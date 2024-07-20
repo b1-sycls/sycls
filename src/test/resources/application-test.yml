@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: sycls
+
+---
+# 테스트 코드 클래스에  @ActiveProfiles("test")를 붙혀서 사용
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  sql:
+    init:
+      encoding: UTF-8
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+jwt:
+  secret:
+    key: 7KCV66+87Iic66qo6rK966+87ZiE7Zi4ZGV2ZW50ZXIK
