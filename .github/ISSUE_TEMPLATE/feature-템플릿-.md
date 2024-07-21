@@ -1,9 +1,9 @@
 ---
 name: 'feature 템플릿 '
 about: 새로운 기능 개발 템플릿
-title: "[FEATURE] 기능이름을 적어주세요"
+title: "[ \U0001F389 FEATURE ] 기능이름을 적어주세요"
 labels: "\U0001F389Feature"
-assignees: CKM123423
+assignees: ''
 
 ---
 
