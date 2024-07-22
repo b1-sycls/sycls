@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,31 +32,32 @@ public class CategoryRestController {
     public ResponseEntity<RestApiResponseDto> addCategory(
             @Valid @RequestBody final CategoryRequestDto requestDto) {
         categoryService.addCategory(requestDto);
-        return ResponseEntity.ok().body(RestApiResponseDto.of("성공"));
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("등록 성공"));
     }
 
     @PatchMapping("/categories/{categoryId}")
     public ResponseEntity<RestApiResponseDto> updateCategory(@PathVariable Long categoryId,
             @Valid @RequestBody final CategoryUpdateRequestDto requestDto) {
         categoryService.updateCategory(categoryId, requestDto);
-        return ResponseEntity.ok().body(RestApiResponseDto.of("성공"));
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("수정 성공"));
     }
 
     @DeleteMapping("/categories/{categoryId}")
     public ResponseEntity<RestApiResponseDto> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
-        return ResponseEntity.ok().body(RestApiResponseDto.of("성공"));
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("삭제 성공"));
     }
 
     @PatchMapping("/categories/{categoryId}/reactivate")
     public ResponseEntity<RestApiResponseDto> reactivateCategory(@PathVariable Long categoryId) {
         categoryService.reactivateCategory(categoryId);
-        return ResponseEntity.ok().body(RestApiResponseDto.of("성공"));
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("복구 성공"));
     }
 
     @GetMapping("/v1/categories")
     public ResponseEntity<RestApiResponseDto<List<CategoryGetAdminResponseDto>>> getAllCategory() {
         List<CategoryGetAdminResponseDto> responseDtoList = categoryService.getAllCategory();
-        return ResponseEntity.ok().body(RestApiResponseDto.of("성공", responseDtoList));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("조회 성공", responseDtoList));
     }
 }
