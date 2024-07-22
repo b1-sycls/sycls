@@ -1,0 +1,28 @@
+### POST 공연장 등록
+POST http://localhost:8081/v1/places
+Content-Type: application/json
+
+{
+  "location": "대전광역시 서구 둔산동",
+  "name": "오페라홀",
+  "maxSeat": 100
+}
+
+### GET 공연장 전체조회
+GET http://localhost:8081/v1/places
+
+
+### GET 공연장 단건조회
+GET http://localhost:8081/v1/1
+
+
+### PATCH 공연장 수정
+PATCH http://localhost:8081/v1/1
+Content-Type: application/json
+
+{
+  "location": "서울특별시 강남구",
+  "name": "월드컵경기장",
+  "maxSeat": 15000,
+  "status": "DISABLE"
+}
