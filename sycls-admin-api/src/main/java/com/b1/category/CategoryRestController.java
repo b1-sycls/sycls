@@ -1,6 +1,6 @@
 package com.b1.category;
 
-import com.b1.category.dto.CategoryGetResponseDto;
+import com.b1.category.dto.CategoryGetAdminResponseDto;
 import com.b1.category.dto.CategoryRequestDto;
 import com.b1.category.dto.CategoryUpdateRequestDto;
 import com.b1.globalresponse.RestApiResponseDto;
@@ -54,8 +54,8 @@ public class CategoryRestController {
     }
 
     @GetMapping("/v1/categories")
-    public ResponseEntity<RestApiResponseDto<List<CategoryGetResponseDto>>> getAllCategory() {
-        List<CategoryGetResponseDto> responseDtoList = categoryService.getAllCategory();
+    public ResponseEntity<RestApiResponseDto<List<CategoryGetAdminResponseDto>>> getAllCategory() {
+        List<CategoryGetAdminResponseDto> responseDtoList = categoryService.getAllCategory();
         return ResponseEntity.ok().body(RestApiResponseDto.of("성공", responseDtoList));
     }
 }
