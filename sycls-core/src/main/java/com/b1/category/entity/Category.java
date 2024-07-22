@@ -44,4 +44,8 @@ public class Category extends TimeStamp {
                 .status(CategoryStatus.ENABLE)
                 .build();
     }
+
+    public void update(String name) {
+        this.name = name;
+    }
 }

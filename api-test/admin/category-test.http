@@ -1,0 +1,19 @@
+###
+
+@categoryId = 1;
+
+### 카테고리 등록
+POST http://localhost:8081/v1/categories
+Content-Type: application/json
+
+{
+  "name": "아이유콘서트"
+}
+
+### 카테고리 수정
+PATCH http://localhost:8081/v1/categories/{{categoryId}}
+Content-Type: application/json
+
+{
+  "name": ""
+}

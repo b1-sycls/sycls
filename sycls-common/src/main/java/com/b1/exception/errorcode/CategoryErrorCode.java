@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum CategoryErrorCode implements ErrorCode {
 
-    CATEGORY_NAME_DUPLICATED(HttpStatus.BAD_REQUEST.value(), "중복된 카테고리 이름 입니다. ");
+    CATEGORY_NAME_DUPLICATED(HttpStatus.BAD_REQUEST.value(), "중복된 카테고리 이름 입니다. "),
+    CATEGORY_NOT_FOUND_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "카테고리를 찾지 못하였습니다."),
+    ;
 
     private final Integer httpStatusCode;
     private final String description;
