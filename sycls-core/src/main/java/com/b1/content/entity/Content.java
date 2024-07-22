@@ -2,6 +2,7 @@ package com.b1.content.entity;
 
 import com.b1.category.entity.Category;
 import com.b1.common.TimeStamp;
+import com.b1.place.entity.Place;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,16 +45,21 @@ public class Content extends TimeStamp {
     private List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id", nullable = false)
+    private Place place;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Content(String title, String description, String mainImagePath,
-            List<ContentDetailImage> contentDetailImageList, Category category) {
+            List<ContentDetailImage> contentDetailImageList, Category category, Place place) {
         this.title = title;
         this.description = description;
         this.mainImagePath = mainImagePath;
         this.contentDetailImageList = contentDetailImageList;
         this.category = category;
+        this.place = place;
     }
 }

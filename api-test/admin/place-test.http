@@ -1,0 +1,12 @@
+### GET 공연장 전체요청
+POST http://localhost:8081/v1/places
+Content-Type: application/json
+
+{
+  "location": "대전광역시 서구 둔산동",
+  "name": "오페라홀",
+  "maxSeat": 100
+}
+
+### GET 공연장 전체요청
+GET http://localhost:8081/v1/places

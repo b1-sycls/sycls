@@ -29,7 +29,7 @@ public class Place extends TimeStamp {
     private String location;
 
     @Column(nullable = false)
-    private Integer max_seat;
+    private Integer maxSeat;
 
     @Column(nullable = false, length = 50)
     private String name;
@@ -39,10 +39,20 @@ public class Place extends TimeStamp {
     private PlaceStatus status;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Place(String location, Integer max_seat, String name, PlaceStatus status) {
+    private Place(String location, Integer maxSeat, String name, PlaceStatus status) {
         this.location = location;
-        this.max_seat = max_seat;
+        this.maxSeat = maxSeat;
         this.name = name;
         this.status = status;
     }
+
+    public static Place addPlace(String location, Integer maxSeat, String name) {
+        return Place.builder()
+                .location(location)
+                .maxSeat(maxSeat)
+                .name(name)
+                .status(PlaceStatus.ENABLE)
+                .build();
+    }
+
 }
