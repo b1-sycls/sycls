@@ -1,10 +1,13 @@
 package com.b1.globalresponse;
 
 import com.b1.exception.errorcode.ErrorCode;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ErrorResponseDto<T> extends RestApiResponseDto {
+@Builder(access = AccessLevel.PRIVATE)
+public class ErrorResponseDto<T> extends RestApiResponseDto<T> {
 
     protected ErrorResponseDto(int code, String message) {
         super(code, message, null);
@@ -14,13 +17,13 @@ public class ErrorResponseDto<T> extends RestApiResponseDto {
         super(code, message, data);
     }
 
-    public static <T> ErrorResponseDto of(ErrorCode errorCode) {
+    public static <T> ErrorResponseDto<T> of(ErrorCode errorCode) {
         return new ErrorResponseDto<>(
                 errorCode.getHttpStatusCode(),
                 errorCode.getDescription());
     }
 
-    public static <T> ErrorResponseDto of(ErrorCode errorCode, T data) {
+    public static <T> ErrorResponseDto<T> of(ErrorCode errorCode, T data) {
         return new ErrorResponseDto<>(
                 errorCode.getHttpStatusCode(),
                 errorCode.getDescription(),
