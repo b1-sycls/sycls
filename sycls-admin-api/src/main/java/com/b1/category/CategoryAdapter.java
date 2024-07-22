@@ -1,19 +1,21 @@
 package com.b1.category;
 
+import com.b1.category.dto.CategoryGetResponseDto;
 import com.b1.category.entity.Category;
 import com.b1.exception.customexception.CateGoryNotFoundException;
 import com.b1.exception.errorcode.CategoryErrorCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j(topic = "Category Adapter")
 @Component
 @RequiredArgsConstructor
 public class CategoryAdapter {
 
-    private static final Logger log = LoggerFactory.getLogger(CategoryAdapter.class);
     private final CategoryRepository categoryRepository;
+    private final CategoryCustomRepository customRepository;
 
     public void saveCategory(Category category) {
         categoryRepository.save(category);
@@ -30,5 +32,9 @@ public class CategoryAdapter {
                     return new CateGoryNotFoundException(
                             CategoryErrorCode.CATEGORY_NOT_FOUND);
                 });
+    }
+
+    public List<CategoryGetResponseDto> findAllOrderByNameAsc() {
+        return customRepository.findAllOrderByNameAsc();
     }
 }

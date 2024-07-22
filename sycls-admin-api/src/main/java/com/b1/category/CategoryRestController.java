@@ -1,13 +1,16 @@
 package com.b1.category;
 
+import com.b1.category.dto.CategoryGetResponseDto;
 import com.b1.category.dto.CategoryRequestDto;
 import com.b1.category.dto.CategoryUpdateRequestDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,5 +51,11 @@ public class CategoryRestController {
     public ResponseEntity<RestApiResponseDto> reactivateCategory(@PathVariable Long categoryId) {
         categoryService.reactivateCategory(categoryId);
         return ResponseEntity.ok().body(RestApiResponseDto.of("성공"));
+    }
+
+    @GetMapping("/v1/categories")
+    public ResponseEntity<RestApiResponseDto<List<CategoryGetResponseDto>>> getAllCategory() {
+        List<CategoryGetResponseDto> responseDtoList = categoryService.getAllCategory();
+        return ResponseEntity.ok().body(RestApiResponseDto.of("성공", responseDtoList));
     }
 }

@@ -1,5 +1,6 @@
 package com.b1.category;
 
+import com.b1.category.dto.CategoryGetResponseDto;
 import com.b1.category.dto.CategoryRequestDto;
 import com.b1.category.dto.CategoryUpdateRequestDto;
 import com.b1.category.entity.Category;
@@ -8,6 +9,7 @@ import com.b1.content.ContentAdapter;
 import com.b1.exception.customexception.CategoryInUseException;
 import com.b1.exception.customexception.CategoryNameDuplicatedException;
 import com.b1.exception.errorcode.CategoryErrorCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -61,6 +63,11 @@ public class CategoryService {
         CategoryStatus.checkEnable(category.getStatus());
 
         category.enableStatus();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryGetResponseDto> getAllCategory() {
+        return categoryAdapter.findAllOrderByNameAsc();
     }
 
     private void checkCategoryDuplicatedName(String name) {
