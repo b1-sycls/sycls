@@ -2,117 +2,47 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.2'
 	id 'io.spring.dependency-management' version '1.1.6'
-
-	id 'jacoco'
 }
 
-group = 'com.b1'
-version = '0.0.1-SNAPSHOT'
-
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
+bootJar.enabled = false // 빌드시 현재 모듈(multi-module)의 .jar를 생성하지 않습니다.
 
 repositories {
 	mavenCentral()
 }
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
-//	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
+	group 'com.example'
+	version '0.0.1-SNAPSHOT'
+	sourceCompatibility = '17'
 
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	apply plugin: 'java'
+	apply plugin: 'java-library'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
 
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-
-	// JWT
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5', 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
-	//QueryDsl
-	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-	testImplementation 'org.mockito:mockito-core:4.8.0'
-
-	runtimeOnly 'com.h2database:h2'
-
-
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
-
-	// jacoco ADD
-	finalizedBy 'jacocoTestReport'
-	// jacoco END
-}
-
-// jacoco report ADD
-jacocoTestReport {
-	reports {
-		// html로 report 생성하기
-		// 빌드경로/jacoco/report.html 폴더 내부로 경로 설정
-		html.destination file("$buildDir/jacoco/report.html")
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
 	}
 
-	finalizedBy 'jacocoTestCoverageVerification'
-}
-// jacoco report config
-jacocoTestReport {
-	getClassDirectories().setFrom(
-			files(classDirectories.files.collect {
-				fileTree(dir: it, exclude: [
-						'**/*util',
-						'**/*entity',
-						'**/*token',
-						'**/*validation',
-				])
-			})
-	)
-}
-// jacoco END
+	repositories {
+		mavenCentral()
+	}
 
-// jacoco coverage config
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			enabled = true
-			element = 'CLASS'
+	dependencies { // 모든 하위 모듈에 추가 될 의존성 목록입니다.
+		implementation 'org.springframework.boot:spring-boot-starter'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-			limit {
-				counter = 'LINE'
-				value = 'COVEREDRATIO'
-				minimum = 0.4
-			}
+		developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-			limit {
-				counter = 'BRANCH'
-				value = 'COVEREDRATIO'
-				minimum = 0.4
-			}
-		}
+		testImplementation 'org.mockito:mockito-core:4.8.0'
+	}
+
+	test {
+		useJUnitPlatform()
 	}
 }
