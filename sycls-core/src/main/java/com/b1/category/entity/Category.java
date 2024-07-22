@@ -49,7 +49,11 @@ public class Category extends TimeStamp {
         this.name = name;
     }
 
-    public void disable() {
+    public void disableStatus() {
         this.status = CategoryStatus.DISABLE;
+    }
+
+    public void enableStatus() {
+        this.status = CategoryStatus.ENABLE;
     }
 }

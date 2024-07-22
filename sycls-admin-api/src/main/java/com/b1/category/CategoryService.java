@@ -45,14 +45,22 @@ public class CategoryService {
     public void deleteCategory(Long categoryId) {
         Category category = categoryAdapter.findById(categoryId);
 
-        CategoryStatus.checkDeleted(category.getStatus());
+        CategoryStatus.checkDisable(category.getStatus());
 
         if (contentAdapter.existsByCategoryId(categoryId)) {
             log.error("공연에서 사용하고 있는 카테고리 | request : {}", categoryId);
             throw new CategoryInUseException(CategoryErrorCode.CATEGORY_IN_USE);
         }
 
-        category.disable();
+        category.disableStatus();
+    }
+
+    public void reactivateCategory(Long categoryId) {
+        Category category = categoryAdapter.findById(categoryId);
+
+        CategoryStatus.checkEnable(category.getStatus());
+
+        category.enableStatus();
     }
 
     private void checkCategoryDuplicatedName(String name) {

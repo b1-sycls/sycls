@@ -43,4 +43,10 @@ public class CategoryRestController {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.ok().body(RestApiResponseDto.of("성공"));
     }
+
+    @PatchMapping("/categories/{categoryId}/reactivate")
+    public ResponseEntity<RestApiResponseDto> reactivateCategory(@PathVariable Long categoryId) {
+        categoryService.reactivateCategory(categoryId);
+        return ResponseEntity.ok().body(RestApiResponseDto.of("성공"));
+    }
 }

@@ -1,6 +1,7 @@
 package com.b1.category.entity;
 
-import com.b1.exception.customexception.CategoryAlreadyDeletedException;
+import com.b1.exception.customexception.CategoryAlreadyDisableException;
+import com.b1.exception.customexception.CategoryAlreadyEnableException;
 import com.b1.exception.errorcode.CategoryErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,17 @@ public enum CategoryStatus {
 
     private final String value;
 
-    public static void checkDeleted(CategoryStatus status) {
+    public static void checkDisable(CategoryStatus status) {
         if (status.equals(DISABLE)) {
             log.error("이미 삭제된 카테고리 | request : {}", status);
-            throw new CategoryAlreadyDeletedException(CategoryErrorCode.CATEGORY_ALREADY_DELETED);
+            throw new CategoryAlreadyDisableException(CategoryErrorCode.CATEGORY_ALREADY_DISABLE);
+        }
+    }
+
+    public static void checkEnable(CategoryStatus status) {
+        if (status.equals(ENABLE)) {
+            log.error("삭제되지 않은 카테고리 | request : {}", status);
+            throw new CategoryAlreadyEnableException(CategoryErrorCode.CATEGORY_ALREADY_ENABLE);
         }
     }
 

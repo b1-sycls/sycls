@@ -1,9 +1,9 @@
 package com.b1.exception.exceptionhandler;
 
-import com.b1.exception.customexception.global.GlobalAlreadyDeletedException;
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
 import com.b1.exception.customexception.global.GlobalEntityInUseException;
 import com.b1.exception.customexception.global.GlobalNotFoundException;
+import com.b1.exception.customexception.global.GlobalStatusException;
 import com.b1.exception.errorcode.ErrorCode;
 import com.b1.globalresponse.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +45,10 @@ public class ApiExceptionHandler {
         return sendErrorResponse(e.getErrorCode());
     }
 
-    @ExceptionHandler(GlobalAlreadyDeletedException.class)
-    protected ResponseEntity<ErrorResponseDto> globalAlreadyDeletedException(
-            GlobalAlreadyDeletedException e) {
-        log.error("GlobalAlreadyDeletedException 발생");
+    @ExceptionHandler(GlobalStatusException.class)
+    protected ResponseEntity<ErrorResponseDto> globalStatusException(
+            GlobalStatusException e) {
+        log.error("GlobalStatusException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 }
