@@ -48,4 +48,8 @@ public class Category extends TimeStamp {
     public void update(String name) {
         this.name = name;
     }
+
+    public void disable() {
+        this.status = CategoryStatus.DISABLE;
+    }
 }

@@ -28,7 +28,7 @@ public class CategoryAdapter {
                 .orElseThrow(() -> {
                     log.error("카테고리를 찾지 못함 | request : {}", categoryId);
                     return new CateGoryNotFoundException(
-                            CategoryErrorCode.CATEGORY_NOT_FOUND_EXCEPTION);
+                            CategoryErrorCode.CATEGORY_NOT_FOUND);
                 });
     }
 }

@@ -1,6 +1,8 @@
 package com.b1.exception.exceptionhandler;
 
+import com.b1.exception.customexception.global.GlobalAlreadyDeletedException;
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
+import com.b1.exception.customexception.global.GlobalEntityInUseException;
 import com.b1.exception.customexception.global.GlobalNotFoundException;
 import com.b1.exception.errorcode.ErrorCode;
 import com.b1.globalresponse.ErrorResponseDto;
@@ -33,6 +35,20 @@ public class ApiExceptionHandler {
     @ExceptionHandler(GlobalNotFoundException.class)
     protected ResponseEntity<ErrorResponseDto> globalNotFoundException(GlobalNotFoundException e) {
         log.error("GlobalNotFoundException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalEntityInUseException.class)
+    protected ResponseEntity<ErrorResponseDto> globalEntityInUseException(
+            GlobalEntityInUseException e) {
+        log.error("GlobalEntityInUseException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalAlreadyDeletedException.class)
+    protected ResponseEntity<ErrorResponseDto> globalAlreadyDeletedException(
+            GlobalAlreadyDeletedException e) {
+        log.error("GlobalAlreadyDeletedException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 }

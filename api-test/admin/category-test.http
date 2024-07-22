@@ -17,3 +17,7 @@ Content-Type: application/json
 {
   "name": ""
 }
+
+
+### 카테고리 삭제
+DELETE http://localhost:8081/v1/categories/{{categoryId}}
