@@ -43,13 +43,18 @@ public class SeatGrade {
     @JoinColumn(name = "content_id", nullable = false)
     private Content content;
 
+    @Column(name = "ticket_id")
+    private Long ticketId;
+
     @Builder(access = AccessLevel.PRIVATE)
-    private SeatGrade(String grade, Integer price, SeatGradeStatus status,
-            Seat seat, Content content) {
+    private SeatGrade(String grade, Integer price, SeatGradeStatus status, Seat seat,
+            Content content,
+            Long ticketId) {
         this.grade = grade;
         this.price = price;
         this.status = status;
         this.seat = seat;
         this.content = content;
+        this.ticketId = ticketId;
     }
 }
