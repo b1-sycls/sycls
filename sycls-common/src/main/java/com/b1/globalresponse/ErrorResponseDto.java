@@ -1,12 +1,9 @@
 package com.b1.globalresponse;
 
 import com.b1.exception.errorcode.ErrorCode;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder(access = AccessLevel.PRIVATE)
 public class ErrorResponseDto<T> extends RestApiResponseDto<T> {
 
     protected ErrorResponseDto(int code, String message) {

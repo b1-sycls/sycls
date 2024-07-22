@@ -21,7 +21,8 @@ public class CategoryCustomRepository {
                 .select(Projections.constructor(
                                 CategoryGetResponseDto.class,
                                 category.id,
-                                category.name
+                                category.name,
+                                category.status
                         )
                 )
                 .from(category)
