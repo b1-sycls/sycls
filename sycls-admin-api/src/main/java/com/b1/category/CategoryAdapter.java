@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class CategoryAdapter {
 
     private final CategoryRepository categoryRepository;
-    private final CategoryCustomRepository customRepository;
+    private final CategoryQueryRepository customRepository;
 
     public void saveCategory(Category category) {
         categoryRepository.save(category);
