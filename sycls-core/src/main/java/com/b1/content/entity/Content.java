@@ -44,7 +44,7 @@ public class Content extends TimeStamp {
     private List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @Builder(access = AccessLevel.PRIVATE)
