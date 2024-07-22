@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-@Slf4j(topic = "PlaceAdapter")
+@Slf4j(topic = "Place Adapter")
 @Component
 @RequiredArgsConstructor
 public class PlaceAdapter {

@@ -17,7 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j(topic = "PlaceService")
+@Slf4j(topic = "Place Service")
 @Service
 @RequiredArgsConstructor
 @Transactional
