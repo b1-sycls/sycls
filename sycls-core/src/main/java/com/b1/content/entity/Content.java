@@ -48,10 +48,6 @@ public class Content extends TimeStamp {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id", nullable = false)
-    private Place place;
-
     @Builder(access = AccessLevel.PRIVATE)
     private Content(String title, String description, String mainImagePath,
             List<ContentDetailImage> contentDetailImageList, Category category, Place place) {
@@ -60,6 +56,5 @@ public class Content extends TimeStamp {
         this.mainImagePath = mainImagePath;
         this.contentDetailImageList = contentDetailImageList;
         this.category = category;
-        this.place = place;
     }
 }

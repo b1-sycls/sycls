@@ -37,11 +37,9 @@ public class PlaceAdapter {
     /**
      * 공연장 단건 조회
      */
-    public PlaceGetResponseDto getPlace(Long placeId) {
-        Place place = placeRepository.findById(placeId).orElseThrow(
+    public Place getPlace(final Long placeId) {
+        return placeRepository.findById(placeId).orElseThrow(
                 () -> new PlaceNotFoundException(PlaceErrorCode.NOT_FOUND_PLACE)
         );
-
-        return PlaceGetResponseDto.of(place);
     }
 }

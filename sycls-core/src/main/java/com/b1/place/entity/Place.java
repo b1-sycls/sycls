@@ -46,6 +46,9 @@ public class Place extends TimeStamp {
         this.status = status;
     }
 
+    /**
+     * 공연장 등록
+     */
     public static Place addPlace(String location, Integer maxSeat, String name) {
         return Place.builder()
                 .location(location)
@@ -53,6 +56,16 @@ public class Place extends TimeStamp {
                 .name(name)
                 .status(PlaceStatus.ENABLE)
                 .build();
+    }
+
+    /**
+     * 공연장 수정
+     */
+    public void updatePlace(String location, String name, Integer maxSeat, PlaceStatus status) {
+        this.location = location;
+        this.name = name;
+        this.maxSeat = maxSeat;
+        this.status = status;
     }
 
 }

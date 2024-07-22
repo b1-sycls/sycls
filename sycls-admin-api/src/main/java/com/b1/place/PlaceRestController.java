@@ -5,6 +5,7 @@ import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.place.dto.PlaceAddRequestDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondiRequestDto;
+import com.b1.place.dto.PlaceUpdateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,11 +57,24 @@ public class PlaceRestController {
      */
     @GetMapping("/{placeId}")
     public ResponseEntity<RestApiResponseDto<PlaceGetResponseDto>> getPlace(
-            @PathVariable Long placeId
+            @PathVariable final Long placeId
     ) {
         PlaceGetResponseDto responseDto = placeService.getPlace(placeId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(HttpStatus.OK.value(), "성공", responseDto));
+    }
+
+    /**
+     * 공안장 정보 수정
+     */
+    @PatchMapping("/{placeId}")
+    public ResponseEntity<RestApiResponseDto<Long>> updatePlace(
+            @PathVariable final Long placeId,
+            @Valid @RequestBody final PlaceUpdateRequestDto requestDto
+    ) {
+        Long response = placeService.updatePlace(placeId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of(HttpStatus.OK.value(), "성공", response));
     }
 
 }

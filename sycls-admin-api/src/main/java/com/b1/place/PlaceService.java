@@ -4,6 +4,7 @@ import com.b1.common.PageResponseDto;
 import com.b1.place.dto.PlaceAddRequestDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondiRequestDto;
+import com.b1.place.dto.PlaceUpdateRequestDto;
 import com.b1.place.entity.Place;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,18 @@ public class PlaceService {
      * 공연장 단건 조회
      */
     @Transactional(readOnly = true)
-    public PlaceGetResponseDto getPlace(Long placeId) {
-        return placeAdapter.getPlace(placeId);
+    public PlaceGetResponseDto getPlace(final Long placeId) {
+        Place place = placeAdapter.getPlace(placeId);
+        return PlaceGetResponseDto.of(place);
+    }
+
+    /**
+     * 공연장 수정
+     */
+    public Long updatePlace(final Long placeId, final PlaceUpdateRequestDto requestDto) {
+        Place place = placeAdapter.getPlace(placeId);
+        place.updatePlace(requestDto.location(), requestDto.name(),
+                requestDto.maxSeat(), requestDto.status());
+        return place.getId();
     }
 }
