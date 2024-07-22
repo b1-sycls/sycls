@@ -3,7 +3,7 @@ package com.b1.place;
 import com.b1.exception.customexception.PlaceNotFoundException;
 import com.b1.exception.errorcode.PlaceErrorCode;
 import com.b1.place.dto.PlaceGetResponseDto;
-import com.b1.place.dto.PlaceSearchCondiRequestDto;
+import com.b1.place.dto.PlaceSearchCondRequestDto;
 import com.b1.place.entity.Place;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class PlaceAdapter {
 
     private final PlaceRepository placeRepository;
+    private final PlaceQueryRepository placeQueryRepository;
 
     /**
      * 공연장 등록
@@ -28,9 +29,9 @@ public class PlaceAdapter {
     /**
      * 공연장 전체 조회
      */
-    public Page<PlaceGetResponseDto> getAllPlaces(final PlaceSearchCondiRequestDto requestDto,
+    public Page<PlaceGetResponseDto> getAllPlaces(final PlaceSearchCondRequestDto requestDto,
             final Pageable pageable) {
-        return placeRepository.getAllPlaces(requestDto.getLocation(),
+        return placeQueryRepository.getAllPlaces(requestDto.getLocation(),
                 requestDto.getName(), requestDto.getMaxSeat(), pageable);
     }
 

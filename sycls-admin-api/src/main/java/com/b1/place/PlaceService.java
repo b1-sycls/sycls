@@ -3,7 +3,7 @@ package com.b1.place;
 import com.b1.common.PageResponseDto;
 import com.b1.place.dto.PlaceAddRequestDto;
 import com.b1.place.dto.PlaceGetResponseDto;
-import com.b1.place.dto.PlaceSearchCondiRequestDto;
+import com.b1.place.dto.PlaceSearchCondRequestDto;
 import com.b1.place.dto.PlaceUpdateRequestDto;
 import com.b1.place.entity.Place;
 import com.b1.place.entity.PlaceStatus;
@@ -43,8 +43,9 @@ public class PlaceService {
      */
     @Transactional(readOnly = true)
     public PageResponseDto<PlaceGetResponseDto> getAllPlaces(
-            final PlaceSearchCondiRequestDto requestDto) {
+            final PlaceSearchCondRequestDto requestDto) {
         Sort.Direction direction = requestDto.getIsDesc() ? Direction.DESC : Direction.ASC;
+        //TODO 음수 검증
         Pageable pageable = PageRequest.of(requestDto.getPageNum() - 1, requestDto.getPageSize(),
                 direction, requestDto.getOrderBy());
 

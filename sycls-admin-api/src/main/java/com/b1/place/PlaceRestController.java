@@ -4,7 +4,7 @@ import com.b1.common.PageResponseDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.place.dto.PlaceAddRequestDto;
 import com.b1.place.dto.PlaceGetResponseDto;
-import com.b1.place.dto.PlaceSearchCondiRequestDto;
+import com.b1.place.dto.PlaceSearchCondRequestDto;
 import com.b1.place.dto.PlaceUpdateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class PlaceRestController {
     ) {
         placeService.addPlace(requestDto);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of(HttpStatus.OK.value(), "성공"));
+                .body(RestApiResponseDto.of("등록되었습니다."));
     }
 
     /**
@@ -46,11 +46,11 @@ public class PlaceRestController {
      */
     @GetMapping("/places")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<PlaceGetResponseDto>>> getAllPlace(
-            @ModelAttribute final PlaceSearchCondiRequestDto requestDto
+            @ModelAttribute final PlaceSearchCondRequestDto requestDto
     ) {
         PageResponseDto<PlaceGetResponseDto> responseDto = placeService.getAllPlaces(requestDto);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of(HttpStatus.OK.value(), "성공", responseDto));
+                .body(RestApiResponseDto.of("조회되었습니다.", responseDto));
     }
 
     /**
@@ -62,7 +62,7 @@ public class PlaceRestController {
     ) {
         PlaceGetResponseDto responseDto = placeService.getPlace(placeId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of(HttpStatus.OK.value(), "성공", responseDto));
+                .body(RestApiResponseDto.of("조회되었습니다", responseDto));
     }
 
     /**
@@ -75,7 +75,7 @@ public class PlaceRestController {
     ) {
         Long response = placeService.updatePlace(placeId, requestDto);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of(HttpStatus.OK.value(), "성공", response));
+                .body(RestApiResponseDto.of("수정되었습니다.", response));
     }
 
     /**
@@ -87,7 +87,7 @@ public class PlaceRestController {
     ) {
         placeService.deletePlace(placeId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of(HttpStatus.OK.value(), "성공"));
+                .body(RestApiResponseDto.of("삭제되었습니다."));
     }
 
 }

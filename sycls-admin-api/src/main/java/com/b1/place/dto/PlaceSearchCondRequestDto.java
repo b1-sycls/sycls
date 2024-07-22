@@ -3,10 +3,11 @@ package com.b1.place.dto;
 import lombok.Getter;
 
 @Getter
-public class PlaceSearchCondiRequestDto {
+public class PlaceSearchCondRequestDto {
 
+    // TODO
     // 페이지 정보
-    private Integer pageNum = 1; // 기본값 1
+    private Integer pageNum = 1; // 기본값 0
     private Integer pageSize = 4; // 기본값 4
 
     // 검색 조건
