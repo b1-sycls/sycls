@@ -35,7 +35,7 @@ public class ContentDetailImage {
     private ContentDetailImageStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "content_id")
+    @JoinColumn(name = "content_id", nullable = false)
     private Content content;
 
     @Builder(access = AccessLevel.PRIVATE)

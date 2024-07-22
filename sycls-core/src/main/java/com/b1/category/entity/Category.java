@@ -25,10 +25,7 @@ public class Category extends TimeStamp {
     @Column(name = "category_id")
     private Long id;
 
-    @Column(nullable = false, length = 10)
-    private String code;
-
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique = true)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -36,9 +33,15 @@ public class Category extends TimeStamp {
     private CategoryStatus status;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Category(String code, String name, CategoryStatus status) {
-        this.code = code;
+    private Category(String name, CategoryStatus status) {
         this.name = name;
         this.status = status;
+    }
+
+    public static Category addCategory(final String name) {
+        return Category.builder()
+                .name(name)
+                .status(CategoryStatus.ENABLE)
+                .build();
     }
 }
