@@ -30,7 +30,8 @@ public class PlaceRepositoryCustomImpl implements PlaceRepositoryCustom {
                                 place.id,
                                 place.location,
                                 place.name,
-                                place.maxSeat
+                                place.maxSeat,
+                                place.status
                         )
                 )
                 .from(place)

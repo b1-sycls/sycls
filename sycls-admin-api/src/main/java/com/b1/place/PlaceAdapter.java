@@ -1,5 +1,7 @@
 package com.b1.place;
 
+import com.b1.exception.customexception.PlaceNotFoundException;
+import com.b1.exception.errorcode.PlaceErrorCode;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondiRequestDto;
 import com.b1.place.entity.Place;
@@ -30,5 +32,16 @@ public class PlaceAdapter {
             final Pageable pageable) {
         return placeRepository.getAllPlaces(requestDto.getLocation(),
                 requestDto.getName(), requestDto.getMaxSeat(), pageable);
+    }
+
+    /**
+     * 공연장 단건 조회
+     */
+    public PlaceGetResponseDto getPlace(Long placeId) {
+        Place place = placeRepository.findById(placeId).orElseThrow(
+                () -> new PlaceNotFoundException(PlaceErrorCode.NOT_FOUND_PLACE)
+        );
+
+        return PlaceGetResponseDto.of(place);
     }
 }

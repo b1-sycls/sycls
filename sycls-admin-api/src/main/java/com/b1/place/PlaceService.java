@@ -1,8 +1,8 @@
 package com.b1.place;
 
+import com.b1.common.PageResponseDto;
 import com.b1.place.dto.PlaceAddRequestDto;
 import com.b1.place.dto.PlaceGetResponseDto;
-import com.b1.place.dto.PlacePageResponseDto;
 import com.b1.place.dto.PlaceSearchCondiRequestDto;
 import com.b1.place.entity.Place;
 import lombok.RequiredArgsConstructor;
@@ -39,12 +39,22 @@ public class PlaceService {
     /**
      * 공연장 전체 조회
      */
-    public PlacePageResponseDto getAllPlaces(final PlaceSearchCondiRequestDto requestDto) {
+    @Transactional(readOnly = true)
+    public PageResponseDto<PlaceGetResponseDto> getAllPlaces(
+            final PlaceSearchCondiRequestDto requestDto) {
         Sort.Direction direction = requestDto.getIsDesc() ? Direction.DESC : Direction.ASC;
         Pageable pageable = PageRequest.of(requestDto.getPageNum() - 1, requestDto.getPageSize(),
                 direction, requestDto.getOrderBy());
 
         Page<PlaceGetResponseDto> pageResponseDto = placeAdapter.getAllPlaces(requestDto, pageable);
-        return PlacePageResponseDto.of(pageResponseDto);
+        return PageResponseDto.of(pageResponseDto);
+    }
+
+    /**
+     * 공연장 단건 조회
+     */
+    @Transactional(readOnly = true)
+    public PlaceGetResponseDto getPlace(Long placeId) {
+        return placeAdapter.getPlace(placeId);
     }
 }

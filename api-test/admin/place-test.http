@@ -1,4 +1,4 @@
-### GET 공연장 전체요청
+### POST 공연장 등록
 POST http://localhost:8081/v1/places
 Content-Type: application/json
 
@@ -8,5 +8,9 @@ Content-Type: application/json
   "maxSeat": 100
 }
 
-### GET 공연장 전체요청
+### GET 공연장 전체조회
 GET http://localhost:8081/v1/places
+
+
+### GET 공연장 단건조회
+GET http://localhost:8081/v1/1
