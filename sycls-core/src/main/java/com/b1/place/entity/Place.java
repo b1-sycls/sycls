@@ -68,4 +68,10 @@ public class Place extends TimeStamp {
         this.status = status;
     }
 
+    /**
+     * 공연장 삭제
+     */
+    public void deletePlace() {
+        this.status = PlaceStatus.DISABLE;
+    }
 }

@@ -39,7 +39,10 @@ public class PlaceAdapter {
      */
     public Place getPlace(final Long placeId) {
         return placeRepository.findById(placeId).orElseThrow(
-                () -> new PlaceNotFoundException(PlaceErrorCode.NOT_FOUND_PLACE)
+                () -> {
+                    log.error("존재하지 않는 공연장 | {}", placeId);
+                    return new PlaceNotFoundException(PlaceErrorCode.NOT_FOUND_PLACE);
+                }
         );
     }
 }

@@ -6,6 +6,7 @@ import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondiRequestDto;
 import com.b1.place.dto.PlaceUpdateRequestDto;
 import com.b1.place.entity.Place;
+import com.b1.place.entity.PlaceStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -68,5 +69,14 @@ public class PlaceService {
         place.updatePlace(requestDto.location(), requestDto.name(),
                 requestDto.maxSeat(), requestDto.status());
         return place.getId();
+    }
+
+    /**
+     * 공연장 삭제
+     */
+    public void deletePlace(Long placeId) {
+        Place place = placeAdapter.getPlace(placeId);
+        PlaceStatus.checkDeleted(place.getStatus());
+        place.deletePlace();
     }
 }

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -75,6 +76,18 @@ public class PlaceRestController {
         Long response = placeService.updatePlace(placeId, requestDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(HttpStatus.OK.value(), "성공", response));
+    }
+
+    /**
+     * 공연장 삭제
+     */
+    @DeleteMapping("/{placeId}")
+    public ResponseEntity<RestApiResponseDto> deletePlace(
+            @PathVariable final Long placeId
+    ) {
+        placeService.deletePlace(placeId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of(HttpStatus.OK.value(), "성공"));
     }
 
 }
