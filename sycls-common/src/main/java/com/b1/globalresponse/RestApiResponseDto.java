@@ -1,13 +1,10 @@
 package com.b1.globalresponse;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@Builder(access = AccessLevel.PRIVATE)
 public class RestApiResponseDto<T> {
 
     private static final String SUCCESS = "성공";
