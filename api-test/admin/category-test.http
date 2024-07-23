@@ -1,0 +1,31 @@
+###
+
+@categoryId = 1;
+
+### 카테고리 등록
+POST http://localhost:8081/v1/categories
+Content-Type: application/json
+
+{
+  "name": "비비콘서트"
+}
+
+### 카테고리 수정
+PATCH http://localhost:8081/v1/categories/{{categoryId}}
+Content-Type: application/json
+
+{
+  "name": ""
+}
+
+
+### 카테고리 삭제
+DELETE http://localhost:8081/v1/categories/{{categoryId}}
+
+
+### 카테고리 복구
+PATCH http://localhost:8081/v1/categories/{{categoryId}}/reactivate
+
+
+### 카테고리 조회 (어드민)
+GET http://localhost:8081/v1/v1/categories
