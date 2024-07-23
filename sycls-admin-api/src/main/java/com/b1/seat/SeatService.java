@@ -6,6 +6,7 @@ import com.b1.place.entity.Place;
 import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
 import com.b1.seat.entity.Seat;
+import com.b1.seat.entity.SeatStatus;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +53,14 @@ public class SeatService {
         Seat seat = seatAdapter.getSeat(seatId);
         seat.updateSeat(requestDto.code(), requestDto.status());
         return seat.getId();
+    }
+
+    /**
+     * 좌석 삭제
+     */
+    public void deleteSeat(final Long seatId) {
+        Seat seat = seatAdapter.getSeat(seatId);
+        SeatStatus.checkDeleted(seat.getStatus());
+        seat.deleteSeat();
     }
 }

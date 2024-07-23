@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,5 +63,18 @@ public class SeatRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("수정되었습니다.", response));
     }
+
+    /**
+     * 좌석 삭제
+     */
+    @DeleteMapping("/seats/{seatId}")
+    public ResponseEntity<RestApiResponseDto> deleteSeat(
+            @PathVariable final Long seatId
+    ) {
+        seatService.deleteSeat(seatId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("수정되었습니다."));
+    }
+
 
 }

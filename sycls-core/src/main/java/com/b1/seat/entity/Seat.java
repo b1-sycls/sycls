@@ -65,4 +65,11 @@ public class Seat extends TimeStamp {
         this.code = code;
         this.status = status;
     }
+
+    /**
+     * 좌석 삭제
+     */
+    public void deleteSeat() {
+        this.status = SeatStatus.DISABLE;
+    }
 }
