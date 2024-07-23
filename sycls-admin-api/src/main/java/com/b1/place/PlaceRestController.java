@@ -33,7 +33,7 @@ public class PlaceRestController {
      * 공연장 등록
      */
     @PostMapping("/places")
-    public ResponseEntity<RestApiResponseDto> addPlace(
+    public ResponseEntity<RestApiResponseDto<String>> addPlace(
             @Valid @RequestBody final PlaceAddRequestDto requestDto
     ) {
         placeService.addPlace(requestDto);
@@ -82,7 +82,7 @@ public class PlaceRestController {
      * 공연장 삭제
      */
     @DeleteMapping("/{placeId}")
-    public ResponseEntity<RestApiResponseDto> deletePlace(
+    public ResponseEntity<RestApiResponseDto<String>> deletePlace(
             @PathVariable final Long placeId
     ) {
         placeService.deletePlace(placeId);
