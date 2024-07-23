@@ -79,4 +79,12 @@ public class User extends TimeStamp {
                 .build();
     }
 
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void deleteUser() {
+        this.status = UserStatus.DELETED;
+    }
+
 }
