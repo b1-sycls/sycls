@@ -35,6 +35,6 @@ public class CategoryAdapter {
     }
 
     public List<CategoryGetAdminResponseDto> getAllCategoryOrderByNameAsc() {
-        return categoryQueryRepository.findAllOrderByNameAscForAdmin();
+        return categoryQueryRepository.getAllOrderByNameAscForAdmin();
     }
 }

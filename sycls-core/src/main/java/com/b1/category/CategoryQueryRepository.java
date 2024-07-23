@@ -16,7 +16,7 @@ public class CategoryQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<CategoryGetAdminResponseDto> findAllOrderByNameAscForAdmin() {
+    public List<CategoryGetAdminResponseDto> getAllOrderByNameAscForAdmin() {
         QCategory category = QCategory.category;
 
         return queryFactory
@@ -32,7 +32,7 @@ public class CategoryQueryRepository {
                 .fetch();
     }
 
-    public List<CategoryGetUserResponseDto> findAllOrderByNameAscForUser() {
+    public List<CategoryGetUserResponseDto> getAllOrderByNameAscForUser() {
         QCategory category = QCategory.category;
 
         return queryFactory
