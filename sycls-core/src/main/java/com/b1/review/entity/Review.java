@@ -46,7 +46,8 @@ public class Review extends TimeStamp {
     private Content content;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Review(String comment, Integer rating, ReviewStatus status, User user, Content content) {
+    private Review(String comment, Integer rating, ReviewStatus status, User user,
+            Content content) {
         this.comment = comment;
         this.rating = rating;
         this.status = status;

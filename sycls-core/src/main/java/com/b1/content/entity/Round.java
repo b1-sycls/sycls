@@ -1,5 +1,6 @@
 package com.b1.content.entity;
 
+import com.b1.place.entity.Place;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,14 +47,19 @@ public class Round {
     @JoinColumn(name = "content_id", nullable = false)
     private Content content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id", nullable = false)
+    private Place place;
+
     @Builder(access = AccessLevel.PRIVATE)
-    public Round(Integer sequence, LocalDate startDate, LocalTime startTime, LocalTime endTime,
-            RoundStatus status, Content content) {
+    private Round(Integer sequence, LocalDate startDate, LocalTime startTime, LocalTime endTime,
+            RoundStatus status, Content content, Place place) {
         this.sequence = sequence;
         this.startDate = startDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.status = status;
         this.content = content;
+        this.place = place;
     }
 }

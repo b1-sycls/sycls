@@ -8,6 +8,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping("/v1")
 public class TicketService {
-
-    private final TicketAdapter ticketAdapter;
+    
 }
