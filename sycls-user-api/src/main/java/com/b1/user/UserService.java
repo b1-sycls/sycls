@@ -28,7 +28,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public void signup(UserSignupRequestDto requestDto) {
-
         // 이메일 중복 검사
         if (userAdapter.checkDuplicateEmail(requestDto.email())) {
             log.error("이메일 중복 | email : {}", requestDto.email());
@@ -39,7 +38,6 @@ public class UserService {
         if (userAdapter.checkDuplicateNickname(requestDto.nickname())) {
             log.error("닉네임 중복 | nickname : {}", requestDto.nickname());
             throw new UserNicknameDuplicatedException(UserErrorCode.USER_NICKNAME_ALREADY_EXISTS);
-
         }
 
         User user = User.addCustomer(
@@ -54,7 +52,6 @@ public class UserService {
     }
 
     public void resign(UserResignRequestDto requestDto, UserDetailsImpl user) {
-
         User getUser = userAdapter.findByEmail(user.getEmail());
         if (getUser.getStatus() == UserStatus.DELETED) {
             log.error("이미 삭제된 유저 | request : {}", getUser.getId());
@@ -67,17 +64,5 @@ public class UserService {
         }
 
         getUser.deleteUser();
-    }
-
-    public boolean checkDuplicateEmail(String email) {
-        return userAdapter.checkDuplicateEmail(email);
-    }
-
-    public boolean checkDuplicateNickname(String nickname) {
-        return userAdapter.checkDuplicateNickname(nickname);
-    }
-
-    public void resetPassword(UserResetPasswordRequestDto requestDto, UserDetailsImpl user) {
-
     }
 }
