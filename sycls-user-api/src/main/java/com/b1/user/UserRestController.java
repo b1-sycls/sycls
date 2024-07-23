@@ -1,5 +1,6 @@
 package com.b1.user;
 
+import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.user.dto.UserSignupRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +16,11 @@ public class UserRestController {
     private final UserService userService;
 
     @PostMapping("/users/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody UserSignupRequestDto requestDto) {
+    public ResponseEntity<RestApiResponseDto<String>> signup(@Valid @RequestBody UserSignupRequestDto requestDto) {
 
         userService.signup(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body("회원가입에 성공하였습니다!");
+                .body(RestApiResponseDto.of("회원가입에 성공하였습니다!"));
     }
 }
