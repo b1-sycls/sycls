@@ -20,6 +20,6 @@ public class UserRestController {
         userService.signup(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body("회원가입 성공!");
+                .body("회원가입에 성공하였습니다!");
     }
 }

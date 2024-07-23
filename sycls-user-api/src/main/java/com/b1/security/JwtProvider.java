@@ -103,7 +103,7 @@ public class JwtProvider {
     // Token 으로 Authentication 가져오기
     public Authentication getAuthentication(String token) {
         String email = extractEmail(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        UserDetails userDetails = userDetailsService.loadUserByEmail(email);
         return new UsernamePasswordAuthenticationToken(userDetails, "",
                 userDetails.getAuthorities());
     }

@@ -4,6 +4,7 @@ import com.b1.security.JwtProvider;
 import com.b1.security.JwtAuthenticationFilter;
 import com.b1.security.JwtAuthorizationFilter;
 import com.b1.security.UserDetailsServiceImpl;
+import com.b1.user.UserAdapter;
 import com.b1.user.UserRepository;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -23,15 +24,15 @@ public class WebSecurityConfig {
     private final JwtProvider jwtProvider;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final UserRepository userRepository;
+    private final UserAdapter userAdapter;
 
     public WebSecurityConfig(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService,
                              AuthenticationConfiguration authenticationConfiguration,
-                             UserRepository userRepository) {
+                             UserAdapter userAdapter) {
         this.jwtProvider = jwtProvider;
         this.userDetailsService = userDetailsService;
         this.authenticationConfiguration = authenticationConfiguration;
-        this.userRepository = userRepository;
+        this.userAdapter = userAdapter;
     }
 
     @Bean
@@ -42,7 +43,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider, userRepository);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider, userAdapter);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
