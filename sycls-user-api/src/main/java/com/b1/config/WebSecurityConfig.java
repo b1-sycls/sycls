@@ -69,6 +69,9 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers("/v1/users/signup").permitAll()
                         .requestMatchers("/v1/auth/login").permitAll()
+                        //임시 권한 수정
+                        .requestMatchers("/v1/users/**").permitAll()
+
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
         );
