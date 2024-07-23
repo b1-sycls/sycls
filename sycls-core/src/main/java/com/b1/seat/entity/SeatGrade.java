@@ -1,6 +1,7 @@
 package com.b1.seat.entity;
 
 import com.b1.content.entity.Content;
+import com.b1.content.entity.Round;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,21 +41,20 @@ public class SeatGrade {
     private Seat seat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "content_id", nullable = false)
-    private Content content;
+    @JoinColumn(name = "round_id", nullable = false)
+    private Round round;
 
     @Column(name = "ticket_id")
     private Long ticketId;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private SeatGrade(String grade, Integer price, SeatGradeStatus status, Seat seat,
-            Content content,
+    private SeatGrade(String grade, Integer price, SeatGradeStatus status, Seat seat, Round round,
             Long ticketId) {
         this.grade = grade;
         this.price = price;
         this.status = status;
         this.seat = seat;
-        this.content = content;
+        this.round = round;
         this.ticketId = ticketId;
     }
 }
