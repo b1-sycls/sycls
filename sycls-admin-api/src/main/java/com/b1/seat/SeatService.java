@@ -50,6 +50,7 @@ public class SeatService {
     /**
      * 좌석의 상세정보(단건) 조회
      */
+    @Transactional(readOnly = true)
     public SeatGetResponseDto getSeat(final Long seatId) {
         Seat seat = seatAdapter.getSeat(seatId);
         return SeatGetResponseDto.of(seat);

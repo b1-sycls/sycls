@@ -31,7 +31,7 @@ public class SeatRestController {
      * 해당 공연장의 좌석 등록
      */
     @PostMapping("/places/{placeId}/seats")
-    public ResponseEntity<RestApiResponseDto> addSeats(
+    public ResponseEntity<RestApiResponseDto<String>> addSeats(
             @PathVariable final Long placeId,
             @Valid @RequestBody final SeatAddRequestDto requestDto
     ) {
@@ -81,7 +81,7 @@ public class SeatRestController {
      * 좌석 삭제
      */
     @DeleteMapping("/seats/{seatId}")
-    public ResponseEntity<RestApiResponseDto> deleteSeat(
+    public ResponseEntity<RestApiResponseDto<String>> deleteSeat(
             @PathVariable final Long seatId
     ) {
         seatService.deleteSeat(seatId);

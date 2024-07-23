@@ -2,13 +2,14 @@ package com.b1.seat.dto;
 
 import com.b1.seat.entity.Seat;
 import com.b1.seat.entity.SeatStatus;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
-@AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SeatGetResponseDto {
 
     private Long seatId;
