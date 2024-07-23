@@ -14,6 +14,6 @@ public class CategoryAdapter {
     private final CategoryQueryRepository categoryQueryRepository;
 
     public List<CategoryGetUserResponseDto> getAllCategoryOrderByNameAsc() {
-        return categoryQueryRepository.findAllOrderByNameAscForUser();
+        return categoryQueryRepository.getAllOrderByNameAscForUser();
     }
 }

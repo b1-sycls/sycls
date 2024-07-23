@@ -2,7 +2,7 @@ package com.b1.category;
 
 import com.b1.category.dto.CategoryGetAdminResponseDto;
 import com.b1.category.entity.Category;
-import com.b1.exception.customexception.CateGoryNotFoundException;
+import com.b1.exception.customexception.CategoryNotFoundException;
 import com.b1.exception.errorcode.CategoryErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +29,12 @@ public class CategoryAdapter {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> {
                     log.error("카테고리를 찾지 못함 | request : {}", categoryId);
-                    return new CateGoryNotFoundException(
+                    return new CategoryNotFoundException(
                             CategoryErrorCode.CATEGORY_NOT_FOUND);
                 });
     }
 
     public List<CategoryGetAdminResponseDto> getAllCategoryOrderByNameAsc() {
-        return categoryQueryRepository.findAllOrderByNameAscForAdmin();
+        return categoryQueryRepository.getAllOrderByNameAscForAdmin();
     }
 }

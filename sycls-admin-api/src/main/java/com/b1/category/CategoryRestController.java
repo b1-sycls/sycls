@@ -1,7 +1,7 @@
 package com.b1.category;
 
+import com.b1.category.dto.CategoryAddRequestDto;
 import com.b1.category.dto.CategoryGetAdminResponseDto;
-import com.b1.category.dto.CategoryRequestDto;
 import com.b1.category.dto.CategoryUpdateRequestDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import jakarta.validation.Valid;
@@ -29,29 +29,31 @@ public class CategoryRestController {
 
     @PostMapping("/categories")
 //    @PreAuthorize("hasRole('ADMIN')") // 시큐리티후 추가
-    public ResponseEntity<RestApiResponseDto> addCategory(
-            @Valid @RequestBody final CategoryRequestDto requestDto) {
+    public ResponseEntity<RestApiResponseDto<String>> addCategory(
+            @Valid @RequestBody final CategoryAddRequestDto requestDto) {
         categoryService.addCategory(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("등록 성공"));
     }
 
     @PatchMapping("/categories/{categoryId}")
-    public ResponseEntity<RestApiResponseDto> updateCategory(@PathVariable Long categoryId,
+    public ResponseEntity<RestApiResponseDto<String>> updateCategory(@PathVariable Long categoryId,
             @Valid @RequestBody final CategoryUpdateRequestDto requestDto) {
         categoryService.updateCategory(categoryId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("수정 성공"));
     }
 
     @DeleteMapping("/categories/{categoryId}")
-    public ResponseEntity<RestApiResponseDto> deleteCategory(@PathVariable Long categoryId) {
-        categoryService.deleteCategory(categoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("삭제 성공"));
+    public ResponseEntity<RestApiResponseDto<String>> disableCategoryStatus(
+            @PathVariable Long categoryId) {
+        categoryService.disableCategoryStatus(categoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("비활성화 성공"));
     }
 
     @PatchMapping("/categories/{categoryId}/reactivate")
-    public ResponseEntity<RestApiResponseDto> reactivateCategory(@PathVariable Long categoryId) {
-        categoryService.reactivateCategory(categoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("복구 성공"));
+    public ResponseEntity<RestApiResponseDto<String>> enableCategoryStatus(
+            @PathVariable Long categoryId) {
+        categoryService.enableCategoryStatus(categoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("활성화 성공"));
     }
 
     @GetMapping("/v1/categories")

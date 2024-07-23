@@ -1,7 +1,7 @@
 package com.b1.category;
 
+import com.b1.category.dto.CategoryAddRequestDto;
 import com.b1.category.dto.CategoryGetAdminResponseDto;
-import com.b1.category.dto.CategoryRequestDto;
 import com.b1.category.dto.CategoryUpdateRequestDto;
 import com.b1.category.entity.Category;
 import com.b1.category.entity.CategoryStatus;
@@ -24,7 +24,7 @@ public class CategoryService {
     private final CategoryAdapter categoryAdapter;
     private final ContentAdapter contentAdapter;
 
-    public void addCategory(CategoryRequestDto requestDto) {
+    public void addCategory(CategoryAddRequestDto requestDto) {
         String name = requestDto.name();
 
         checkCategoryDuplicatedName(name);
@@ -44,7 +44,7 @@ public class CategoryService {
         category.update(name);
     }
 
-    public void deleteCategory(Long categoryId) {
+    public void disableCategoryStatus(Long categoryId) {
         Category category = categoryAdapter.findById(categoryId);
 
         CategoryStatus.checkDisable(category.getStatus());
@@ -57,7 +57,7 @@ public class CategoryService {
         category.disableStatus();
     }
 
-    public void reactivateCategory(Long categoryId) {
+    public void enableCategoryStatus(Long categoryId) {
         Category category = categoryAdapter.findById(categoryId);
 
         CategoryStatus.checkEnable(category.getStatus());
