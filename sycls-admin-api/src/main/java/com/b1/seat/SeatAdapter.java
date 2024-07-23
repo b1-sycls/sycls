@@ -1,5 +1,7 @@
 package com.b1.seat;
 
+import com.b1.exception.customexception.SeatNotFoundException;
+import com.b1.exception.errorcode.SeatErrorCode;
 import com.b1.seat.entity.Seat;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +27,17 @@ public class SeatAdapter {
      */
     public Set<Seat> getAllSeats(final Long placeId) {
         return seatRepository.findByPlaceId(placeId);
+    }
+
+    /**
+     * 좌석 단건조회
+     */
+    public Seat getSeat(Long seatId) {
+        return seatRepository.findById(seatId).orElseThrow(
+                () -> {
+                    log.error("찾을 수 없는 좌석 | {}", seatId);
+                    return new SeatNotFoundException(SeatErrorCode.NOT_FOUND_SEAT);
+                }
+        );
     }
 }

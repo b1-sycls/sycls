@@ -1,6 +1,7 @@
 package com.b1.seat;
 
 import com.b1.place.PlaceAdapter;
+import com.b1.place.dto.SeatUpdateRequestDto;
 import com.b1.place.entity.Place;
 import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
@@ -42,5 +43,14 @@ public class SeatService {
 
         Set<Seat> seatSet = seatAdapter.getAllSeats(placeId);
         return SeatGetAllResponseDto.of(seatSet);
+    }
+
+    /**
+     * 좌석 수정
+     */
+    public Long updateSeat(final Long seatId, final SeatUpdateRequestDto requestDto) {
+        Seat seat = seatAdapter.getSeat(seatId);
+        seat.updateSeat(requestDto.code(), requestDto.status());
+        return seat.getId();
     }
 }

@@ -1,6 +1,7 @@
 package com.b1.seat;
 
 import com.b1.globalresponse.RestApiResponseDto;
+import com.b1.place.dto.SeatUpdateRequestDto;
 import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,9 +45,22 @@ public class SeatRestController {
     public ResponseEntity<RestApiResponseDto<SeatGetAllResponseDto>> getAllSeats(
             @PathVariable final Long placeId
     ) {
-        SeatGetAllResponseDto responseList = seatService.getAllSeats(placeId);
+        SeatGetAllResponseDto response = seatService.getAllSeats(placeId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("등록되었습니다.", responseList));
+                .body(RestApiResponseDto.of("조회되었습니다.", response));
+    }
+
+    /**
+     * 좌석 수정
+     */
+    @PatchMapping("/seats/{seatId}")
+    public ResponseEntity<RestApiResponseDto<Long>> updateSeat(
+            @PathVariable final Long seatId,
+            @Valid @RequestBody final SeatUpdateRequestDto requestDto
+    ) {
+        Long response = seatService.updateSeat(seatId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("수정되었습니다.", response));
     }
 
 }

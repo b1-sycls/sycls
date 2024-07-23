@@ -58,4 +58,11 @@ public class Seat extends TimeStamp {
                 .build();
     }
 
+    /**
+     * 좌석 수정
+     */
+    public void updateSeat(String code, SeatStatus status) {
+        this.code = code;
+        this.status = status;
+    }
 }
