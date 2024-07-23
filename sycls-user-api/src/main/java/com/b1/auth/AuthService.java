@@ -1,6 +1,5 @@
 package com.b1.auth;
 
-import com.b1.auth.entity.EmailVerificationCode;
 import com.b1.auth.repository.EmailVerificationCodeRepository;
 import com.b1.user.UserAdapter;
 import com.b1.user.dto.UserResetPasswordRequestDto;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +26,12 @@ public class AuthService {
     private final EmailVerificationCodeRepository emailVerificationCodeRepository;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public boolean checkDuplicateEmail(String email) {
-        return userAdapter.checkDuplicateEmail(email);
+    public boolean checkEmailExists(String email) {
+        return userAdapter.checkEmailExists(email);
     }
 
-    public boolean checkDuplicateNickname(String nickname) {
-        return userAdapter.checkDuplicateNickname(nickname);
+    public boolean checkNicknameExists(String nickname) {
+        return userAdapter.checkNicknameExists(nickname);
     }
 
     /**
@@ -46,13 +44,17 @@ public class AuthService {
     }
 
     public void saveVerificationCode(String email, String code) {
+        log.info("인증 코드를 Redis에 저장합니다: email={}, code={}", email, code); // 추가된 로깅
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(email, code, Duration.ofMinutes(5)); // 5분간 유효
+        log.info("인증 코드가 저장되었습니다."); // 추가된 로깅
     }
 
     public boolean verifyCode(String email, String code) {
+        log.info("인증 코드를 확인합니다: email={}, code={}", email, code); // 추가된 로깅
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         String storedCode = (String) valueOperations.get(email);
+        log.info("Redis에서 가져온 인증 코드: {}", storedCode); // 추가된 로깅
         return storedCode != null && storedCode.equals(code);
     }
 

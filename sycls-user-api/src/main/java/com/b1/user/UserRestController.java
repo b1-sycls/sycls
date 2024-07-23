@@ -21,7 +21,7 @@ public class UserRestController {
 
     /**
      * 회원가입 기능
-     * request : email, username, nickname, phone_number, password
+     * @param requestDto : email, username, nickname, phone_number, password
      * */
     @PostMapping("/users/signup")
     public ResponseEntity<RestApiResponseDto<String>> signup(@Valid @RequestBody UserSignupRequestDto requestDto) {
@@ -34,7 +34,8 @@ public class UserRestController {
 
     /**
      * 회원탈퇴 기능
-     * request : password
+     * @param requestDto : password
+     * @param userDetails : security filter 를 거친 UserDetailsImpl
      * */
     @DeleteMapping("/users/resign")
     public ResponseEntity<RestApiResponseDto<String>> signup(@Valid @RequestBody UserResignRequestDto requestDto,

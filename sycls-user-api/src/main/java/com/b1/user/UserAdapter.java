@@ -1,6 +1,5 @@
 package com.b1.user;
 
-import com.b1.exception.customexception.UserNicknameDuplicatedException;
 import com.b1.exception.customexception.UserNotFoundException;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.user.entity.User;
@@ -26,11 +25,11 @@ public class UserAdapter {
         });
     }
 
-    public boolean checkDuplicateEmail(String email) {
+    public boolean checkEmailExists(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    public boolean checkDuplicateNickname(String nickname) {
+    public boolean checkNicknameExists(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
 

@@ -71,6 +71,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/v1/auth/login").permitAll()
                         //임시 권한 수정
                         .requestMatchers("/v1/users/**").permitAll()
+                        .requestMatchers("/v1/auth/**").permitAll()
 
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()

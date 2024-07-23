@@ -6,7 +6,6 @@ import com.b1.exception.customexception.UserIncorrectPasswordException;
 import com.b1.exception.customexception.UserNicknameDuplicatedException;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.UserDetailsImpl;
-import com.b1.user.dto.UserResetPasswordRequestDto;
 import com.b1.user.dto.UserResignRequestDto;
 import com.b1.user.dto.UserSignupRequestDto;
 import com.b1.user.entity.User;
@@ -29,13 +28,13 @@ public class UserService {
 
     public void signup(UserSignupRequestDto requestDto) {
         // 이메일 중복 검사
-        if (userAdapter.checkDuplicateEmail(requestDto.email())) {
+        if (userAdapter.checkEmailExists(requestDto.email())) {
             log.error("이메일 중복 | email : {}", requestDto.email());
             throw new UserEmailDuplicatedException(UserErrorCode.USER_EMAIL_ALREADY_EXISTS);
         }
 
         // 닉네임 중복 검사
-        if (userAdapter.checkDuplicateNickname(requestDto.nickname())) {
+        if (userAdapter.checkNicknameExists(requestDto.nickname())) {
             log.error("닉네임 중복 | nickname : {}", requestDto.nickname());
             throw new UserNicknameDuplicatedException(UserErrorCode.USER_NICKNAME_ALREADY_EXISTS);
         }
