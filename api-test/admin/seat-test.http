@@ -1,0 +1,13 @@
+### POST 좌석 등록
+POST http://localhost:8081/v1/places/1/seats
+Content-Type: application/json
+
+{
+  "codeList": [
+    "a1",
+    "a2",
+    "a3",
+    "a4"
+  ]
+}
+

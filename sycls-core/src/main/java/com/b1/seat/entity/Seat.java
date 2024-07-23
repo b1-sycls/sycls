@@ -46,4 +46,16 @@ public class Seat extends TimeStamp {
         this.status = status;
         this.place = place;
     }
+
+    /**
+     * 좌석 생성
+     */
+    public static Seat addSeat(String code, Place place) {
+        return Seat.builder()
+                .code(code)
+                .status(SeatStatus.ENABLE)
+                .place(place)
+                .build();
+    }
+
 }
