@@ -62,4 +62,18 @@ public class Round {
         this.content = content;
         this.place = place;
     }
+
+    public static Round addRound(Integer sequence, LocalDate startDate, LocalTime startTime,
+            LocalTime endTime,
+            RoundStatus status, Content content, Place place) {
+        return Round.builder()
+                .sequence(sequence)
+                .startDate(startDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .status(status)
+                .content(content)
+                .place(place)
+                .build();
+    }
 }

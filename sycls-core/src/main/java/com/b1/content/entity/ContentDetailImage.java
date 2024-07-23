@@ -45,4 +45,13 @@ public class ContentDetailImage {
         this.status = status;
         this.content = content;
     }
+
+    public static ContentDetailImage addContentDetailImage(String detailImagePath,
+            Content content) {
+        return ContentDetailImage.builder()
+                .detailImagePath(detailImagePath)
+                .status(ContentDetailImageStatus.ENABLE)
+                .content(content)
+                .build();
+    }
 }

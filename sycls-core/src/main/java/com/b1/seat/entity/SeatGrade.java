@@ -1,8 +1,10 @@
 package com.b1.seat.entity;
 
-import com.b1.content.entity.Content;
+import com.b1.content.entity.Round;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,12 +29,14 @@ public class SeatGrade {
     private Long id;
 
     @Column(nullable = false, length = 10)
-    private String grade;
+    @Enumerated(EnumType.STRING)
+    private SeatGradeType grade;
 
     @Column(nullable = false)
     private Integer price;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private SeatGradeStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,21 +44,31 @@ public class SeatGrade {
     private Seat seat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "content_id", nullable = false)
-    private Content content;
+    @JoinColumn(name = "round_id", nullable = false)
+    private Round round;
 
     @Column(name = "ticket_id")
     private Long ticketId;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private SeatGrade(String grade, Integer price, SeatGradeStatus status, Seat seat,
-            Content content,
-            Long ticketId) {
+    private SeatGrade(SeatGradeType grade, Integer price, SeatGradeStatus status, Seat seat,
+            Round round, Long ticketId) {
         this.grade = grade;
         this.price = price;
         this.status = status;
         this.seat = seat;
-        this.content = content;
+        this.round = round;
         this.ticketId = ticketId;
+    }
+
+    public static SeatGrade addSeatGrade(SeatGradeType grade, Integer price, Seat seat,
+            Round round) {
+        return SeatGrade.builder()
+                .grade(grade)
+                .price(price)
+                .seat(seat)
+                .round(round)
+                .status(SeatGradeStatus.ENABLE)
+                .build();
     }
 }

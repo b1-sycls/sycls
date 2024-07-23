@@ -2,7 +2,6 @@ package com.b1.content.entity;
 
 import com.b1.category.entity.Category;
 import com.b1.common.TimeStamp;
-import com.b1.place.entity.Place;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,17 +43,37 @@ public class Content extends TimeStamp {
     @OneToMany(mappedBy = "content", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "content", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<Round> roundList = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Content(String title, String description, String mainImagePath,
-            List<ContentDetailImage> contentDetailImageList, Category category, Place place) {
+    private Content(String title, String description, Category category) {
         this.title = title;
         this.description = description;
-        this.mainImagePath = mainImagePath;
-        this.contentDetailImageList = contentDetailImageList;
         this.category = category;
+    }
+
+    public static Content addContent(String title, String description, Category category) {
+        return Content.builder()
+                .title(title)
+                .description(description)
+                .category(category)
+                .build();
+    }
+
+    public void addMainImagePath(String mainImagePath) {
+        this.mainImagePath = mainImagePath;
+    }
+
+    public void addRoundList(List<Round> roundList) {
+        this.roundList = roundList;
+    }
+
+    public void addContentDetailImageList(List<ContentDetailImage> contentDetailImageList) {
+        this.contentDetailImageList = contentDetailImageList;
     }
 }

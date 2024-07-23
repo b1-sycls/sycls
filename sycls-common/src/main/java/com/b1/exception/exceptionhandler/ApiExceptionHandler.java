@@ -2,6 +2,9 @@ package com.b1.exception.exceptionhandler;
 
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
 import com.b1.exception.customexception.global.GlobalEntityInUseException;
+import com.b1.exception.customexception.global.GlobalInvalidException;
+import com.b1.exception.customexception.global.GlobalLoadingException;
+import com.b1.exception.customexception.global.GlobalMissingException;
 import com.b1.exception.customexception.global.GlobalNotFoundException;
 import com.b1.exception.customexception.global.GlobalStatusException;
 import com.b1.exception.errorcode.ErrorCode;
@@ -49,6 +52,24 @@ public class ApiExceptionHandler {
     protected ResponseEntity<ErrorResponseDto> globalStatusException(
             GlobalStatusException e) {
         log.error("GlobalStatusException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalInvalidException.class)
+    protected ResponseEntity<ErrorResponseDto> globalInvalidException(GlobalInvalidException e) {
+        log.error("GlobalInvalidException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalMissingException.class)
+    protected ResponseEntity<ErrorResponseDto> globalMissingException(GlobalMissingException e) {
+        log.error("GlobalMissingException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalLoadingException.class)
+    protected ResponseEntity<ErrorResponseDto> globalLoadingException(GlobalLoadingException e) {
+        log.error("GlobalLoadingException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 }

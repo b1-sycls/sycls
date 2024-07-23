@@ -8,6 +8,9 @@ dependencies {
     //	implementation 'org.springframework.boot:spring-boot-starter-security'
     //	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
+    // aws - S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
     //	testImplementation 'org.springframework.security:spring-security-test'
     implementation project(':sycls-core')
     implementation project(':sycls-common')
