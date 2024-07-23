@@ -38,11 +38,11 @@ public class Review extends TimeStamp {
     private ReviewStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "content_id")
+    @JoinColumn(name = "content_id", nullable = false)
     private Content content;
 
     @Builder(access = AccessLevel.PRIVATE)

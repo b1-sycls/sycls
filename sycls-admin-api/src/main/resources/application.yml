@@ -2,5 +2,6 @@ spring:
   profiles:
     include:
       - core
+
 server:
   port: 8081

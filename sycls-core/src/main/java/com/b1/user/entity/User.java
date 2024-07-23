@@ -1,23 +1,18 @@
 package com.b1.user.entity;
 
 import com.b1.common.TimeStamp;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User extends TimeStamp {
 
     @Id
@@ -34,7 +29,7 @@ public class User extends TimeStamp {
     @Column(nullable = false, unique = true, length = 20)
     private String nickname;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 255)
     private String password;
 
     @Column(nullable = false, length = 20)
@@ -54,8 +49,7 @@ public class User extends TimeStamp {
 
     @Builder(access = AccessLevel.PRIVATE)
     private User(String email, String username, String nickname, String password,
-            String phoneNumber,
-            UserStatus status, UserLoginType type, UserRole role) {
+                 String phoneNumber, UserStatus status, UserLoginType type, UserRole role) {
         this.email = email;
         this.username = username;
         this.nickname = nickname;
@@ -64,6 +58,20 @@ public class User extends TimeStamp {
         this.status = status;
         this.type = type;
         this.role = role;
+    }
+
+    public static User addCustomer(String email, String username, String nickname, String password,
+                                   String phoneNumber) {
+        return User.builder()
+                .email(email)
+                .username(username)
+                .nickname(nickname)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .status(UserStatus.ACTIVE)
+                .type(UserLoginType.COMMON)
+                .role(UserRole.USER)
+                .build();
     }
 
 }
