@@ -5,6 +5,7 @@ import com.b1.place.dto.SeatUpdateRequestDto;
 import com.b1.place.entity.Place;
 import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
+import com.b1.seat.dto.SeatGetResponseDto;
 import com.b1.seat.entity.Seat;
 import com.b1.seat.entity.SeatStatus;
 import java.util.Set;
@@ -44,6 +45,14 @@ public class SeatService {
 
         Set<Seat> seatSet = seatAdapter.getAllSeats(placeId);
         return SeatGetAllResponseDto.of(seatSet);
+    }
+
+    /**
+     * 좌석의 상세정보(단건) 조회
+     */
+    public SeatGetResponseDto getSeat(final Long seatId) {
+        Seat seat = seatAdapter.getSeat(seatId);
+        return SeatGetResponseDto.of(seat);
     }
 
     /**

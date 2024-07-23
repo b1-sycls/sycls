@@ -4,6 +4,7 @@ import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.place.dto.SeatUpdateRequestDto;
 import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
+import com.b1.seat.dto.SeatGetResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,18 @@ public class SeatRestController {
             @PathVariable final Long placeId
     ) {
         SeatGetAllResponseDto response = seatService.getAllSeats(placeId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("조회되었습니다.", response));
+    }
+
+    /**
+     * 좌석의 상세정보(단건) 조회
+     */
+    @GetMapping("/seats/{seatId}")
+    public ResponseEntity<RestApiResponseDto<SeatGetResponseDto>> getSeat(
+            @PathVariable final Long seatId
+    ) {
+        SeatGetResponseDto response = seatService.getSeat(seatId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("조회되었습니다.", response));
     }

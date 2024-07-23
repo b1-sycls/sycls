@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j(topic = "")
+@Slf4j(topic = "Seat Status")
 @Getter
 @RequiredArgsConstructor
 public enum SeatStatus {
