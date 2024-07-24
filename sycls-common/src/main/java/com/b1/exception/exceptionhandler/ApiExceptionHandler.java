@@ -6,6 +6,7 @@ import com.b1.exception.customexception.global.GlobalInvalidException;
 import com.b1.exception.customexception.global.GlobalLoadingException;
 import com.b1.exception.customexception.global.GlobalMissingException;
 import com.b1.exception.customexception.global.GlobalNotFoundException;
+import com.b1.exception.customexception.global.GlobalReservationException;
 import com.b1.exception.customexception.global.GlobalStatusException;
 import com.b1.exception.errorcode.ErrorCode;
 import com.b1.globalresponse.ErrorResponseDto;
@@ -70,6 +71,13 @@ public class ApiExceptionHandler {
     @ExceptionHandler(GlobalLoadingException.class)
     protected ResponseEntity<ErrorResponseDto> globalLoadingException(GlobalLoadingException e) {
         log.error("GlobalLoadingException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalReservationException.class)
+    protected ResponseEntity<ErrorResponseDto> globalReservationException(
+            GlobalReservationException e) {
+        log.error("GlobalReservationException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 }

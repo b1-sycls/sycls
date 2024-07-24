@@ -36,6 +36,7 @@ public class ContentService {
     private final PlaceHelper placeHelper;
     private final SeatHelper seatHelper;
     private final SeatGradeAdapter seatGradeAdapter;
+    private final RoundHelper roundHelper;
     private final S3Uploader s3Uploader;
 
     public void addContent(ContentAddRequestDto requestDto, MultipartFile mainImage,
@@ -55,7 +56,8 @@ public class ContentService {
         for (RoundInfoDto infoDto : requestDto.roundInfoDtoList()) {
             Place place = placeHelper.getPlace(infoDto.placeId());
 
-            // 장소에 대한 시간검증
+            roundHelper.checkContentConflictingReservation(place.getId(), infoDto.startDate(),
+                    infoDto.startTime(), infoDto.endTime());
 
             Round round = Round.addRound(
                     infoDto.sequence(),
