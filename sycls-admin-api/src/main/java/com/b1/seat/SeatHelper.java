@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-@Slf4j(topic = "Seat Adapter")
+@Slf4j(topic = "Seat Helper")
 @Component
 @RequiredArgsConstructor
 public class SeatHelper {
