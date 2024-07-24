@@ -1,5 +1,20 @@
 @roundId = 1
 
+### 회차 등록
+POST http://localhost:8081/v1/rounds
+Content-Type: application/json
+
+{
+  "contentId": 1,
+  "placeId": 1,
+  "sequence": 1,
+  "status": "WAITING",
+  "startDate": "2024-09-05",
+  "startTime": "05:00",
+  "endTime": "06:00"
+}
+
+
 ### 회차 상태 수정
 PATCH http://localhost:8081/v1/rounds/{{roundId}}/status
 Content-Type: application/json

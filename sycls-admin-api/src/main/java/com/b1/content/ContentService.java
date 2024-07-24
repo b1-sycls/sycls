@@ -61,7 +61,7 @@ public class ContentService {
     public void updateContent(Long contentId, ContentUpdateRequestDto requestDto,
             MultipartFile mainImage, MultipartFile[] detailImages) {
 
-        Content content = contentHelper.findById(contentId);
+        Content content = contentHelper.getContent(contentId);
 
         Category category = categoryHelper.findById(requestDto.categoryId());
 
@@ -94,7 +94,7 @@ public class ContentService {
 
     public void updateContentStatus(Long contentId, ContentUpdateStatusRequestDto requestDto) {
 
-        Content content = contentHelper.findById(contentId);
+        Content content = contentHelper.getContent(contentId);
 
         if (content.getStatus() == requestDto.status()) {
             log.error("공연의 상태가 동일 | contentId : {}", contentId);

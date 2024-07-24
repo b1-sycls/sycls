@@ -57,14 +57,14 @@ public class Round {
 
     @Builder(access = AccessLevel.PRIVATE)
     private Round(Integer sequence, LocalDate startDate, LocalTime startTime, LocalTime endTime,
-            RoundStatus status, Content content, Place place) {
+            Content content, Place place, RoundStatus status) {
         this.sequence = sequence;
         this.startDate = startDate;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.status = status;
         this.content = content;
         this.place = place;
+        this.status = status;
     }
 
     public static Round addRound(Integer sequence, LocalDate startDate, LocalTime startTime,

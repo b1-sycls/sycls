@@ -1,6 +1,7 @@
 package com.b1.round;
 
 import com.b1.globalresponse.RestApiResponseDto;
+import com.b1.round.dto.RoundAddRequestDto;
 import com.b1.round.dto.RoundUpdateRequestDto;
 import com.b1.round.dto.RoundUpdateStatusRequestDto;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,13 @@ public class RoundRestController {
 
     private final RoundService roundService;
 
+    @PostMapping("/rounds")
+    public ResponseEntity<RestApiResponseDto<String>> addRound(
+            @Valid @RequestBody RoundAddRequestDto requestDto) {
+        roundService.addRound(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("등록 성공"));
+    }
+
     @PatchMapping("/rounds/{roundId}/status")
     public ResponseEntity<RestApiResponseDto<String>> updateRoundStatus(@PathVariable Long roundId,
             @Valid @RequestBody RoundUpdateStatusRequestDto requestDto) {
@@ -33,7 +42,7 @@ public class RoundRestController {
     public ResponseEntity<RestApiResponseDto<String>> updateRound(
             @PathVariable Long roundId, @Valid @RequestBody RoundUpdateRequestDto requestDto) {
         roundService.updateRound(roundId, requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("회차 수정 성공"));
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("정보 수정 성공"));
     }
 
 }

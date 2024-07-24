@@ -25,7 +25,7 @@ public class ContentHelper {
         contentRepository.save(content);
     }
 
-    public Content findById(Long contentId) {
+    public Content getContent(Long contentId) {
         return contentRepository.findById(contentId)
                 .orElseThrow(
                         () -> new ContentNotFoundException(ContentErrorCode.CONTENT_NOT_FOUND));
