@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ContentAdapter {
+public class ContentHelper {
 
     private final ContentRepository contentRepository;
 

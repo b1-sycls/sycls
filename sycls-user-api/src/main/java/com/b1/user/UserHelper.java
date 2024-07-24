@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j(topic = "User Adapter")
 @Component
 @RequiredArgsConstructor
-public class UserAdapter {
+public class UserHelper {
 
     private final UserRepository userRepository;
 

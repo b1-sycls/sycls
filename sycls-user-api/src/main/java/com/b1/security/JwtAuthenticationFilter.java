@@ -1,8 +1,7 @@
 package com.b1.security;
 
-import com.b1.user.UserAdapter;
+import com.b1.user.UserHelper;
 import com.b1.user.dto.UserLoginRequestDto;
-import com.b1.user.UserRepository;
 import com.b1.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -20,11 +19,11 @@ import java.io.IOException;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtProvider jwtProvider;
-    private final UserAdapter userAdapter;
+    private final UserHelper userHelper;
 
-    public JwtAuthenticationFilter(JwtProvider jwtProvider, UserAdapter userAdapter) {
+    public JwtAuthenticationFilter(JwtProvider jwtProvider, UserHelper userHelper) {
         this.jwtProvider = jwtProvider;
-        this.userAdapter = userAdapter;
+        this.userHelper = userHelper;
         setFilterProcessesUrl("/v1/auth/login");
     }
 
@@ -34,7 +33,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try{
             UserLoginRequestDto loginRequestDto = new ObjectMapper().readValue(request.getInputStream(), UserLoginRequestDto.class);
 
-            User user = userAdapter.findByEmail(loginRequestDto.email());
+            User user = userHelper.findByEmail(loginRequestDto.email());
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(

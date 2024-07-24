@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j(topic = "Category Adapter")
 @Component
 @RequiredArgsConstructor
-public class CategoryAdapter {
+public class CategoryHelper {
 
     private final CategoryQueryRepository categoryQueryRepository;
 

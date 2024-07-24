@@ -22,19 +22,19 @@ import org.springframework.stereotype.Service;
 @Slf4j(topic = "User Service")
 public class UserService {
 
-    private final UserAdapter userAdapter;
+    private final UserHelper userHelper;
 
     private final PasswordEncoder passwordEncoder;
 
     public void signup(UserSignupRequestDto requestDto) {
         // 이메일 중복 검사
-        if (userAdapter.checkEmailExists(requestDto.email())) {
+        if (userHelper.checkEmailExists(requestDto.email())) {
             log.error("이메일 중복 | email : {}", requestDto.email());
             throw new UserEmailDuplicatedException(UserErrorCode.USER_EMAIL_ALREADY_EXISTS);
         }
 
         // 닉네임 중복 검사
-        if (userAdapter.checkNicknameExists(requestDto.nickname())) {
+        if (userHelper.checkNicknameExists(requestDto.nickname())) {
             log.error("닉네임 중복 | nickname : {}", requestDto.nickname());
             throw new UserNicknameDuplicatedException(UserErrorCode.USER_NICKNAME_ALREADY_EXISTS);
         }
@@ -47,11 +47,11 @@ public class UserService {
                 requestDto.phoneNumber()
         );
 
-        userAdapter.addUser(user);
+        userHelper.addUser(user);
     }
 
     public void resign(UserResignRequestDto requestDto, UserDetailsImpl user) {
-        User getUser = userAdapter.findByEmail(user.getEmail());
+        User getUser = userHelper.findByEmail(user.getEmail());
         if (getUser.getStatus() == UserStatus.DELETED) {
             log.error("이미 삭제된 유저 | request : {}", getUser.getId());
             throw new UserAlreadyDeletedException(UserErrorCode.USER_ALREADY_DELETED);
