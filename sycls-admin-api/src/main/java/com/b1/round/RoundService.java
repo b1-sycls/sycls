@@ -83,10 +83,7 @@ public class RoundService {
 
         Round round = roundHelper.findById(roundId);
 
-        if (round.getStatus() == RoundStatus.CLOSED) {
-            log.error("해당 회차가 이미 닫혀있는 상태 roundId : {}", round.getId());
-            throw new RoundStatusEqualsException(RoundErrorCode.STATUS_ALREADY_CLOSED);
-        }
+        RoundStatus.checkClosed(round.getStatus());
 
         final Long placeId = round.getPlace().getId();
 
