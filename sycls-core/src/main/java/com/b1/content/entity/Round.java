@@ -76,4 +76,8 @@ public class Round {
                 .place(place)
                 .build();
     }
+
+    public void updateStatus(RoundStatus status) {
+        this.status = status;
+    }
 }

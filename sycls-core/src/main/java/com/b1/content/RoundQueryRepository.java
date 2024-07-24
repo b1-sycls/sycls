@@ -1,6 +1,7 @@
 package com.b1.content;
 
 import com.b1.content.entity.QRound;
+import com.b1.content.entity.RoundStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,6 +23,7 @@ public class RoundQueryRepository {
         Integer fetchCount = queryFactory.selectOne()
                 .from(round)
                 .where(round.place.id.eq(placeId)
+                        .and(round.status.in(RoundStatus.AVAILABLE, RoundStatus.WAITING))
                         .and(round.startDate.eq(startDate))
                         .and(round.startTime.lt(endTime).and(round.endTime.gt(startTime)))
                 ).fetchFirst();

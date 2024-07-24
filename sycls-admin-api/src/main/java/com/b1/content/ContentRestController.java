@@ -44,4 +44,6 @@ public class ContentRestController {
         contentService.updateContent(contentId, requestDto, mainImage, detailImages);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("수정 성공"));
     }
+
+    
 }
