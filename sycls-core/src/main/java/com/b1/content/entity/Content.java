@@ -5,6 +5,8 @@ import com.b1.common.TimeStamp;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,7 +42,9 @@ public class Content extends TimeStamp {
     @Column(nullable = false, length = 300)
     private String mainImagePath;
 
-    //TODO 상태추가하기
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ContentStatus status;
 
     @OneToMany(mappedBy = "content", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
@@ -50,10 +54,11 @@ public class Content extends TimeStamp {
     private Category category;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Content(String title, String description, Category category) {
+    private Content(String title, String description, Category category, ContentStatus status) {
         this.title = title;
         this.description = description;
         this.category = category;
+        this.status = status;
     }
 
     public static Content addContent(String title, String description, Category category) {
@@ -61,6 +66,7 @@ public class Content extends TimeStamp {
                 .title(title)
                 .description(description)
                 .category(category)
+                .status(ContentStatus.HIDDEN)
                 .build();
     }
 
@@ -79,5 +85,9 @@ public class Content extends TimeStamp {
 
     public void addContentDetailImageList(List<ContentDetailImage> contentDetailImageList) {
         this.contentDetailImageList = contentDetailImageList;
+    }
+
+    public void updateStatus(ContentStatus status) {
+        this.status = status;
     }
 }

@@ -1,0 +1,9 @@
+@contentId = 1
+
+### 공연 상태 수정
+PATCH http://localhost:8081/v1/contents/{{contentId}}/status
+Content-Type: application/json
+
+{
+  "status": "VISIBLE"
+}

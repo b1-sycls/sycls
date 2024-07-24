@@ -30,7 +30,8 @@ public class RoundService {
         Round round = roundHelper.findById(roundId);
 
         if (round.getStatus() == requestDto.status()) {
-            throw new RoundStatusEqualsException(RoundErrorCode.STATUS_EQUALS);
+            log.error("회차 스테이터스 동일 오류 | roundId : {}", roundId);
+            throw new RoundStatusEqualsException(RoundErrorCode.ROUND_STATUS_EQUALS);
         }
 
         round.updateStatus(requestDto.status());
@@ -84,12 +85,14 @@ public class RoundService {
         LocalDate today = LocalDate.now();
 
         if (startDate.isBefore(today)) {
+            log.error("공연 날짜가 과거일 수 없음 | date : {}", startDate);
             throw new InvalidDateException(RoundErrorCode.INVALID_DATE);
         }
     }
 
     private void checkEndTimeAfterStartTime(LocalTime startTime, LocalTime endTime) {
         if (endTime.isBefore(startTime)) {
+            log.error("시작시간이 종료시간보다 늦을 수 없음");
             throw new InvalidTimeException(RoundErrorCode.INVALID_TIME);
         }
     }

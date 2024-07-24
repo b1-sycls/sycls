@@ -2,6 +2,7 @@ package com.b1.content;
 
 import com.b1.content.dto.ContentAddRequestDto;
 import com.b1.content.dto.ContentUpdateRequestDto;
+import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,8 +44,15 @@ public class ContentRestController {
             @RequestPart(value = "detailImages", required = false) MultipartFile[] detailImages
     ) {
         contentService.updateContent(contentId, requestDto, mainImage, detailImages);
-        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("수정 성공"));
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("정보 수정 성공"));
     }
 
-    
+    @PatchMapping("/contents/{contentId}/status")
+    public ResponseEntity<RestApiResponseDto<String>> updateContentStatus(
+            @PathVariable Long contentId,
+            @Valid @RequestBody ContentUpdateStatusRequestDto requestDto
+    ) {
+        contentService.updateContentStatus(contentId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("상태 수정 성공"));
+    }
 }

@@ -5,8 +5,11 @@ import com.b1.category.CategoryHelper;
 import com.b1.category.entity.Category;
 import com.b1.content.dto.ContentAddRequestDto;
 import com.b1.content.dto.ContentUpdateRequestDto;
+import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
+import com.b1.exception.customexception.ContentStatusEqualsException;
+import com.b1.exception.errorcode.ContentErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +28,6 @@ public class ContentService {
     private final CategoryHelper categoryHelper;
     private final S3Uploader s3Uploader;
 
-    // TODO 상태추가후 로직 추가
     public void addContent(ContentAddRequestDto requestDto, MultipartFile mainImage,
             MultipartFile[] detailImages) {
 
@@ -88,6 +90,18 @@ public class ContentService {
 
         content.updateContent(category, requestDto.title(), requestDto.description(),
                 contentMainImagePath, detailImageList);
+    }
+
+    public void updateContentStatus(Long contentId, ContentUpdateStatusRequestDto requestDto) {
+
+        Content content = contentHelper.findById(contentId);
+
+        if (content.getStatus() == requestDto.status()) {
+            log.error("공연의 상태가 동일 | contentId : {}", contentId);
+            throw new ContentStatusEqualsException(ContentErrorCode.CONTENT_STATUS_EQUALS);
+        }
+
+        content.updateStatus(requestDto.status());
     }
 
     private List<ContentDetailImage> getContentDetailImages(List<String> detailImageList,

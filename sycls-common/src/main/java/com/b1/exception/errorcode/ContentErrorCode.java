@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ContentErrorCode implements ErrorCode {
 
     CONTENT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "공연 정보를 찾지 못하였습니다."),
+    CONTENT_STATUS_EQUALS(HttpStatus.BAD_REQUEST.value(), "공연의 상태가 동일합니다"),
     ;
 
     private final Integer httpStatusCode;
