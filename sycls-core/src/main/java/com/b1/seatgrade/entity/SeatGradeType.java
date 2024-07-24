@@ -1,4 +1,4 @@
-package com.b1.seat.entity;
+package com.b1.seatgrade.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

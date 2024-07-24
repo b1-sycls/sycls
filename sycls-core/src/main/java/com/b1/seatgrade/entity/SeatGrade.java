@@ -1,6 +1,7 @@
-package com.b1.seat.entity;
+package com.b1.seatgrade.entity;
 
-import com.b1.content.entity.Round;
+import com.b1.round.entity.Round;
+import com.b1.seat.entity.Seat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -70,5 +71,10 @@ public class SeatGrade {
                 .round(round)
                 .status(SeatGradeStatus.ENABLE)
                 .build();
+    }
+
+    public void updateSeatGrade(SeatGradeType grade, Integer price) {
+        this.grade = grade;
+        this.price = price;
     }
 }

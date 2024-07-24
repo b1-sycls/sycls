@@ -1,7 +1,8 @@
-package com.b1.content;
+package com.b1.round;
 
-import com.b1.content.dto.RoundUpdateStatusRequestDto;
 import com.b1.globalresponse.RestApiResponseDto;
+import com.b1.round.dto.RoundUpdateRequestDto;
+import com.b1.round.dto.RoundUpdateStatusRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +22,18 @@ public class RoundRestController {
 
     private final RoundService roundService;
 
-    @PatchMapping("/rounds/{roundId}")
-    public ResponseEntity<RestApiResponseDto<String>> updateStatus(
-            @PathVariable Long roundId, @Valid @RequestBody RoundUpdateStatusRequestDto requestDto
-    ) {
-        roundService.updateStatus(roundId, requestDto);
+    @PatchMapping("/rounds/{roundId}/status")
+    public ResponseEntity<RestApiResponseDto<String>> updateRoundStatus(@PathVariable Long roundId,
+            @Valid @RequestBody RoundUpdateStatusRequestDto requestDto) {
+        roundService.updateRoundStatus(roundId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("상태 수정 성공"));
     }
+
+    @PatchMapping("/rounds/{roundId}")
+    public ResponseEntity<RestApiResponseDto<String>> updateRound(
+            @PathVariable Long roundId, @Valid @RequestBody RoundUpdateRequestDto requestDto) {
+        roundService.updateRound(roundId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("회차 수정 성공"));
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.b1.seat.entity;
 
+import com.b1.seatgrade.entity.SeatGrade;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

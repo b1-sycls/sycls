@@ -40,11 +40,10 @@ public class Content extends TimeStamp {
     @Column(nullable = false, length = 300)
     private String mainImagePath;
 
-    @OneToMany(mappedBy = "content", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
+    //TODO 상태추가하기
 
     @OneToMany(mappedBy = "content", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<Round> roundList = new ArrayList<>();
+    private List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -76,10 +75,6 @@ public class Content extends TimeStamp {
 
     public void addMainImagePath(String mainImagePath) {
         this.mainImagePath = mainImagePath;
-    }
-
-    public void addRoundList(List<Round> roundList) {
-        this.roundList = roundList;
     }
 
     public void addContentDetailImageList(List<ContentDetailImage> contentDetailImageList) {

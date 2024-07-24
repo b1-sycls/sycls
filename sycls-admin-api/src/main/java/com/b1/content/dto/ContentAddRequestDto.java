@@ -3,7 +3,6 @@ package com.b1.content.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.util.List;
 
 public record ContentAddRequestDto(
 
@@ -15,9 +14,7 @@ public record ContentAddRequestDto(
         String title,
 
         @Size(max = 50, message = "공연 설명은 50자 이하여야 합니다.")
-        String description,
-
-        List<RoundInfoDto> roundInfoDtoList
+        String description
 ) {
 
 }

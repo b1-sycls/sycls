@@ -1,8 +1,7 @@
-package com.b1.content.dto;
+package com.b1.round.dto;
 
-import com.b1.content.entity.RoundStatus;
+import com.b1.round.entity.RoundStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -35,15 +34,15 @@ public record RoundInfoDto(
         @NotNull(message = "회차 상태는 누락될 수 없습니다.")
         RoundStatus status,
 
-        @NotBlank(message = "공연 날짜는 누락될 수 없습니다.")
+        @NotNull(message = "공연 날짜는 누락될 수 없습니다.")
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate startDate,
 
-        @NotBlank(message = "공연 시작 시간은 누락될 수 없습니다.")
+        @NotNull(message = "공연 시작 시간은 누락될 수 없습니다.")
         @JsonFormat(pattern = "HH:mm")
         LocalTime startTime,
 
-        @NotBlank(message = "공연 종료 시간은 누락될 수 없습니다.")
+        @NotNull(message = "공연 종료 시간은 누락될 수 없습니다.")
         @JsonFormat(pattern = "HH:mm")
         LocalTime endTime
 ) {

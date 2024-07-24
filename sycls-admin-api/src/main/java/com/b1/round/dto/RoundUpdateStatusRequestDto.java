@@ -1,6 +1,6 @@
-package com.b1.content.dto;
+package com.b1.round.dto;
 
-import com.b1.content.entity.RoundStatus;
+import com.b1.round.entity.RoundStatus;
 import jakarta.validation.constraints.NotNull;
 
 public record RoundUpdateStatusRequestDto(

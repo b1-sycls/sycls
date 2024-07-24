@@ -1,8 +1,11 @@
-package com.b1.content.entity;
+package com.b1.round.entity;
 
+import com.b1.content.entity.Content;
 import com.b1.place.entity.Place;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,6 +44,7 @@ public class Round {
     private LocalTime endTime;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private RoundStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -79,5 +83,11 @@ public class Round {
 
     public void updateStatus(RoundStatus status) {
         this.status = status;
+    }
+
+    public void updateDateAndTime(LocalDate startDate, LocalTime startTime, LocalTime endTime) {
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 }

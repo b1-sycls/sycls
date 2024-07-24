@@ -34,6 +34,7 @@ public class CategoryService {
         categoryHelper.saveCategory(category);
     }
 
+    // TODO 업데이트에 상태변화 api 합치기
     public void updateCategory(Long categoryId, CategoryUpdateRequestDto requestDto) {
         String name = requestDto.name();
 

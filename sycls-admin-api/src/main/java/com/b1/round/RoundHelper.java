@@ -1,11 +1,12 @@
-package com.b1.content;
+package com.b1.round;
 
-import com.b1.content.entity.Round;
 import com.b1.exception.customexception.CategoryNameDuplicatedException;
 import com.b1.exception.customexception.RoundNotFoundException;
 import com.b1.exception.errorcode.RoundErrorCode;
+import com.b1.round.entity.Round;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -29,5 +30,9 @@ public class RoundHelper {
     public Round findById(Long roundId) {
         return roundRepository.findById(roundId)
                 .orElseThrow(() -> new RoundNotFoundException(RoundErrorCode.ROUND_NOT_FOUND));
+    }
+
+    public List<Round> getAllRoundsByPlaceId(Long placeId, LocalDate startDate) {
+        return queryRepository.getAllRoundsByPlaceId(placeId, startDate);
     }
 }

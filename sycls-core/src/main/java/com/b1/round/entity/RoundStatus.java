@@ -1,4 +1,4 @@
-package com.b1.content.entity;
+package com.b1.round.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

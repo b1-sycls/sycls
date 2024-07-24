@@ -5,26 +5,10 @@ import com.b1.category.CategoryHelper;
 import com.b1.category.entity.Category;
 import com.b1.content.dto.ContentAddRequestDto;
 import com.b1.content.dto.ContentUpdateRequestDto;
-import com.b1.content.dto.RoundInfoDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
-import com.b1.content.entity.Round;
-import com.b1.exception.customexception.InvalidDateException;
-import com.b1.exception.customexception.InvalidTimeException;
-import com.b1.exception.errorcode.RoundErrorCode;
-import com.b1.place.PlaceHelper;
-import com.b1.place.entity.Place;
-import com.b1.seat.SeatGradeHelper;
-import com.b1.seat.SeatHelper;
-import com.b1.seat.entity.Seat;
-import com.b1.seat.entity.SeatGrade;
-import com.b1.seat.entity.SeatGradeType;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,12 +23,9 @@ public class ContentService {
 
     private final ContentHelper contentHelper;
     private final CategoryHelper categoryHelper;
-    private final PlaceHelper placeHelper;
-    private final SeatHelper seatHelper;
-    private final SeatGradeHelper seatGradeHelper;
-    private final RoundHelper roundHelper;
     private final S3Uploader s3Uploader;
 
+    // TODO 상태추가후 로직 추가
     public void addContent(ContentAddRequestDto requestDto, MultipartFile mainImage,
             MultipartFile[] detailImages) {
 
@@ -56,63 +37,12 @@ public class ContentService {
                 category
         );
 
-        List<Round> roundList = new ArrayList<>();
-        List<SeatGrade> seatGradeList = new ArrayList<>();
-
-        for (RoundInfoDto infoDto : requestDto.roundInfoDtoList()) {
-
-            checkContentStartDate(infoDto.startDate());
-            checkEndTimeAfterStartTime(infoDto.startTime(), infoDto.endTime());
-
-            Place place = placeHelper.getPlace(infoDto.placeId());
-
-            roundHelper.checkContentConflictingReservation(place.getId(), infoDto.startDate(),
-                    infoDto.startTime(), infoDto.endTime());
-
-            Round round = Round.addRound(
-                    infoDto.sequence(),
-                    infoDto.startDate(),
-                    infoDto.startTime(),
-                    infoDto.endTime(),
-                    infoDto.status(),
-                    content,
-                    place
-            );
-
-            roundList.add(round);
-
-            Set<Seat> seatSet = seatHelper.getAllSeatByPlaceId(place.getId());
-
-            if (infoDto.vipSeatList() != null) {
-                createAndGetSeatGradeList(infoDto.vipSeatList(), infoDto.vipPrice(), seatSet, round,
-                        seatGradeList, SeatGradeType.VIP);
-            }
-
-            if (infoDto.royalList() != null) {
-                createAndGetSeatGradeList(infoDto.royalList(), infoDto.royalPrice(), seatSet, round,
-                        seatGradeList, SeatGradeType.ROYAL);
-            }
-
-            if (infoDto.superiorList() != null) {
-                createAndGetSeatGradeList(infoDto.superiorList(), infoDto.royalPrice(), seatSet,
-                        round, seatGradeList, SeatGradeType.SUPERIOR);
-            }
-
-            if (infoDto.aGradeList() != null) {
-                createAndGetSeatGradeList(infoDto.aGradeList(), infoDto.aGradePrice(), seatSet,
-                        round, seatGradeList, SeatGradeType.A_GRADE);
-            }
-        }
-
-        content.addRoundList(roundList);
-
         String mainImagePath = s3Uploader.saveMainImage(mainImage);
 
         content.addMainImagePath(mainImagePath);
 
         if (detailImages == null) {
             contentHelper.saveContent(content);
-            seatGradeHelper.saveAllSeatGrade(seatGradeList);
             return;
         }
 
@@ -124,7 +54,6 @@ public class ContentService {
         content.addContentDetailImageList(contentDetailImageList);
 
         contentHelper.saveContent(content);
-        seatGradeHelper.saveAllSeatGrade(seatGradeList);
     }
 
     public void updateContent(Long contentId, ContentUpdateRequestDto requestDto,
@@ -159,40 +88,6 @@ public class ContentService {
 
         content.updateContent(category, requestDto.title(), requestDto.description(),
                 contentMainImagePath, detailImageList);
-    }
-
-    private void checkContentStartDate(LocalDate startDate) {
-
-        LocalDate today = LocalDate.now();
-
-        if (startDate.isBefore(today)) {
-            throw new InvalidDateException(RoundErrorCode.INVALID_DATE);
-        }
-    }
-
-    private void checkEndTimeAfterStartTime(LocalTime startTime, LocalTime endTime) {
-        if (endTime.isBefore(startTime)) {
-            throw new InvalidTimeException(RoundErrorCode.INVALID_TIME);
-        }
-    }
-
-    private void createAndGetSeatGradeList(List<Long> idList, Integer price, Set<Seat> seatSet,
-            Round round, List<SeatGrade> seatGradeList, SeatGradeType type) {
-
-        Set<Long> idSet = new HashSet<>(idList);
-
-        for (Seat seat : seatSet) {
-            if (idSet.contains(seat.getId())) {
-                SeatGrade seatGrade = SeatGrade.addSeatGrade(
-                        type,
-                        price,
-                        seat,
-                        round
-                );
-
-                seatGradeList.add(seatGrade);
-            }
-        }
     }
 
     private List<ContentDetailImage> getContentDetailImages(List<String> detailImageList,
