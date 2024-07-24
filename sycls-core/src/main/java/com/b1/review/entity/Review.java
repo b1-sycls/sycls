@@ -76,4 +76,11 @@ public class Review extends TimeStamp {
         this.comment = comment;
         this.rating = rating;
     }
+
+    /**
+     * 리뷰 삭제
+     */
+    public void deleteReview() {
+        this.status = ReviewStatus.DISABLE;
+    }
 }

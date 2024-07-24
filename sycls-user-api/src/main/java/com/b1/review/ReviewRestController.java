@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,6 +65,19 @@ public class ReviewRestController {
         Long response = reviewService.updateReview(reviewId, requestDto/*, userDetails.getUser()*/);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("조회되었습니다.", response));
+    }
+
+    /**
+     * 리뷰 삭제
+     */
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<RestApiResponseDto<String>> deleteReview(
+            @PathVariable final Long reviewId
+            //, @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        reviewService.deleteReview(reviewId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("삭제되었습니다,"));
     }
 
 }

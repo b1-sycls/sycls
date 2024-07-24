@@ -4,6 +4,7 @@ import com.b1.review.dto.ReviewAddRequestDto;
 import com.b1.review.dto.ReviewGetAllResponseDto;
 import com.b1.review.dto.ReviewUpdateRequestDto;
 import com.b1.review.entity.Review;
+import com.b1.review.entity.ReviewStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,5 +49,14 @@ public class ReviewService {
         review.updateReview(requestDto.comment(), requestDto.rating());
 
         return review.getId();
+    }
+
+    /**
+     * 리뷰 삭제
+     */
+    public void deleteReview(final Long reviewId) {
+        Review review = reviewHelper.getReview(reviewId);
+        ReviewStatus.checkDeleted(review.getStatus());
+        review.deleteReview();
     }
 }
