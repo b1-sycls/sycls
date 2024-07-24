@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Slf4j(topic = "Place Adapter")
 @Component
 @RequiredArgsConstructor
-public class PlaceAdapter {
+public class PlaceHelper {
 
     private final PlaceRepository placeRepository;
     private final PlaceQueryRepository placeQueryRepository;

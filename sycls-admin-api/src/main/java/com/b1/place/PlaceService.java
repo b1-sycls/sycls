@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PlaceService {
 
-    private final PlaceAdapter placeAdapter;
+    private final PlaceHelper placeHelper;
 
     /**
      * 공연장 등록
@@ -35,7 +35,7 @@ public class PlaceService {
                 requestDto.name()
         );
 
-        placeAdapter.savePlace(place);
+        placeHelper.savePlace(place);
     }
 
     /**
@@ -49,7 +49,7 @@ public class PlaceService {
         Pageable pageable = PageRequest.of(requestDto.getPageNum() - 1, requestDto.getPageSize(),
                 direction, requestDto.getOrderBy());
 
-        Page<PlaceGetResponseDto> pageResponseDto = placeAdapter.getAllPlaces(requestDto, pageable);
+        Page<PlaceGetResponseDto> pageResponseDto = placeHelper.getAllPlaces(requestDto, pageable);
         return PageResponseDto.of(pageResponseDto);
     }
 
@@ -58,7 +58,7 @@ public class PlaceService {
      */
     @Transactional(readOnly = true)
     public PlaceGetResponseDto getPlace(final Long placeId) {
-        Place place = placeAdapter.getPlace(placeId);
+        Place place = placeHelper.getPlace(placeId);
         return PlaceGetResponseDto.of(place);
     }
 
@@ -66,7 +66,7 @@ public class PlaceService {
      * 공연장 수정
      */
     public Long updatePlace(final Long placeId, final PlaceUpdateRequestDto requestDto) {
-        Place place = placeAdapter.getPlace(placeId);
+        Place place = placeHelper.getPlace(placeId);
         place.updatePlace(requestDto.location(), requestDto.name(),
                 requestDto.maxSeat(), requestDto.status());
         return place.getId();
@@ -76,7 +76,7 @@ public class PlaceService {
      * 공연장 삭제
      */
     public void deletePlace(Long placeId) {
-        Place place = placeAdapter.getPlace(placeId);
+        Place place = placeHelper.getPlace(placeId);
         PlaceStatus.checkDeleted(place.getStatus());
         place.deletePlace();
     }

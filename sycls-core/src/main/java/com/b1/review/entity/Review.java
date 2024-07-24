@@ -54,4 +54,15 @@ public class Review extends TimeStamp {
         this.user = user;
         this.content = content;
     }
+
+    public static Review addReview(String comment, Integer rating,
+            ReviewStatus status, User user, Content content) {
+        return Review.builder()
+                .comment(comment)
+                .rating(rating)
+                .status(status)
+                .user(user)
+                .content(content)
+                .build();
+    }
 }
