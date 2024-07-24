@@ -16,5 +16,9 @@ public record UserResetPasswordRequestDto(
                 regexp = "^(?=.*[0-9])(?=.*[!@#$%^&*]).{1,20}$",
                 message = "비밀번호는 숫자와 특수문자를 하나 이상 포함해야 합니다."
         )
-        String password
-) {}
+        String newPassword,
+
+        @NotBlank(message = "인증 코드는 필수 항목입니다.")
+        String code
+) {
+}

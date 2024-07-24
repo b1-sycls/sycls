@@ -1,18 +1,18 @@
 package com.b1.auth;
 
+import com.b1.auth.entity.EmailVerificationCode;
 import com.b1.auth.repository.EmailVerificationCodeRepository;
+import com.b1.exception.customexception.UserNotFoundException;
+import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.user.UserHelper;
 import com.b1.user.dto.UserResetPasswordRequestDto;
 import com.b1.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.Random;
 
 @Service
@@ -24,7 +24,6 @@ public class AuthService {
     private final UserHelper userHelper;
     private final PasswordEncoder passwordEncoder;
     private final EmailVerificationCodeRepository emailVerificationCodeRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
 
     public boolean checkEmailExists(String email) {
         return userHelper.checkEmailExists(email);
@@ -34,31 +33,28 @@ public class AuthService {
         return userHelper.checkNicknameExists(nickname);
     }
 
-    /**
-     * TODO 유저 패스워드 변경 Service 로직에서 Email 인증번호 + Redis 인증번호 관리 구현 필요
-     */
-    public void resetPassword(UserResetPasswordRequestDto requestDto) {
+    public void resetPassword (UserResetPasswordRequestDto requestDto) {
         User user = userHelper.findByEmail(requestDto.email());
-
-        user.changePassword(passwordEncoder.encode(requestDto.password()));
+        user.changePassword(passwordEncoder.encode(requestDto.newPassword()));
     }
 
-    public void saveVerificationCode(String email, String code) {
-        log.info("인증 코드를 Redis에 저장합니다: email={}, code={}", email, code); // 추가된 로깅
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(email, code, Duration.ofMinutes(5)); // 5분간 유효
-        log.info("인증 코드가 저장되었습니다."); // 추가된 로깅
+    public void saveVerificationCode (String email, String code) {
+        EmailVerificationCode emailVerificationCode = EmailVerificationCode.builder()
+                .email(email)
+                .code(code)
+                .ttl(300)
+                .build();
+        emailVerificationCodeRepository.save(emailVerificationCode);
     }
 
-    public boolean verifyCode(String email, String code) {
-        log.info("인증 코드를 확인합니다: email={}, code={}", email, code); // 추가된 로깅
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        String storedCode = (String) valueOperations.get(email);
-        log.info("Redis에서 가져온 인증 코드: {}", storedCode); // 추가된 로깅
+    public boolean verifyCode  (String email, String code) {
+        String storedCode = emailVerificationCodeRepository.findByEmail(email).orElseThrow(
+                () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND)
+        ).getCode();
         return storedCode != null && storedCode.equals(code);
     }
 
-    public String generateVerificationCode() {
+    public String generateVerificationCode () {
         Random random = new Random();
         int code = random.nextInt(899999) + 100000; // 100000 ~ 999999 사이의 숫자 생성
         return String.valueOf(code);

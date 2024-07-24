@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-@Slf4j(topic = "User Adapter")
+@Slf4j(topic = "User Helper")
 @Component
 @RequiredArgsConstructor
 public class UserHelper {
