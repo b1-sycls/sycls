@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CategoryService {
 
-    private final CategoryAdapter categoryAdapter;
+    private final CategoryHelper categoryHelper;
 
     @Transactional(readOnly = true)
     public List<CategoryGetUserResponseDto> getAllCategory() {
-        return categoryAdapter.getAllCategoryOrderByNameAsc();
+        return categoryHelper.getAllCategoryOrderByNameAsc();
     }
 }

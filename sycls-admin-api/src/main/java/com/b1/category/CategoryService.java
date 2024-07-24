@@ -5,7 +5,7 @@ import com.b1.category.dto.CategoryGetAdminResponseDto;
 import com.b1.category.dto.CategoryUpdateRequestDto;
 import com.b1.category.entity.Category;
 import com.b1.category.entity.CategoryStatus;
-import com.b1.content.ContentAdapter;
+import com.b1.content.ContentHelper;
 import com.b1.exception.customexception.CategoryInUseException;
 import com.b1.exception.customexception.CategoryNameDuplicatedException;
 import com.b1.exception.errorcode.CategoryErrorCode;
@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final CategoryAdapter categoryAdapter;
-    private final ContentAdapter contentAdapter;
+    private final CategoryHelper categoryHelper;
+    private final ContentHelper contentHelper;
 
     public void addCategory(CategoryAddRequestDto requestDto) {
         String name = requestDto.name();
@@ -31,7 +31,7 @@ public class CategoryService {
 
         Category category = Category.addCategory(name);
 
-        categoryAdapter.saveCategory(category);
+        categoryHelper.saveCategory(category);
     }
 
     public void updateCategory(Long categoryId, CategoryUpdateRequestDto requestDto) {
@@ -39,17 +39,17 @@ public class CategoryService {
 
         checkCategoryDuplicatedName(name);
 
-        Category category = categoryAdapter.findById(categoryId);
+        Category category = categoryHelper.findById(categoryId);
 
         category.update(name);
     }
 
     public void disableCategoryStatus(Long categoryId) {
-        Category category = categoryAdapter.findById(categoryId);
+        Category category = categoryHelper.findById(categoryId);
 
         CategoryStatus.checkDisable(category.getStatus());
 
-        if (contentAdapter.existsByCategoryId(categoryId)) {
+        if (contentHelper.existsByCategoryId(categoryId)) {
             log.error("공연에서 사용하고 있는 카테고리 | request : {}", categoryId);
             throw new CategoryInUseException(CategoryErrorCode.CATEGORY_IN_USE);
         }
@@ -58,7 +58,7 @@ public class CategoryService {
     }
 
     public void enableCategoryStatus(Long categoryId) {
-        Category category = categoryAdapter.findById(categoryId);
+        Category category = categoryHelper.findById(categoryId);
 
         CategoryStatus.checkEnable(category.getStatus());
 
@@ -67,11 +67,11 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<CategoryGetAdminResponseDto> getAllCategory() {
-        return categoryAdapter.getAllCategoryOrderByNameAsc();
+        return categoryHelper.getAllCategoryOrderByNameAsc();
     }
 
     private void checkCategoryDuplicatedName(String name) {
-        if (categoryAdapter.existsByName(name)) {
+        if (categoryHelper.existsByName(name)) {
             log.error("중복된 카테고리 이름 | name : {}", name);
             throw new CategoryNameDuplicatedException(CategoryErrorCode.CATEGORY_NAME_DUPLICATED);
         }

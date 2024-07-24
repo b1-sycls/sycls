@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j(topic = "Seat Adapter")
 @Component
 @RequiredArgsConstructor
-public class SeatAdapter {
+public class SeatHelper {
 
     private final SeatRepository seatRepository;
 
