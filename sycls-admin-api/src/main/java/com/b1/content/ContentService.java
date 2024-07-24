@@ -14,7 +14,7 @@ import com.b1.exception.customexception.InvalidTimeException;
 import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.place.PlaceHelper;
 import com.b1.place.entity.Place;
-import com.b1.seat.SeatGradeAdapter;
+import com.b1.seat.SeatGradeHelper;
 import com.b1.seat.SeatHelper;
 import com.b1.seat.entity.Seat;
 import com.b1.seat.entity.SeatGrade;
@@ -41,7 +41,7 @@ public class ContentService {
     private final CategoryHelper categoryHelper;
     private final PlaceHelper placeHelper;
     private final SeatHelper seatHelper;
-    private final SeatGradeAdapter seatGradeAdapter;
+    private final SeatGradeHelper seatGradeHelper;
     private final RoundHelper roundHelper;
     private final S3Uploader s3Uploader;
 
@@ -112,7 +112,7 @@ public class ContentService {
 
         if (detailImages == null) {
             contentHelper.saveContent(content);
-            seatGradeAdapter.saveAllSeatGrade(seatGradeList);
+            seatGradeHelper.saveAllSeatGrade(seatGradeList);
             return;
         }
 
@@ -124,7 +124,7 @@ public class ContentService {
         content.addContentDetailImageList(contentDetailImageList);
 
         contentHelper.saveContent(content);
-        seatGradeAdapter.saveAllSeatGrade(seatGradeList);
+        seatGradeHelper.saveAllSeatGrade(seatGradeList);
     }
 
     public void updateContent(Long contentId, ContentUpdateRequestDto requestDto,

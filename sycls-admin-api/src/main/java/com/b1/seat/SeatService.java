@@ -1,6 +1,6 @@
 package com.b1.seat;
 
-import com.b1.place.PlaceAdapter;
+import com.b1.place.PlaceHelper;
 import com.b1.place.dto.SeatUpdateRequestDto;
 import com.b1.place.entity.Place;
 import com.b1.seat.dto.SeatAddRequestDto;
@@ -21,19 +21,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SeatService {
 
-    private final PlaceAdapter placeAdapter;
-    private final SeatAdapter seatAdapter;
+    private final PlaceHelper placeHelper;
+    private final SeatHelper seatHelper;
 
     /**
      * 해당 공연장의 좌석 등록
      */
     public void addSeats(final Long placeId, final SeatAddRequestDto requestDto) {
-        Place place = placeAdapter.getPlace(placeId);
+        Place place = placeHelper.getPlace(placeId);
 
         Set<Seat> seatSet = requestDto.codeList().stream()
                 .map(code -> Seat.addSeat(code, place))
                 .collect(Collectors.toSet());
-        seatAdapter.saveSeats(seatSet);
+        seatHelper.saveSeats(seatSet);
     }
 
     /**
@@ -41,9 +41,9 @@ public class SeatService {
      */
     @Transactional(readOnly = true)
     public SeatGetAllResponseDto getAllSeats(final Long placeId) {
-        placeAdapter.existPlace(placeId);
+        placeHelper.existPlace(placeId);
 
-        Set<Seat> seatSet = seatAdapter.getAllSeats(placeId);
+        Set<Seat> seatSet = seatHelper.getAllSeats(placeId);
         return SeatGetAllResponseDto.of(seatSet);
     }
 
@@ -52,7 +52,7 @@ public class SeatService {
      */
     @Transactional(readOnly = true)
     public SeatGetResponseDto getSeat(final Long seatId) {
-        Seat seat = seatAdapter.getSeat(seatId);
+        Seat seat = seatHelper.getSeat(seatId);
         return SeatGetResponseDto.of(seat);
     }
 
@@ -60,7 +60,7 @@ public class SeatService {
      * 좌석 수정
      */
     public Long updateSeat(final Long seatId, final SeatUpdateRequestDto requestDto) {
-        Seat seat = seatAdapter.getSeat(seatId);
+        Seat seat = seatHelper.getSeat(seatId);
         seat.updateSeat(requestDto.code(), requestDto.status());
         return seat.getId();
     }
@@ -69,7 +69,7 @@ public class SeatService {
      * 좌석 삭제
      */
     public void deleteSeat(final Long seatId) {
-        Seat seat = seatAdapter.getSeat(seatId);
+        Seat seat = seatHelper.getSeat(seatId);
         SeatStatus.checkDeleted(seat.getStatus());
         seat.deleteSeat();
     }
