@@ -8,6 +8,9 @@ import com.b1.content.dto.RoundInfoDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
 import com.b1.content.entity.Round;
+import com.b1.exception.customexception.InvalidDateException;
+import com.b1.exception.customexception.InvalidTimeException;
+import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.place.PlaceHelper;
 import com.b1.place.entity.Place;
 import com.b1.seat.SeatGradeAdapter;
@@ -15,6 +18,8 @@ import com.b1.seat.SeatHelper;
 import com.b1.seat.entity.Seat;
 import com.b1.seat.entity.SeatGrade;
 import com.b1.seat.entity.SeatGradeType;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +59,11 @@ public class ContentService {
         List<SeatGrade> seatGradeList = new ArrayList<>();
 
         for (RoundInfoDto infoDto : requestDto.roundInfoDtoList()) {
+
+            checkContentStartDate(infoDto.startDate());
+
+            checkEndTimeAfterStartTime(infoDto.startTime(), infoDto.endTime());
+
             Place place = placeHelper.getPlace(infoDto.placeId());
 
             roundHelper.checkContentConflictingReservation(place.getId(), infoDto.startDate(),
@@ -123,6 +133,21 @@ public class ContentService {
 
         contentHelper.saveContent(content);
         seatGradeAdapter.saveAllSeatGrade(seatGradeList);
+    }
+
+    private void checkContentStartDate(LocalDate startDate) {
+
+        LocalDate today = LocalDate.now();
+
+        if (startDate.isBefore(today)) {
+            throw new InvalidDateException(RoundErrorCode.INVALID_DATE);
+        }
+    }
+
+    private void checkEndTimeAfterStartTime(LocalTime startTime, LocalTime endTime) {
+        if (endTime.isBefore(startTime)) {
+            throw new InvalidTimeException(RoundErrorCode.INVALID_TIME);
+        }
     }
 
     private void createAndGetSeatGradeList(List<Long> idList, Integer price, Set<Seat> seatSet,
