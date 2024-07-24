@@ -1,6 +1,8 @@
 package com.b1.review;
 
 import com.b1.review.dto.ReviewAddRequestDto;
+import com.b1.review.dto.ReviewGetAllResponseDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,5 +25,12 @@ public class ReviewService {
         //Content content = contentHelper.getContent(contentId);
         //Review review = Review.addReview(requestDto.comment(), requestDto.rating(), ReviewStatus.ENABLE, user, content)
         //reviewHelper.saveReview(review);
+    }
+
+    /**
+     * 리뷰 조회 TODO user&content 완성 후 리팩토링
+     */
+    public List<ReviewGetAllResponseDto> getAllReviews(final Long contentId) {
+        return reviewHelper.getAllReviews(contentId);
     }
 }
