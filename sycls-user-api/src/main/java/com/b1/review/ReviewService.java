@@ -2,6 +2,8 @@ package com.b1.review;
 
 import com.b1.review.dto.ReviewAddRequestDto;
 import com.b1.review.dto.ReviewGetAllResponseDto;
+import com.b1.review.dto.ReviewUpdateRequestDto;
+import com.b1.review.entity.Review;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,21 @@ public class ReviewService {
     /**
      * 리뷰 조회 TODO user&content 완성 후 리팩토링
      */
+    @Transactional(readOnly = true)
     public List<ReviewGetAllResponseDto> getAllReviews(final Long contentId) {
         return reviewHelper.getAllReviews(contentId);
+    }
+
+    /**
+     * 리뷰 수정
+     */
+    public Long updateReview(final Long reviewId,
+            final ReviewUpdateRequestDto requestDto/*, User user*/) {
+        Review review = reviewHelper.getReview(reviewId);
+        // TODO User 비교 로직 추가
+        // content도 확인해야하나?
+        review.updateReview(requestDto.comment(), requestDto.rating());
+
+        return review.getId();
     }
 }

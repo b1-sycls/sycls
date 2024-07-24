@@ -1,5 +1,7 @@
 package com.b1.review;
 
+import com.b1.exception.customexception.ReviewNotFoundException;
+import com.b1.exception.errorcode.ReviewErrorCode;
 import com.b1.review.dto.ReviewGetAllResponseDto;
 import com.b1.review.entity.Review;
 import java.util.List;
@@ -27,5 +29,17 @@ public class ReviewHelper {
      */
     public List<ReviewGetAllResponseDto> getAllReviews(final Long contentId) {
         return reviewQueryRepository.getAllReviews(contentId);
+    }
+
+    /**
+     * 리뷰 단건 조회
+     */
+    public Review getReview(Long reviewId) {
+        return reviewRepository.findById(reviewId).orElseThrow(
+                () -> {
+                    log.error("찾을 수 없는 리뷰 | {}", reviewId);
+                    return new ReviewNotFoundException(ReviewErrorCode.NOT_FOUND_REVIEW);
+                }
+        );
     }
 }

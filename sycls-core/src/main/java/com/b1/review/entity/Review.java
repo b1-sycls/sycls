@@ -55,6 +55,9 @@ public class Review extends TimeStamp {
         this.content = content;
     }
 
+    /**
+     * 리뷰 등록
+     */
     public static Review addReview(String comment, Integer rating,
             ReviewStatus status, User user, Content content) {
         return Review.builder()
@@ -64,5 +67,13 @@ public class Review extends TimeStamp {
                 .user(user)
                 .content(content)
                 .build();
+    }
+
+    /**
+     * 리뷰 수정
+     */
+    public void updateReview(String comment, Integer rating) {
+        this.comment = comment;
+        this.rating = rating;
     }
 }
