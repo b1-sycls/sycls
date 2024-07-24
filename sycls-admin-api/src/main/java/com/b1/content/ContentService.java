@@ -4,6 +4,7 @@ import com.b1.S3.S3Uploader;
 import com.b1.category.CategoryHelper;
 import com.b1.category.entity.Category;
 import com.b1.content.dto.ContentAddRequestDto;
+import com.b1.content.dto.ContentUpdateRequestDto;
 import com.b1.content.dto.RoundInfoDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
@@ -61,7 +62,6 @@ public class ContentService {
         for (RoundInfoDto infoDto : requestDto.roundInfoDtoList()) {
 
             checkContentStartDate(infoDto.startDate());
-
             checkEndTimeAfterStartTime(infoDto.startTime(), infoDto.endTime());
 
             Place place = placeHelper.getPlace(infoDto.placeId());
@@ -110,7 +110,7 @@ public class ContentService {
 
         content.addMainImagePath(mainImagePath);
 
-        if (detailImages == null) { //TODO 프론트에서 초기화 시켜줄경우 isEmpty 로 변경 가능
+        if (detailImages == null) {
             contentHelper.saveContent(content);
             seatGradeAdapter.saveAllSeatGrade(seatGradeList);
             return;
@@ -118,21 +118,47 @@ public class ContentService {
 
         List<String> detailImageList = s3Uploader.saveDetailImage(detailImages);
 
-        List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
-
-        for (String detailImagePath : detailImageList) {
-            ContentDetailImage contentDetailImage = ContentDetailImage.addContentDetailImage(
-                    detailImagePath,
-                    content
-            );
-
-            contentDetailImageList.add(contentDetailImage);
-        }
+        List<ContentDetailImage> contentDetailImageList = getContentDetailImages(detailImageList,
+                content);
 
         content.addContentDetailImageList(contentDetailImageList);
 
         contentHelper.saveContent(content);
         seatGradeAdapter.saveAllSeatGrade(seatGradeList);
+    }
+
+    public void updateContent(Long contentId, ContentUpdateRequestDto requestDto,
+            MultipartFile mainImage, MultipartFile[] detailImages) {
+
+        Content content = contentHelper.findById(contentId);
+
+        Category category = categoryHelper.findById(requestDto.categoryId());
+
+        String contentMainImagePath = content.getMainImagePath();
+
+        if (mainImage != null) {
+            s3Uploader.deleteFileFromS3(requestDto.oldMainImagePath());
+            contentMainImagePath = s3Uploader.saveMainImage(mainImage);
+        }
+
+        List<ContentDetailImage> detailImageList = contentHelper.getByContentDetailImagesByContentId(
+                content.getId());
+
+        if (detailImages != null) {
+            for (String oldDetailImagePath : requestDto.detailImagePaths()) {
+                s3Uploader.deleteFileFromS3(oldDetailImagePath);
+            }
+
+            for (ContentDetailImage detailImage : detailImageList) {
+                detailImage.disableStatus();
+            }
+
+            List<String> newDetailImageList = s3Uploader.saveDetailImage(detailImages);
+            detailImageList = getContentDetailImages(newDetailImageList, content);
+        }
+
+        content.updateContent(category, requestDto.title(), requestDto.description(),
+                contentMainImagePath, detailImageList);
     }
 
     private void checkContentStartDate(LocalDate startDate) {
@@ -167,5 +193,20 @@ public class ContentService {
                 seatGradeList.add(seatGrade);
             }
         }
+    }
+
+    private List<ContentDetailImage> getContentDetailImages(List<String> detailImageList,
+            Content content) {
+        List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
+
+        for (String detailImagePath : detailImageList) {
+            ContentDetailImage contentDetailImage = ContentDetailImage.addContentDetailImage(
+                    detailImagePath,
+                    content
+            );
+
+            contentDetailImageList.add(contentDetailImage);
+        }
+        return contentDetailImageList;
     }
 }

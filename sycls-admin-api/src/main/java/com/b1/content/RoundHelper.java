@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RoundHelper {
-
+    
     private final RoundQueryRepository queryRepository;
 
     public void checkContentConflictingReservation(Long placeId, LocalDate startDate,

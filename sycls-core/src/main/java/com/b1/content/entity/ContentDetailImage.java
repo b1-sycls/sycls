@@ -54,4 +54,8 @@ public class ContentDetailImage {
                 .content(content)
                 .build();
     }
+
+    public void disableStatus() {
+        this.status = ContentDetailImageStatus.DISABLE;
+    }
 }

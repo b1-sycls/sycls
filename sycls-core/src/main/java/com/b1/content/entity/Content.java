@@ -65,6 +65,15 @@ public class Content extends TimeStamp {
                 .build();
     }
 
+    public void updateContent(Category category, String title, String description,
+            String mainImagePath, List<ContentDetailImage> detailImageList) {
+        this.category = category;
+        this.title = title;
+        this.description = description;
+        this.mainImagePath = mainImagePath;
+        this.contentDetailImageList = detailImageList;
+    }
+
     public void addMainImagePath(String mainImagePath) {
         this.mainImagePath = mainImagePath;
     }

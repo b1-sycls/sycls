@@ -3,10 +3,8 @@ package com.b1.S3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.b1.exception.customexception.S3MainImageMissingException;
 import com.b1.exception.customexception.S3UploadingException;
 import com.b1.exception.errorcode.S3ErrorCode;
@@ -84,24 +82,9 @@ public class S3Uploader {
     }
 
     public void deleteFileFromS3(String imageDir) {
-        ObjectListing objectListing = amazonS3Client.listObjects(bucket, imageDir);
+        String splitStr = ".com/";
+        String fileName = imageDir.substring(imageDir.lastIndexOf(splitStr) + splitStr.length());
 
-        if (objectListing.getObjectSummaries().isEmpty()) {
-            log.info("삭제할 파일 없음");
-            return;
-        }
-
-        while (true) {
-            for (S3ObjectSummary summary : objectListing.getObjectSummaries()) {
-                amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, summary.getKey()));
-                log.info("삭제한 이미지 링크 : {}", imageDir);
-            }
-
-            if (objectListing.isTruncated()) {
-                objectListing = amazonS3Client.listNextBatchOfObjects(objectListing);
-            } else {
-                break;
-            }
-        }
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 }
