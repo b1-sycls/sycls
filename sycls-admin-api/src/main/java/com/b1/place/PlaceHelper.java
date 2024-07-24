@@ -46,4 +46,14 @@ public class PlaceHelper {
                 }
         );
     }
+
+    /**
+     * 공연장 존재 확인
+     */
+    public void existPlace(final Long placeId) {
+        if (!placeRepository.existsById(placeId)) {
+            log.error("존재하지 않는 공연장 | {}", placeId);
+            throw new PlaceNotFoundException(PlaceErrorCode.NOT_FOUND_PLACE);
+        }
+    }
 }
