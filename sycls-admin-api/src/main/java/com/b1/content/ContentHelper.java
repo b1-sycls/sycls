@@ -1,5 +1,7 @@
 package com.b1.content;
 
+import com.b1.content.dto.ContentDetailImagePathGetResponseDto;
+import com.b1.content.dto.ContentGetAdminResponseDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
 import com.b1.exception.customexception.ContentNotFoundException;
@@ -33,5 +35,14 @@ public class ContentHelper {
 
     public List<ContentDetailImage> getByContentDetailImagesByContentId(Long contentId) {
         return queryRepository.getByContentDetailImagesByContentId(contentId);
+    }
+
+    public ContentGetAdminResponseDto getContentByContentId(Long contentId) {
+        return queryRepository.getByContentByContentId(contentId);
+    }
+
+    public List<ContentDetailImagePathGetResponseDto> getAllContentDetailImagesPathByContentId(
+            Long contentId) {
+        return queryRepository.getAllContentDetailImagesPathByContentId(contentId);
     }
 }

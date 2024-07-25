@@ -1,9 +1,12 @@
 package com.b1.round;
 
+import com.b1.content.entity.QContent;
 import com.b1.place.entity.QPlace;
+import com.b1.round.dto.RoundInfoGetResponseDto;
 import com.b1.round.entity.QRound;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.util.List;
@@ -30,5 +33,26 @@ public class RoundQueryRepository {
                         .and(round.status.in(RoundStatus.AVAILABLE, RoundStatus.WAITING))
                         .and(round.startDate.eq(startDate))
                 ).fetch();
+    }
+
+    public List<RoundInfoGetResponseDto> getAllRoundsInfoByContentId(Long contentId) {
+        QRound round = QRound.round;
+        QContent content = QContent.content;
+
+        return queryFactory
+                .select(Projections.constructor(
+                        RoundInfoGetResponseDto.class,
+                        round.id,
+                        round.sequence,
+                        round.startDate,
+                        round.startTime,
+                        round.endTime,
+                        round.status
+                ))
+                .from(round)
+                .leftJoin(round.content, content)
+                .where(content.id.eq(contentId))
+                .orderBy(round.sequence.asc())
+                .fetch();
     }
 }

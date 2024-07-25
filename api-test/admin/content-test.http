@@ -7,3 +7,6 @@ Content-Type: application/json
 {
   "status": "VISIBLE"
 }
+
+### 공연 단일 조회
+GET http://localhost:8081/v1/contents/{{contentId}}

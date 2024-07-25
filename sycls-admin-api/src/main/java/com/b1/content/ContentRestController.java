@@ -1,6 +1,7 @@
 package com.b1.content;
 
 import com.b1.content.dto.ContentAddRequestDto;
+import com.b1.content.dto.ContentDetailResponseDto;
 import com.b1.content.dto.ContentUpdateRequestDto;
 import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.globalresponse.RestApiResponseDto;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,5 +56,14 @@ public class ContentRestController {
     ) {
         contentService.updateContentStatus(contentId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("상태 수정 성공"));
+    }
+
+    @GetMapping("/contents/{contentId}")
+    public ResponseEntity<RestApiResponseDto<ContentDetailResponseDto>> getContent(
+            @PathVariable Long contentId
+    ) {
+        ContentDetailResponseDto response = contentService.getContent(contentId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("단일 조회 성공", response));
     }
 }

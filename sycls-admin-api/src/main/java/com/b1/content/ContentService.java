@@ -4,12 +4,17 @@ import com.b1.S3.S3Uploader;
 import com.b1.category.CategoryHelper;
 import com.b1.category.entity.Category;
 import com.b1.content.dto.ContentAddRequestDto;
+import com.b1.content.dto.ContentDetailImagePathGetResponseDto;
+import com.b1.content.dto.ContentDetailResponseDto;
+import com.b1.content.dto.ContentGetAdminResponseDto;
 import com.b1.content.dto.ContentUpdateRequestDto;
 import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
 import com.b1.exception.customexception.ContentStatusEqualsException;
 import com.b1.exception.errorcode.ContentErrorCode;
+import com.b1.round.RoundHelper;
+import com.b1.round.dto.RoundInfoGetResponseDto;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +31,7 @@ public class ContentService {
 
     private final ContentHelper contentHelper;
     private final CategoryHelper categoryHelper;
+    private final RoundHelper roundHelper;
     private final S3Uploader s3Uploader;
 
     public void addContent(ContentAddRequestDto requestDto, MultipartFile mainImage,
@@ -102,6 +108,22 @@ public class ContentService {
         }
 
         content.updateStatus(requestDto.status());
+    }
+
+    @Transactional(readOnly = true)
+    public ContentDetailResponseDto getContent(Long contentId) {
+
+        ContentGetAdminResponseDto contentGetAdmin = contentHelper.getContentByContentId(
+                contentId);
+
+        List<ContentDetailImagePathGetResponseDto> contentDetailImagePathList =
+                contentHelper.getAllContentDetailImagesPathByContentId(contentId);
+
+        List<RoundInfoGetResponseDto> roundInfoList = roundHelper.getAllRoundsInfoByContentId(
+                contentId);
+
+        return ContentDetailResponseDto.of(contentGetAdmin, contentDetailImagePathList,
+                roundInfoList);
     }
 
     private List<ContentDetailImage> getContentDetailImages(List<String> detailImageList,
