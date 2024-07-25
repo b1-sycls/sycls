@@ -17,6 +17,7 @@ import com.b1.exception.errorcode.ContentErrorCode;
 import com.b1.round.RoundHelper;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import com.b1.s3.S3Uploader;
+import com.b1.s3.S3Util;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -80,7 +81,6 @@ public class ContentService {
         String contentMainImagePath = content.getMainImagePath();
 
         if (mainImage != null) {
-            s3Uploader.deleteFileFromS3(requestDto.oldMainImagePath());
             contentMainImagePath = s3Uploader.saveMainImage(mainImage);
         }
 
@@ -88,9 +88,6 @@ public class ContentService {
                 content.getId());
 
         if (detailImages != null) {
-            for (String oldDetailImagePath : requestDto.detailImagePaths()) {
-                s3Uploader.deleteFileFromS3(oldDetailImagePath);
-            }
 
             for (ContentDetailImage detailImage : detailImageList) {
                 detailImage.disableStatus();
@@ -122,8 +119,16 @@ public class ContentService {
         ContentGetAdminResponseDto contentGetAdmin = contentHelper.getContentByContentId(
                 contentId);
 
+        contentGetAdmin.updateImagePath(S3Util.makeResponseImageDir(
+                contentGetAdmin.getMainImagePath()));
+
         List<ContentDetailImagePathGetAdminResponseDto> contentDetailImagePathList =
                 contentHelper.getAllContentDetailImagesPathByContentId(contentId);
+
+        for (ContentDetailImagePathGetAdminResponseDto dto : contentDetailImagePathList) {
+            final String detailImagePath = S3Util.makeResponseImageDir(dto.getDetailImagePath());
+            dto.updateDetailImagePath(detailImagePath);
+        }
 
         List<RoundInfoGetAdminResponseDto> roundInfoList = roundHelper.getAllRoundsInfoByContentId(
                 contentId);
@@ -144,9 +149,12 @@ public class ContentService {
         Page<ContentGetAdminResponseDto> pageResponseDto = contentHelper.getAllContentForAdmin(
                 categoryId, titleKeyword, status, pageable);
 
+        for (ContentGetAdminResponseDto dto : pageResponseDto) {
+            dto.updateImagePath(S3Util.makeResponseImageDir(dto.getMainImagePath()));
+        }
+
         return PageResponseDto.of(pageResponseDto);
     }
-
 
     private List<ContentDetailImage> getContentDetailImages(List<String> detailImageList,
             Content content) {

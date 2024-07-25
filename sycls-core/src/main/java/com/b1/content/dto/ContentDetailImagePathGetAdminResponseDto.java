@@ -8,10 +8,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ContentDetailImagePathGetAdminResponseDto {
 
-    private final Long contentDetailImageId;
+    private Long contentDetailImageId;
 
-    private final String detailImagePath;
+    private String detailImagePath;
 
-    private final ContentDetailImageStatus status;
+    private ContentDetailImageStatus status;
 
+    public void updateDetailImagePath(String detailImagePath) {
+        this.detailImagePath = detailImagePath;
+    }
 }

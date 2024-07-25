@@ -45,4 +45,13 @@ public class S3Util {
     public static String createFileName(String extension) {
         return UUID.randomUUID().toString().concat(extension);
     }
+
+    public static String subStringImageDir(String imageDir) {
+        String splitStr = ".com";
+        return imageDir.substring(imageDir.lastIndexOf(splitStr) + splitStr.length());
+    }
+
+    public static String makeResponseImageDir(String imageDir) {
+        return "https://sycls-test.s3.ap-northeast-2.amazonaws.com" + imageDir;
+    }
 }

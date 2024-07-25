@@ -49,6 +49,7 @@ public class S3Uploader {
             String extension = S3Util.getCheckImageExtension(
                     Objects.requireNonNull(file.getOriginalFilename())
             );
+
             String imageDir = S3Util.createImageDir(S3Type.CONTENT_DETAIL_IMAGE);
 
             String uploadFileName = imageDir + S3Util.createFileName(extension);
@@ -78,13 +79,12 @@ public class S3Uploader {
             throw new S3UploadingException(S3ErrorCode.S3_UPLOADING_FAIL);
         }
 
-        return amazonS3Client.getUrl(bucket, uploadFileName).toString();
+        return S3Util.subStringImageDir(amazonS3Client.getUrl(bucket, uploadFileName).toString());
     }
 
     public void deleteFileFromS3(String imageDir) {
-        String splitStr = ".com/";
-        String fileName = imageDir.substring(imageDir.lastIndexOf(splitStr) + splitStr.length());
+        String substringImageDir = S3Util.subStringImageDir(imageDir);
 
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, substringImageDir));
     }
 }

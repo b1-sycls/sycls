@@ -74,15 +74,14 @@ public class ContentRestController {
     @GetMapping("/contents")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<ContentGetAdminResponseDto>>> getAllContents(
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false, defaultValue = "") String titleKeyword,
             @RequestParam(required = false) ContentStatus status,
+            @RequestParam(required = false, defaultValue = "") String titleKeyword,
             @RequestParam(required = false, defaultValue = "1") int page,
             @RequestParam(required = false, defaultValue = "createdAt") String sortProperty,
             @RequestParam(required = false, defaultValue = "DESC") String sortDirection
     ) {
         PageResponseDto<ContentGetAdminResponseDto> response = contentService.getAllContents(
-                categoryId,
-                titleKeyword, status, page, sortProperty, sortDirection);
+                categoryId, titleKeyword, status, page, sortProperty, sortDirection);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("전체 조회 성공", response));
     }

@@ -8,15 +8,19 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ContentGetUserResponseDto {
 
-    private final Long contentId;
+    private Long contentId;
 
-    private final String title;
+    private String title;
 
-    private final String description;
+    private String description;
 
-    private final String mainImagePath;
+    private String mainImagePath;
 
-    private final ContentStatus status;
+    private ContentStatus status;
 
-    private final String categoryName;
+    private String categoryName;
+
+    public void updateImagePath(String mainImagePath) {
+        this.mainImagePath = mainImagePath;
+    }
 }

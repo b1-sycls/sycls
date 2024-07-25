@@ -6,6 +6,7 @@ import com.b1.content.dto.ContentDetailResponseDto;
 import com.b1.content.dto.ContentGetUserResponseDto;
 import com.b1.round.RoundHelper;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
+import com.b1.s3.S3Util;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,16 @@ public class ContentService {
 
         ContentGetUserResponseDto contentGetUser = contentHelper.getContentByContentId(contentId);
 
+        contentGetUser.updateImagePath(
+                S3Util.makeResponseImageDir(contentGetUser.getMainImagePath()));
+
         List<ContentDetailImagePathGetUserResponseDto> contentDetailImagePathList =
                 contentHelper.getAllContentDetailImagesPathByContentId(contentId);
+
+        for (ContentDetailImagePathGetUserResponseDto dto : contentDetailImagePathList) {
+            final String detailImagePath = S3Util.makeResponseImageDir(dto.getDetailImagePath());
+            dto.updateDetailImagePath(detailImagePath);
+        }
 
         List<RoundInfoGetUserResponseDto> roundInfoList = roundHelper.getAllRoundsInfoByContentId(
                 contentId);
@@ -50,6 +59,10 @@ public class ContentService {
 
         Page<ContentGetUserResponseDto> pageResponseDto = contentHelper.getAllContentForAdmin(
                 categoryId, titleKeyword, pageable);
+
+        for (ContentGetUserResponseDto dto : pageResponseDto) {
+            dto.updateImagePath(S3Util.makeResponseImageDir(dto.getMainImagePath()));
+        }
 
         return PageResponseDto.of(pageResponseDto);
     }
