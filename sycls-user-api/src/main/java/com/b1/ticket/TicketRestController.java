@@ -19,7 +19,7 @@ public class TicketRestController {
 
     private final TicketService ticketService;
 
-    @PostMapping("/ticket")
+    @PostMapping("/tickets")
     public ResponseEntity<RestApiResponseDto<TicketAddResponseDto>> addTicket(
             @Valid @RequestBody final TicketAddRequestDto requestDto
     ) {

@@ -28,6 +28,7 @@ public class SeatGradeHelper {
         Set<SeatGrade> seatGrades = seatGradeRepository
                 .findAllByRoundAndIdIn(round, seatGradeIds);
         if (seatGrades.size() != seatGradeIds.size()) {
+            log.error("찾을 수 없는 등급 좌석 | request {}", seatGradeIds);
             throw new SeatGradeNotFoundException(SeatGradeErrorCode.NOT_FOUND_SEAT_GRADE);
         }
         SeatGradeStatus.checkEnable(seatGrades);
