@@ -2,7 +2,8 @@ package com.b1.round;
 
 import com.b1.content.entity.QContent;
 import com.b1.place.entity.QPlace;
-import com.b1.round.dto.RoundInfoGetResponseDto;
+import com.b1.round.dto.RoundInfoGetAdminResponseDto;
+import com.b1.round.dto.RoundInfoGetUserResponseDto;
 import com.b1.round.entity.QRound;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
@@ -35,19 +36,39 @@ public class RoundQueryRepository {
                 ).fetch();
     }
 
-    public List<RoundInfoGetResponseDto> getAllRoundsInfoByContentId(Long contentId) {
+    public List<RoundInfoGetAdminResponseDto> getAllRoundsInfoByContentIdForAdmin(Long contentId) {
         QRound round = QRound.round;
         QContent content = QContent.content;
 
         return queryFactory
                 .select(Projections.constructor(
-                        RoundInfoGetResponseDto.class,
+                        RoundInfoGetAdminResponseDto.class,
                         round.id,
                         round.sequence,
                         round.startDate,
                         round.startTime,
                         round.endTime,
                         round.status
+                ))
+                .from(round)
+                .leftJoin(round.content, content)
+                .where(content.id.eq(contentId))
+                .orderBy(round.sequence.asc())
+                .fetch();
+    }
+
+    public List<RoundInfoGetUserResponseDto> getAllRoundsInfoByContentIdForUser(Long contentId) {
+        QRound round = QRound.round;
+        QContent content = QContent.content;
+
+        return queryFactory
+                .select(Projections.constructor(
+                        RoundInfoGetUserResponseDto.class,
+                        round.id,
+                        round.sequence,
+                        round.startDate,
+                        round.startTime,
+                        round.endTime
                 ))
                 .from(round)
                 .leftJoin(round.content, content)

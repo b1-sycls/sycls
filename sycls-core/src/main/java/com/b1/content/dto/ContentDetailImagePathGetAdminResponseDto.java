@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ContentDetailImagePathGetResponseDto {
+public class ContentDetailImagePathGetAdminResponseDto {
 
     private final Long contentDetailImageId;
 

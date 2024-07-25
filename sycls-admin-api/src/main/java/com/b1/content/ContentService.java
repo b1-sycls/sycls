@@ -5,7 +5,7 @@ import com.b1.category.CategoryHelper;
 import com.b1.category.entity.Category;
 import com.b1.common.PageResponseDto;
 import com.b1.content.dto.ContentAddRequestDto;
-import com.b1.content.dto.ContentDetailImagePathGetResponseDto;
+import com.b1.content.dto.ContentDetailImagePathGetAdminResponseDto;
 import com.b1.content.dto.ContentDetailResponseDto;
 import com.b1.content.dto.ContentGetAdminResponseDto;
 import com.b1.content.dto.ContentUpdateRequestDto;
@@ -16,7 +16,7 @@ import com.b1.content.entity.ContentStatus;
 import com.b1.exception.customexception.ContentStatusEqualsException;
 import com.b1.exception.errorcode.ContentErrorCode;
 import com.b1.round.RoundHelper;
-import com.b1.round.dto.RoundInfoGetResponseDto;
+import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -122,10 +122,10 @@ public class ContentService {
         ContentGetAdminResponseDto contentGetAdmin = contentHelper.getContentByContentId(
                 contentId);
 
-        List<ContentDetailImagePathGetResponseDto> contentDetailImagePathList =
+        List<ContentDetailImagePathGetAdminResponseDto> contentDetailImagePathList =
                 contentHelper.getAllContentDetailImagesPathByContentId(contentId);
 
-        List<RoundInfoGetResponseDto> roundInfoList = roundHelper.getAllRoundsInfoByContentId(
+        List<RoundInfoGetAdminResponseDto> roundInfoList = roundHelper.getAllRoundsInfoByContentId(
                 contentId);
 
         return ContentDetailResponseDto.of(contentGetAdmin, contentDetailImagePathList,

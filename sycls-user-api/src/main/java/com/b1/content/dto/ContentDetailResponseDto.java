@@ -1,7 +1,6 @@
 package com.b1.content.dto;
 
-import com.b1.content.entity.ContentStatus;
-import com.b1.round.dto.RoundInfoGetAdminResponseDto;
+import com.b1.round.dto.RoundInfoGetUserResponseDto;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,20 +16,18 @@ public class ContentDetailResponseDto {
     private final String title;
     private final String description;
     private final String mainImagePath;
-    private final ContentStatus status;
     private final String categoryName;
-    private final List<ContentDetailImagePathGetAdminResponseDto> detailImageList;
-    private final List<RoundInfoGetAdminResponseDto> roundList;
+    private final List<ContentDetailImagePathGetUserResponseDto> detailImageList;
+    private final List<RoundInfoGetUserResponseDto> roundList;
 
-    public static ContentDetailResponseDto of(ContentGetAdminResponseDto contentDto,
-            List<ContentDetailImagePathGetAdminResponseDto> detailImageList,
-            List<RoundInfoGetAdminResponseDto> roundList) {
+    public static ContentDetailResponseDto of(ContentGetUserResponseDto contentDto,
+            List<ContentDetailImagePathGetUserResponseDto> detailImageList,
+            List<RoundInfoGetUserResponseDto> roundList) {
         return ContentDetailResponseDto.builder()
                 .contentId(contentDto.getContentId())
                 .title(contentDto.getTitle())
                 .description(contentDto.getDescription())
                 .mainImagePath(contentDto.getMainImagePath())
-                .status(contentDto.getStatus())
                 .categoryName(contentDto.getCategoryName())
                 .detailImageList(detailImageList)
                 .roundList(roundList)

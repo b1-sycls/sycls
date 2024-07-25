@@ -1,6 +1,6 @@
 package com.b1.content;
 
-import com.b1.content.dto.ContentDetailImagePathGetResponseDto;
+import com.b1.content.dto.ContentDetailImagePathGetAdminResponseDto;
 import com.b1.content.dto.ContentGetAdminResponseDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
@@ -41,12 +41,12 @@ public class ContentHelper {
     }
 
     public ContentGetAdminResponseDto getContentByContentId(Long contentId) {
-        return queryRepository.getByContentByContentId(contentId);
+        return queryRepository.getByContentByContentIdForAdmin(contentId);
     }
 
-    public List<ContentDetailImagePathGetResponseDto> getAllContentDetailImagesPathByContentId(
+    public List<ContentDetailImagePathGetAdminResponseDto> getAllContentDetailImagesPathByContentId(
             Long contentId) {
-        return queryRepository.getAllContentDetailImagesPathByContentId(contentId);
+        return queryRepository.getAllContentDetailImagesPathByContentIdForAdmin(contentId);
     }
 
     public Page<ContentGetAdminResponseDto> getAllContentForAdmin(Long categoryId,
