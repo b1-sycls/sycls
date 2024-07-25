@@ -7,7 +7,8 @@ import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
-import com.b1.round.dto.RoundSimpleResponseDto;
+import com.b1.round.dto.RoundSimpleAdminResponseDto;
+import com.b1.round.dto.RoundSimpleUserResponseDto;
 import com.b1.round.entity.QRound;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
@@ -155,14 +156,14 @@ public class RoundQueryRepository {
                 .fetchOne();
     }
 
-    public Page<RoundSimpleResponseDto> getAllSimpleRoundsForAdmin(Long contentId,
+    public Page<RoundSimpleAdminResponseDto> getAllSimpleRoundsForAdmin(Long contentId,
             RoundStatus status, Pageable pageable) {
         QRound round = QRound.round;
         QContent content = QContent.content;
 
-        List<RoundSimpleResponseDto> roundList = queryFactory
+        List<RoundSimpleAdminResponseDto> roundList = queryFactory
                 .select(Projections.constructor(
-                        RoundSimpleResponseDto.class,
+                        RoundSimpleAdminResponseDto.class,
                         round.id,
                         content.title,
                         round.sequence,
@@ -193,11 +194,53 @@ public class RoundQueryRepository {
         return PageableExecutionUtils.getPage(roundList, pageable, total::fetchOne);
     }
 
+    public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(Long contentId,
+            Pageable pageable) {
+        QRound round = QRound.round;
+        QContent content = QContent.content;
+
+        List<RoundSimpleUserResponseDto> roundList = queryFactory
+                .select(Projections.constructor(
+                        RoundSimpleUserResponseDto.class,
+                        round.id,
+                        content.title,
+                        round.sequence,
+                        round.startDate,
+                        round.startTime,
+                        round.endTime
+                ))
+                .from(round)
+                .leftJoin(round.content, content)
+                .where(
+                        contentIdEq(contentId),
+                        statusNotClosed()
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(round.sequence.asc())
+                .fetch();
+
+        JPAQuery<Long> total = queryFactory
+                .select(round.count())
+                .from(round)
+                .where(
+                        contentIdEq(contentId),
+                        statusNotClosed()
+                );
+
+        return PageableExecutionUtils.getPage(roundList, pageable, total::fetchOne);
+    }
+
     private BooleanExpression contentIdEq(Long contentId) {
         return contentId == null ? null : QRound.round.content.id.eq(contentId);
     }
 
     private BooleanExpression statusEq(RoundStatus status) {
         return status == null ? null : QRound.round.status.eq(status);
+    }
+
+    private BooleanExpression statusNotClosed() {
+        return QRound.round.status.eq(RoundStatus.WAITING)
+                .or(QRound.round.status.eq(RoundStatus.AVAILABLE));
     }
 }

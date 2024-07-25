@@ -38,4 +38,4 @@ GET localhost:8081/v1/rounds/{{roundId}}
 
 
 ### 회차 전체 조회
-GET localhost:8081/v1/rounds?contentId=1
+GET localhost:8081/v1/rounds

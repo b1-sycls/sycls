@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RoundSimpleResponseDto {
+public class RoundSimpleAdminResponseDto {
 
     private final Long roundId;
     private final String contentTitle;
