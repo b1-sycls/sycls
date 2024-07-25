@@ -2,6 +2,7 @@ package com.b1.seatgrade.entity;
 
 import com.b1.round.entity.Round;
 import com.b1.seat.entity.Seat;
+import com.b1.content.entity.Content;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
