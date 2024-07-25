@@ -10,3 +10,6 @@ Content-Type: application/json
 
 ### 공연 단일 조회
 GET http://localhost:8081/v1/contents/{{contentId}}
+
+### 공연 전체 조회
+GET http://localhost:8081/v1/contents?titleKeyword=예시&status=VISIBLE&categoryId=1

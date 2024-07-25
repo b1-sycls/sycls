@@ -3,6 +3,7 @@ package com.b1.content;
 import com.b1.S3.S3Uploader;
 import com.b1.category.CategoryHelper;
 import com.b1.category.entity.Category;
+import com.b1.common.PageResponseDto;
 import com.b1.content.dto.ContentAddRequestDto;
 import com.b1.content.dto.ContentDetailImagePathGetResponseDto;
 import com.b1.content.dto.ContentDetailResponseDto;
@@ -11,6 +12,7 @@ import com.b1.content.dto.ContentUpdateRequestDto;
 import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
+import com.b1.content.entity.ContentStatus;
 import com.b1.exception.customexception.ContentStatusEqualsException;
 import com.b1.exception.errorcode.ContentErrorCode;
 import com.b1.round.RoundHelper;
@@ -19,6 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -139,5 +145,19 @@ public class ContentService {
             contentDetailImageList.add(contentDetailImage);
         }
         return contentDetailImageList;
+    }
+
+    public PageResponseDto<ContentGetAdminResponseDto> getAllContents(Long categoryId,
+            String titleKeyword,
+            ContentStatus status, int page, String sortProperty, String sortDirection) {
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
+
+        Pageable pageable = PageRequest.of(page - 1, 4, sort);
+
+        Page<ContentGetAdminResponseDto> pageResponseDto = contentHelper.getAllContentForAdmin(
+                categoryId, titleKeyword, status, pageable);
+
+        return PageResponseDto.of(pageResponseDto);
     }
 }

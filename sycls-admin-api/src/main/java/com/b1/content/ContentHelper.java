@@ -4,11 +4,14 @@ import com.b1.content.dto.ContentDetailImagePathGetResponseDto;
 import com.b1.content.dto.ContentGetAdminResponseDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
+import com.b1.content.entity.ContentStatus;
 import com.b1.exception.customexception.ContentNotFoundException;
 import com.b1.exception.errorcode.ContentErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Slf4j(topic = "Content Helper")
@@ -44,5 +47,11 @@ public class ContentHelper {
     public List<ContentDetailImagePathGetResponseDto> getAllContentDetailImagesPathByContentId(
             Long contentId) {
         return queryRepository.getAllContentDetailImagesPathByContentId(contentId);
+    }
+
+    public Page<ContentGetAdminResponseDto> getAllContentForAdmin(Long categoryId,
+            String titleKeyword,
+            ContentStatus status, Pageable pageable) {
+        return queryRepository.getAllContentForAdmin(categoryId, titleKeyword, status, pageable);
     }
 }

@@ -4,14 +4,21 @@ import com.b1.category.entity.QCategory;
 import com.b1.content.dto.ContentDetailImagePathGetResponseDto;
 import com.b1.content.dto.ContentGetAdminResponseDto;
 import com.b1.content.entity.ContentDetailImage;
+import com.b1.content.entity.ContentStatus;
 import com.b1.content.entity.QContent;
 import com.b1.content.entity.QContentDetailImage;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Slf4j(topic = "Content Query Repository")
 @Repository
@@ -42,6 +49,7 @@ public class ContentQueryRepository {
     }
 
     public List<ContentDetailImage> getByContentDetailImagesByContentId(Long contentId) {
+
         QContent content = QContent.content;
         QContentDetailImage contentDetailImage = QContentDetailImage.contentDetailImage;
 
@@ -52,9 +60,9 @@ public class ContentQueryRepository {
                 .fetch();
     }
 
-
     public List<ContentDetailImagePathGetResponseDto> getAllContentDetailImagesPathByContentId(
             Long contentId) {
+
         QContentDetailImage contentDetailImage = QContentDetailImage.contentDetailImage;
         QContent content = QContent.content;
 
@@ -70,5 +78,57 @@ public class ContentQueryRepository {
                 .where(content.id.eq(contentId))
                 .orderBy(contentDetailImage.id.asc())
                 .fetch();
+    }
+
+    public Page<ContentGetAdminResponseDto> getAllContentForAdmin(Long categoryId,
+            String titleKeyword,
+            ContentStatus status, Pageable pageable) {
+
+        QContent content = QContent.content;
+        QCategory category = QCategory.category;
+
+        List<ContentGetAdminResponseDto> contentList = queryFactory
+                .select(Projections.constructor(
+                        ContentGetAdminResponseDto.class,
+                        content.id,
+                        content.title,
+                        content.description,
+                        content.mainImagePath,
+                        content.status,
+                        content.category.name
+                ))
+                .from(content)
+                .where(
+                        categoryEq(categoryId),
+                        titleContains(titleKeyword),
+                        statusEq(status)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(content.createdAt.desc())
+                .fetch();
+
+        JPAQuery<Long> total = queryFactory
+                .select(content.count())
+                .from(content)
+                .where(
+                        titleContains(titleKeyword),
+                        statusEq(status)
+                );
+
+        return PageableExecutionUtils.getPage(contentList, pageable, total::fetchOne);
+    }
+
+    private BooleanExpression categoryEq(Long categoryId) {
+        return categoryId == null ? null : QCategory.category.id.eq(categoryId);
+    }
+
+    private BooleanExpression titleContains(String titleKeyword) {
+        return StringUtils.hasText(titleKeyword) ? QContent.content.title.containsIgnoreCase(
+                titleKeyword) : null;
+    }
+
+    private BooleanExpression statusEq(ContentStatus status) {
+        return status == null ? null : QContent.content.status.eq(status);
     }
 }
