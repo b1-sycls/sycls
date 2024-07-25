@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum CommonErrorCode implements ErrorCode {
-    BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name()),
-    ;
+public enum RoundErrorCode implements ErrorCode {
+    NOT_FOUND_ROUND(HttpStatus.NOT_FOUND.value(), "찾을 수 없는 공연입니다."),
+    BOOKING_NOT_AVAILABLE(HttpStatus.BAD_REQUEST.value(), "예매 할 수 없는 공연입니다.");
 
     private final Integer httpStatusCode;
     private final String description;
