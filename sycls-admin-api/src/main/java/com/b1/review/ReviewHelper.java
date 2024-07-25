@@ -3,6 +3,7 @@ package com.b1.review;
 import com.b1.exception.customexception.ReviewNotFoundException;
 import com.b1.exception.errorcode.ReviewErrorCode;
 import com.b1.review.dto.ReviewGetResponseDto;
+import com.b1.review.dto.ReviewSearchCondRequestDto;
 import com.b1.review.entity.Review;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,23 +20,30 @@ public class ReviewHelper {
     private final ReviewQueryRepository reviewQueryRepository;
 
     /**
-     * 리뷰 등록
+     * 해당 공연의 리뷰 전체 조회
      */
-    public void saveReview(final Review review) {
-        reviewRepository.save(review);
+    public Page<ReviewGetResponseDto> getAllReviewsByContent(final Long contentId,
+            final ReviewSearchCondRequestDto requestDto, final Pageable pageable) {
+        return reviewQueryRepository.getAllReviewsByContent(
+                contentId,
+                requestDto.getEmail(),
+                requestDto.getNickName(),
+                requestDto.getReviewStatus(),
+                pageable
+        );
     }
 
     /**
-     * 리뷰 조회
+     * 리뷰 상세 조회
      */
-    public Page<ReviewGetResponseDto> getAllReviews(final Long contentId, final Pageable pageable) {
-        return reviewQueryRepository.getAllReviews(contentId, pageable);
+    public ReviewGetResponseDto getReview(Long reviewId) {
+        return reviewQueryRepository.getReview(reviewId);
     }
 
     /**
-     * 리뷰 단건 조회
+     * 리뷰 findById
      */
-    public Review getReview(Long reviewId) {
+    public Review findReview(final Long reviewId) {
         return reviewRepository.findById(reviewId).orElseThrow(
                 () -> {
                     log.error("찾을 수 없는 리뷰 | {}", reviewId);
