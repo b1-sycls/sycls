@@ -1,5 +1,6 @@
 package com.b1.auth.entity;
 
+import jakarta.persistence.Table;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -7,20 +8,17 @@ import org.springframework.data.redis.core.TimeToLive;
 
 import java.io.Serializable;
 
-@RedisHash("EmailVerificationCode")
+@RedisHash("Blacklist")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmailVerificationCode implements Serializable {
+public class BlacklistToken implements Serializable {
 
     @Id
-    private String email;
-
-    private String code;
+    private String token;
 
     @TimeToLive
-    private long ttl;
-
+    private long ttl; // 토큰 만료 시간
 }

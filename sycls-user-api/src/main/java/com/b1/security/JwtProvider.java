@@ -1,13 +1,17 @@
 package com.b1.security;
 
+import com.b1.auth.entity.BlacklistToken;
+import com.b1.auth.entity.Token;
+import com.b1.auth.repository.BlacklistTokenRepository;
+import com.b1.auth.repository.TokenRepository;
+import com.b1.exception.customexception.TokenException;
+import com.b1.exception.errorcode.TokenErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +30,8 @@ import java.util.function.Function;
 public class JwtProvider {
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final TokenRepository tokenRepository;
+    private final BlacklistTokenRepository blacklistTokenRepository;
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
@@ -69,18 +75,20 @@ public class JwtProvider {
                         .compact();
     }
 
-    // JWT 토큰 substring
     public String substringToken(String tokenValue) {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        log.error("Not Found Token");
-        throw new IllegalArgumentException();
+        log.error("토큰을 찾을 수 없음 : {}" , tokenValue);
+        throw new TokenException(TokenErrorCode.TOKEN_NOT_FOUND);
     }
 
-    // 토큰 검증
     public boolean validateToken(String token) {
         try {
+            if (isExistBlacklistToken(token)) {
+                log.error("블랙리스트 토큰입니다.");
+                throw new TokenException(TokenErrorCode.IS_BLACKLIST_TOKEN);
+            }
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
@@ -95,24 +103,19 @@ public class JwtProvider {
         return false;
     }
 
-    // 토큰에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    // Token 으로 Authentication 가져오기
     public Authentication getAuthentication(String token) {
         String email = extractEmail(token);
         UserDetails userDetails = userDetailsService.loadUserByEmail(email);
-        return new UsernamePasswordAuthenticationToken(userDetails, "",
-                userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // HttpServletRequest 에서 access token 가져오기
     public String getTokenFromRequest(HttpServletRequest req) {
-        String accessToken = req.getHeader("Authorization").substring(7);
-
-        return accessToken;
+        String accessToken = req.getHeader("Authorization");
+        return substringToken(accessToken);
     }
 
     public String extractEmail(String token) {
@@ -132,8 +135,12 @@ public class JwtProvider {
         return extractAllClaims(token).getExpiration();
     }
 
-    public long getRemainingValidityMillis(String accessToken) {
-        Date expiration = extractExpiration(accessToken);
+    public long extractExpirationMillis(String token) {
+        return extractAllClaims(token).getExpiration().getTime();
+    }
+
+    public long getRemainingValidityMillis(String token) {
+        Date expiration = extractExpiration(token);
         Date now = new Date();
         return expiration.getTime() - now.getTime();
     }
@@ -141,4 +148,36 @@ public class JwtProvider {
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
+
+    public void addToken(String accessToken, String refreshToken, long ttl) {
+        Token newToken = Token.builder()
+                .access(accessToken)
+                .refresh(refreshToken)
+                .ttl(ttl)
+                .build();
+        tokenRepository.save(newToken);
+    }
+
+    public Token getToken(String token) {
+        return tokenRepository.findById(token).orElseThrow(
+                () -> new TokenException(TokenErrorCode.TOKEN_NOT_FOUND)
+        );
+    }
+
+    public void deleteToken(String token) {
+        tokenRepository.deleteById(token);
+    }
+
+    public void addBlacklistToken(String token, long ttl) {
+        BlacklistToken blacklistToken = BlacklistToken.builder()
+                .token(token)
+                .ttl(ttl)
+                .build();
+        blacklistTokenRepository.save(blacklistToken);
+    }
+
+    public boolean isExistBlacklistToken(String token) {
+        return blacklistTokenRepository.existsById(BEARER_PREFIX + token);
+    }
+
 }

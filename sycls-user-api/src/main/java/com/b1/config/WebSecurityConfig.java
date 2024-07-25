@@ -1,10 +1,8 @@
 package com.b1.config;
 
-import com.b1.security.JwtProvider;
-import com.b1.security.JwtAuthenticationFilter;
-import com.b1.security.JwtAuthorizationFilter;
-import com.b1.security.UserDetailsServiceImpl;
+import com.b1.security.*;
 import com.b1.user.UserHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,24 +13,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final JwtProvider jwtProvider;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserHelper userHelper;
-
-    public WebSecurityConfig(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService,
-                             AuthenticationConfiguration authenticationConfiguration,
-                             UserHelper userHelper) {
-        this.jwtProvider = jwtProvider;
-        this.userDetailsService = userDetailsService;
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.userHelper = userHelper;
-    }
+    private final JwtLogoutSuccessHandler jwtLogoutSuccessHandler;
+    private final JwtLogoutHandler jwtLogoutHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
@@ -76,8 +69,15 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
         );
 
+        http.logout(logout ->
+                logout.logoutUrl("/v1/auth/logout")
+                        .addLogoutHandler(jwtLogoutHandler)
+                        .logoutSuccessHandler(jwtLogoutSuccessHandler)
+        );
+
+
         // 필터 관리
-        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthorizationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

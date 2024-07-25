@@ -1,8 +1,11 @@
 package com.b1.security;
 
+import com.b1.exception.customexception.UserAlreadyDeletedException;
+import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.user.UserHelper;
 import com.b1.user.dto.UserLoginRequestDto;
 import com.b1.user.entity.User;
+import com.b1.user.entity.UserStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,6 +37,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             UserLoginRequestDto loginRequestDto = new ObjectMapper().readValue(request.getInputStream(), UserLoginRequestDto.class);
 
             User user = userHelper.findByEmail(loginRequestDto.email());
+            if (UserStatus.DELETED == user.getStatus()) {
+                log.error("이미 삭제된 유저 | request : {}", user.getId());
+                throw new UserAlreadyDeletedException(UserErrorCode.USER_ALREADY_DELETED);
+            }
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -55,12 +62,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String email = ((UserDetailsImpl) authResult.getPrincipal()).getEmail();
 
         // 토큰 생성
-        String token = jwtProvider.createAccessToken(email);
+        String accessToken = jwtProvider.createAccessToken(email);
         String refreshToken = jwtProvider.createRefreshToken(email);
 
         // 헤더에 토큰 저장
-        response.setHeader("Authorization", token);
+        response.setHeader("Authorization", accessToken);
         response.setHeader("RefreshToken", refreshToken);
+        jwtProvider.addToken(accessToken, refreshToken, jwtProvider.extractExpirationMillis(jwtProvider.substringToken(refreshToken)));
+
         // 로그인 성공 메세지 반환
         response.setContentType("application/json; charset=UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString("로그인 성공!"));

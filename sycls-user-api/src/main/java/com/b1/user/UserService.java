@@ -52,7 +52,7 @@ public class UserService {
 
     public void resign(UserResignRequestDto requestDto, UserDetailsImpl user) {
         User getUser = userHelper.findByEmail(user.getEmail());
-        if (getUser.getStatus() == UserStatus.DELETED) {
+        if (UserStatus.DELETED == getUser.getStatus()) {
             log.error("이미 삭제된 유저 | request : {}", getUser.getId());
             throw new UserAlreadyDeletedException(UserErrorCode.USER_ALREADY_DELETED);
         }
