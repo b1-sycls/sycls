@@ -11,8 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @RequiredArgsConstructor
 public enum RoundStatus {
-    WAITING("WAITING"),    // 대기
-    AVAILABLE("AVAILABLE"),  // 예매 가능
+    WAITING("WAITING"), // 대기
+    AVAILABLE("AVAILABLE"), // 예매 가능
     CLOSED("CLOSED"),  // 마감
     ;
 

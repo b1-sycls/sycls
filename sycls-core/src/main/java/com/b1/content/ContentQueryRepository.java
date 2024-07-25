@@ -70,7 +70,8 @@ public class ContentQueryRepository {
                 .select(Projections.constructor(
                         ContentDetailImagePathGetUserResponseDto.class,
                         contentDetailImage.id,
-                        contentDetailImage.detailImagePath
+                        contentDetailImage.detailImagePath,
+                        contentDetailImage.status
                 ))
                 .from(contentDetailImage)
                 .leftJoin(contentDetailImage.content, content)
@@ -112,6 +113,7 @@ public class ContentQueryRepository {
                         content.title,
                         content.description,
                         content.mainImagePath,
+                        content.status,
                         category.name
                 ))
                 .from(content)
@@ -174,6 +176,7 @@ public class ContentQueryRepository {
                         content.title,
                         content.description,
                         content.mainImagePath,
+                        content.status,
                         category.name
                 ))
                 .from(content)

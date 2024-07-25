@@ -1,5 +1,6 @@
 package com.b1.content.dto;
 
+import com.b1.content.entity.ContentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,6 +15,8 @@ public class ContentGetUserResponseDto {
     private final String description;
 
     private final String mainImagePath;
+
+    private final ContentStatus status;
 
     private final String categoryName;
 }

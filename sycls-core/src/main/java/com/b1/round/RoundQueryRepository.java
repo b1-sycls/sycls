@@ -78,7 +78,8 @@ public class RoundQueryRepository {
                         round.sequence,
                         round.startDate,
                         round.startTime,
-                        round.endTime
+                        round.endTime,
+                        round.status
                 ))
                 .from(round)
                 .leftJoin(round.content, content)
@@ -137,15 +138,19 @@ public class RoundQueryRepository {
                         round.startDate,
                         round.startTime,
                         round.endTime,
+                        round.status,
                         content.id,
                         content.title,
                         content.description,
                         content.mainImagePath,
+                        content.status,
                         category.id,
                         category.name,
+                        category.status,
                         place.id,
                         place.name,
-                        place.location
+                        place.location,
+                        place.status
                 ))
                 .from(round)
                 .leftJoin(round.content, content)
@@ -207,7 +212,8 @@ public class RoundQueryRepository {
                         round.sequence,
                         round.startDate,
                         round.startTime,
-                        round.endTime
+                        round.endTime,
+                        round.status
                 ))
                 .from(round)
                 .leftJoin(round.content, content)
