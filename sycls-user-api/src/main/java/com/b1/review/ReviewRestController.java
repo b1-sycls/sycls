@@ -1,11 +1,11 @@
 package com.b1.review;
 
+import com.b1.common.PageResponseDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.review.dto.ReviewAddRequestDto;
-import com.b1.review.dto.ReviewGetAllResponseDto;
+import com.b1.review.dto.ReviewGetResponseDto;
 import com.b1.review.dto.ReviewUpdateRequestDto;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j(topic = "Review Rest Controller")
@@ -42,13 +43,19 @@ public class ReviewRestController {
     }
 
     /**
-     * 리뷰 조회
+     * 리뷰 전체 조회
      */
     @GetMapping("/contents/{contentId}/reviews")
-    public ResponseEntity<RestApiResponseDto<List<ReviewGetAllResponseDto>>> getAllReviews(
-            @PathVariable final Long contentId
+    public ResponseEntity<RestApiResponseDto<PageResponseDto<ReviewGetResponseDto>>> getAllReviews(
+            @PathVariable final Long contentId,
+            @RequestParam(value = "pageNum", required = false, defaultValue = "1") final Integer pageNum,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "4") final Integer pageSize
     ) {
-        List<ReviewGetAllResponseDto> response = reviewService.getAllReviews(contentId);
+        PageResponseDto<ReviewGetResponseDto> response = reviewService.getAllReviews(
+                contentId,
+                pageNum,
+                pageSize
+        );
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("조회되었습니다.", response));
     }

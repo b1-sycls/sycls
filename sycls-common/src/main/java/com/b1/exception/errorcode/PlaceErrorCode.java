@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum PlaceErrorCode implements ErrorCode {
 
-    NOT_FOUND_PLACE(HttpStatus.BAD_REQUEST.value(), "공연장을 찾을 수 없습니다."),
+    NOT_FOUND_PLACE(HttpStatus.NOT_FOUND.value(), "공연장을 찾을 수 없습니다."),
     ALREADY_DELETED(HttpStatus.BAD_REQUEST.value(), "이미 삭제된 공연장입니다."),
     ;
 

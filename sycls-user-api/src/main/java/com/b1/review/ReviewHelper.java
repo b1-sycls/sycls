@@ -2,11 +2,12 @@ package com.b1.review;
 
 import com.b1.exception.customexception.ReviewNotFoundException;
 import com.b1.exception.errorcode.ReviewErrorCode;
-import com.b1.review.dto.ReviewGetAllResponseDto;
+import com.b1.review.dto.ReviewGetResponseDto;
 import com.b1.review.entity.Review;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Slf4j(topic = "Review Helper")
@@ -27,8 +28,8 @@ public class ReviewHelper {
     /**
      * 리뷰 조회
      */
-    public List<ReviewGetAllResponseDto> getAllReviews(final Long contentId) {
-        return reviewQueryRepository.getAllReviews(contentId);
+    public Page<ReviewGetResponseDto> getAllReviews(final Long contentId, final Pageable pageable) {
+        return reviewQueryRepository.getAllReviews(contentId, pageable);
     }
 
     /**
