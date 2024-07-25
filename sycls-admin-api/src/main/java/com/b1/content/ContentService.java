@@ -112,6 +112,8 @@ public class ContentService {
             throw new ContentStatusEqualsException(ContentErrorCode.CONTENT_STATUS_EQUALS);
         }
 
+        contentHelper.checkRoundStatusByContentId(content.getId());
+
         content.updateStatus(requestDto.status());
     }
 

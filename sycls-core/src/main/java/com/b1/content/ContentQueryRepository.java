@@ -9,6 +9,8 @@ import com.b1.content.entity.ContentDetailImage;
 import com.b1.content.entity.ContentStatus;
 import com.b1.content.entity.QContent;
 import com.b1.content.entity.QContentDetailImage;
+import com.b1.round.entity.QRound;
+import com.b1.round.entity.RoundStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -201,6 +203,20 @@ public class ContentQueryRepository {
                 );
 
         return PageableExecutionUtils.getPage(contentList, pageable, total::fetchOne);
+    }
+
+    public Long checkRoundStatusByContentId(Long contentId) {
+
+        QContent content = QContent.content;
+        QRound round = QRound.round;
+
+        return queryFactory
+                .select(round.count())
+                .from(round)
+                .leftJoin(round.content, content)
+                .where(content.id.eq(contentId)
+                        .and(round.status.notIn(RoundStatus.CLOSED)))
+                .fetchOne();
     }
 
     private BooleanExpression categoryEq(Long categoryId) {

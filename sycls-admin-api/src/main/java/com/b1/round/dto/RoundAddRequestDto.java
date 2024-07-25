@@ -1,6 +1,5 @@
 package com.b1.round.dto;
 
-import com.b1.round.entity.RoundStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -16,9 +15,6 @@ public record RoundAddRequestDto(
 
         @NotNull(message = "회차 순서는 누락될 수 없습니다.")
         Integer sequence,
-
-        @NotNull(message = "회차 상태는 누락될 수 없습니다.")
-        RoundStatus status,
 
         @NotNull(message = "공연 날짜는 누락될 수 없습니다.")
         @JsonFormat(pattern = "yyyy-MM-dd")

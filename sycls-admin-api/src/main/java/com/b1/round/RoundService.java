@@ -64,7 +64,7 @@ public class RoundService {
                 dtoStartDate,
                 dtoStartTime,
                 dtoEndTime,
-                requestDto.status(),
+                RoundStatus.WAITING,
                 content,
                 place
         );

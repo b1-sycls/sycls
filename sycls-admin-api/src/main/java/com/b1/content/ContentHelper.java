@@ -5,6 +5,7 @@ import com.b1.content.dto.ContentGetAdminResponseDto;
 import com.b1.content.dto.ContentSearchCondRequest;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
+import com.b1.exception.customexception.ContentNotChangeStatusException;
 import com.b1.exception.customexception.ContentNotFoundException;
 import com.b1.exception.errorcode.ContentErrorCode;
 import java.util.List;
@@ -53,5 +54,14 @@ public class ContentHelper {
             Pageable pageable) {
         return queryRepository.getAllContentForAdmin(request.getCategoryId(),
                 request.getTitleKeyword(), request.getStatus(), pageable);
+    }
+
+    public void checkRoundStatusByContentId(Long contentId) {
+        Long count = queryRepository.checkRoundStatusByContentId(contentId);
+
+        if (count == null || count == 0) {
+            log.error("활성화된 회차 없음 | contentId : {}", contentId);
+            throw new ContentNotChangeStatusException(ContentErrorCode.CONTENT_NOT_CHANGE_STATUS);
+        }
     }
 }
