@@ -25,3 +25,13 @@ insert into seats_grade(grade, price, status, ticket_id, round_id, seat_id)
 values ('VIP', 10000, 'ENABLE', null, 1, 1);
 insert into seats_grade(grade, price, status, ticket_id, round_id, seat_id)
 values ('VIP', 10000, 'ENABLE', null, 1, 2);
+
+-- 유저
+insert into users(email, username, nickname, password, phone_number, status, type, role, created_at,
+                  updated_at)
+values ('test@gmail.com', '홍길동', '길동이', 'Abcdefg123!', '01012345678', 'ACTIVE', 'COMMON', 'USER',
+        now(), now());
+
+-- 리뷰
+insert into reviews(comment, rating, status, user_id, content_id, created_at, updated_at)
+values ('댓글', 5, 'ENABLE', 1, 1, now(), now());
