@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum SeatErrorCode implements ErrorCode {
 
-    NOT_FOUND_SEAT(HttpStatus.BAD_REQUEST.value(), "좌석을 찾을 수 없습니다."),
+    NOT_FOUND_SEAT(HttpStatus.NOT_FOUND.value(), "좌석을 찾을 수 없습니다."),
     ALREADY_DELETED_SEAT(HttpStatus.BAD_REQUEST.value(), "이미 삭제된 좌석입니다."),
     ;
 

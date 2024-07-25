@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql
+    ports:
+      - ${RDB_PORT}
+    container_name: mysql-sycls
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_DATABASE: ${RDB_NAME}
+      MYSQL_ROOT_PASSWORD: ${RDB_PASSWORD}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+  redis:
+    container_name: redis-sycls
+    image: redis:alpine
+    command: redis-server
+    environment:
+      TZ: Asia/Seoul
+    ports:
+      - ${REDIS_PORT}

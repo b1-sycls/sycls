@@ -3,6 +3,8 @@ package com.b1.content.entity;
 import com.b1.place.entity.Place;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,6 +43,7 @@ public class Round {
     private LocalTime endTime;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private RoundStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)

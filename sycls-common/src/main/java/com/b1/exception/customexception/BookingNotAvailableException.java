@@ -3,10 +3,9 @@ package com.b1.exception.customexception;
 import com.b1.exception.customexception.global.GlobalStatusException;
 import com.b1.exception.errorcode.ErrorCode;
 
-public class PlaceAlreadyDeletedException extends GlobalStatusException {
+public class BookingNotAvailableException extends GlobalStatusException {
 
-    public PlaceAlreadyDeletedException(ErrorCode errorCode) {
+    public BookingNotAvailableException(ErrorCode errorCode) {
         super(errorCode);
     }
-
 }

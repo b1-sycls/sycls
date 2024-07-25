@@ -6,11 +6,13 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum CommonErrorCode implements ErrorCode {
-    BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name()),
+public enum SeatReservationLogErrorCode implements ErrorCode {
+
+    SEAT_RESERVATION_NOT_AVAILABLE(HttpStatus.BAD_REQUEST.value(), "이미 매진 된 좌석입니다."),
     ;
 
     private final Integer httpStatusCode;
     private final String description;
 
 }
+
