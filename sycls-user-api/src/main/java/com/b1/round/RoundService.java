@@ -7,6 +7,7 @@ import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
 import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleUserResponseDto;
+import com.b1.s3.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,9 @@ public class RoundService {
         if (responseDto == null) {
             return null;
         }
+
+        responseDto.updateMainImagePath(
+                S3Util.makeResponseImageDir(responseDto.getMainImagePath()));
 
         return RoundDetailResponseDto.of(responseDto);
     }

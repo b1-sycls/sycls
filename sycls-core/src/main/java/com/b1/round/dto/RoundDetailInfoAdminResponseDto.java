@@ -14,28 +14,32 @@ import lombok.Getter;
 public class RoundDetailInfoAdminResponseDto {
 
     // 나중에 출연진 추가를위해 미리 같은 필드의 dto 선언
-    private final Long roundId;
-    private final Integer sequence;
-    private final LocalDate startDate;
-    private final LocalTime startTime;
-    private final LocalTime endTime;
-    private final RoundStatus roundStatus;
+    private Long roundId;
+    private Integer sequence;
+    private LocalDate startDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private RoundStatus roundStatus;
 
     // 공연 정보
-    private final Long contentId;
-    private final String contentTitle;
-    private final String description;
-    private final String mainImagePath;
-    private final ContentStatus contentStatus;
+    private Long contentId;
+    private String contentTitle;
+    private String description;
+    private String mainImagePath;
+    private ContentStatus contentStatus;
 
     // 카테고리 정보
-    private final Long categoryId;
-    private final String categoryName;
-    private final CategoryStatus categoryStatus;
+    private Long categoryId;
+    private String categoryName;
+    private CategoryStatus categoryStatus;
 
     // 공연장 정보
-    private final Long placeId;
-    private final String placeName;
-    private final String placeLocation;
-    private final PlaceStatus placeStatus;
+    private Long placeId;
+    private String placeName;
+    private String placeLocation;
+    private PlaceStatus placeStatus;
+
+    public void updateMainImagePath(String mainImagePath) {
+        this.mainImagePath = mainImagePath;
+    }
 }

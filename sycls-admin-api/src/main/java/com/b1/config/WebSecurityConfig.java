@@ -16,31 +16,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    //    private final JwtProvider jwtProvider;
-//    private final UserDetailsServiceImpl userDetailsService;
-    private final AuthenticationConfiguration authenticationConfiguration;
-//    private final UserHelper userHelper;
-//    private final JwtLogoutSuccessHandler jwtLogoutSuccessHandler;
-//    private final JwtLogoutHandler jwtLogoutHandler;
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
             throws Exception {
         return configuration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-//        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider, userHelper);
-//        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-//        return filter;
-//    }
-
-//    @Bean
-//    public JwtAuthorizationFilter jwtAuthorizationFilter() {
-//        return new JwtAuthorizationFilter(jwtProvider, userDetailsService);
-//    }
-
+    // 테스트용 설정 이거 없으면 admin api 막힘
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
@@ -67,16 +49,6 @@ public class WebSecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
         );
-
-//        http.logout(logout ->
-//                logout.logoutUrl("/v1/auth/logout")
-//                        .addLogoutHandler(jwtLogoutHandler)
-//                        .logoutSuccessHandler(jwtLogoutSuccessHandler)
-//        );
-
-        // 필터 관리
-//        http.addFilterBefore(jwtAuthorizationFilter(), LogoutFilter.class);
-//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -77,9 +77,9 @@ public class RoundRestController {
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("정보 조회 성공", responseDto));
+                .body(RestApiResponseDto.of("단일 정보 조회 성공", responseDto));
     }
-    
+
     /**
      * 회차 전체 조회
      */
@@ -92,6 +92,6 @@ public class RoundRestController {
         PageResponseDto<RoundSimpleAdminResponseDto> responseDto = roundService.getAllRounds(
                 request);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("정보 조회 성공", responseDto));
+                .body(RestApiResponseDto.of("전체 정보 조회 성공", responseDto));
     }
 }

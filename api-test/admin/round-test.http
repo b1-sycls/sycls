@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### 회차 정보 수정
-PATCH http://localhost:8081/v1/rounds/2
+PATCH http://localhost:8081/v1/rounds/1
 Content-Type: application/json
 
 {

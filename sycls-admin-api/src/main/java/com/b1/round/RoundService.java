@@ -21,6 +21,7 @@ import com.b1.round.dto.RoundUpdateRequestDto;
 import com.b1.round.dto.RoundUpdateStatusRequestDto;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
+import com.b1.s3.S3Util;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -128,6 +129,9 @@ public class RoundService {
         if (responseDto == null) {
             return null;
         }
+
+        responseDto.updateMainImagePath(
+                S3Util.makeResponseImageDir(responseDto.getMainImagePath()));
 
         return RoundDetailResponseDto.of(responseDto);
     }
