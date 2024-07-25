@@ -71,7 +71,7 @@ public class ReviewRestController {
     ) {
         Long response = reviewService.updateReview(reviewId, requestDto/*, userDetails.getUser()*/);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("조회되었습니다.", response));
+                .body(RestApiResponseDto.of("수정되었습니다.", response));
     }
 
     /**
