@@ -1,4 +1,4 @@
-package com.b1.S3;
+package com.b1.s3;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

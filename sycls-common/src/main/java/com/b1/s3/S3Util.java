@@ -1,4 +1,4 @@
-package com.b1.S3;
+package com.b1.s3;
 
 import com.b1.exception.customexception.S3InvalidImageTypeException;
 import com.b1.exception.errorcode.S3ErrorCode;
