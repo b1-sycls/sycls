@@ -2,15 +2,12 @@ package com.b1.security;
 
 import com.b1.user.entity.User;
 import com.b1.user.entity.UserRole;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-@Slf4j
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
@@ -33,7 +30,9 @@ public class UserDetailsImpl implements UserDetails {
         return user.getUsername();
     }
 
-    public String getEmail() { return  user.getEmail(); }
+    public String getEmail() {
+        return user.getEmail();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
