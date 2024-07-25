@@ -111,28 +111,6 @@ public class ReviewQueryRepository {
     }
 
     /**
-     * 관리자 리뷰 전체 조회시 검색조건 email
-     */
-    private BooleanExpression emailLike(final String email) {
-        return StringUtils.hasText(email) ? user.email.like(email) : null;
-    }
-
-    /**
-     * 관리자 리뷰 전체 조회시 검색조건 nickName
-     */
-    private BooleanExpression nickNameLike(final String nickName) {
-        return StringUtils.hasText(nickName) ? user.email.like(nickName) : null;
-    }
-
-    /**
-     * 관리자 리뷰 전체 조회시 검색조건 reviewStatus
-     */
-    private BooleanExpression reviewStatusEq(final ReviewStatus status) {
-        return status != null ? review.status.eq(status) : null;
-    }
-
-
-    /**
      * 리뷰 상세조회
      */
     public ReviewGetResponseDto getReview(final Long reviewId) {
@@ -153,5 +131,26 @@ public class ReviewQueryRepository {
                         review.id.eq(reviewId)
                 )
                 .fetchOne();
+    }
+
+    /**
+     * 관리자 리뷰 전체 조회시 검색조건 email
+     */
+    private BooleanExpression emailLike(final String email) {
+        return StringUtils.hasText(email) ? user.email.like(email) : null;
+    }
+
+    /**
+     * 관리자 리뷰 전체 조회시 검색조건 nickName
+     */
+    private BooleanExpression nickNameLike(final String nickName) {
+        return StringUtils.hasText(nickName) ? user.email.like(nickName) : null;
+    }
+
+    /**
+     * 관리자 리뷰 전체 조회시 검색조건 reviewStatus
+     */
+    private BooleanExpression reviewStatusEq(final ReviewStatus status) {
+        return status != null ? review.status.eq(status) : null;
     }
 }

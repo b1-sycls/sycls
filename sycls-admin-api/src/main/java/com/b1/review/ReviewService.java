@@ -51,6 +51,7 @@ public class ReviewService {
     /**
      * 리뷰 상세 조회
      */
+    @Transactional(readOnly = true)
     public ReviewGetResponseDto getReview(Long reviewId) {
         return reviewHelper.getReview(reviewId);
     }
