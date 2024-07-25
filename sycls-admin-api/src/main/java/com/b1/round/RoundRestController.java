@@ -56,6 +56,12 @@ public class RoundRestController {
             @PathVariable Long roundId
     ) {
         RoundDetailResponseDto responseDto = roundService.getRound(roundId);
+
+        if (responseDto == null) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(RestApiResponseDto.of("회차를 등록해 주세요."));
+        }
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("정보 조회 성공", responseDto));
     }

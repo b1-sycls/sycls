@@ -109,6 +109,10 @@ public class RoundService {
 
         RoundDetailInfoAdminResponseDto responseDto = roundHelper.getRoundDetail(roundId);
 
+        if (responseDto == null) {
+            return null;
+        }
+
         return RoundDetailResponseDto.of(responseDto);
     }
 

@@ -183,7 +183,8 @@ public class ContentQueryRepository {
                 .leftJoin(content.category, category)
                 .where(
                         categoryEq(categoryId),
-                        titleContains(titleKeyword)
+                        titleContains(titleKeyword),
+                        statusEq(ContentStatus.VISIBLE)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
