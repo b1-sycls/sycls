@@ -1,5 +1,6 @@
 package com.b1.round;
 
+import com.b1.common.PageResponseDto;
 import com.b1.content.ContentHelper;
 import com.b1.content.entity.Content;
 import com.b1.exception.customexception.InvalidDateException;
@@ -12,6 +13,7 @@ import com.b1.place.entity.Place;
 import com.b1.round.dto.RoundAddRequestDto;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
+import com.b1.round.dto.RoundSimpleResponseDto;
 import com.b1.round.dto.RoundUpdateRequestDto;
 import com.b1.round.dto.RoundUpdateStatusRequestDto;
 import com.b1.round.entity.Round;
@@ -21,6 +23,10 @@ import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,6 +110,20 @@ public class RoundService {
         RoundDetailInfoAdminResponseDto responseDto = roundHelper.getRound(roundId);
 
         return RoundDetailResponseDto.of(responseDto);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDto<RoundSimpleResponseDto> getAllRounds(Long contentId, RoundStatus status,
+            int page, String sortProperty, String sortDirection) {
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
+
+        Pageable pageable = PageRequest.of(page - 1, 10, sort);
+
+        Page<RoundSimpleResponseDto> pageResponseDto = roundHelper.getAllSimpleRoundsForAdmin(
+                contentId, status, pageable);
+
+        return PageResponseDto.of(pageResponseDto);
     }
 
     private void checkReservationTime(LocalDate startDate, LocalTime startTime,

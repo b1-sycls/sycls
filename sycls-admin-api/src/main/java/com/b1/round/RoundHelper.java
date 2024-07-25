@@ -4,11 +4,15 @@ import com.b1.exception.customexception.RoundNotFoundException;
 import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
+import com.b1.round.dto.RoundSimpleResponseDto;
 import com.b1.round.entity.Round;
+import com.b1.round.entity.RoundStatus;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Slf4j(topic = "Round Helper")
@@ -38,5 +42,10 @@ public class RoundHelper {
 
     public RoundDetailInfoAdminResponseDto getRound(Long roundId) {
         return queryRepository.getRoundByRoundIdForAdmin(roundId);
+    }
+
+    public Page<RoundSimpleResponseDto> getAllSimpleRoundsForAdmin(Long contentId,
+            RoundStatus status, Pageable pageable) {
+        return queryRepository.getAllSimpleRoundsForAdmin(contentId, status, pageable);
     }
 }
