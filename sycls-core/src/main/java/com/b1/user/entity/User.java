@@ -34,7 +34,7 @@ public class User extends TimeStamp {
     @Column(nullable = false, unique = true, length = 20)
     private String nickname;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 255)
     private String password;
 
     @Column(nullable = false, length = 20)
@@ -54,7 +54,7 @@ public class User extends TimeStamp {
 
     @Builder(access = AccessLevel.PRIVATE)
     private User(String email, String username, String nickname, String password,
-            String phoneNumber, UserStatus status, UserLoginType type, UserRole role) {
+                 String phoneNumber, UserStatus status, UserLoginType type, UserRole role) {
         this.email = email;
         this.username = username;
         this.nickname = nickname;
@@ -65,8 +65,8 @@ public class User extends TimeStamp {
         this.role = role;
     }
 
-    public static User addCustomer(String email, String username, String nickname,
-            String password, String phoneNumber) {
+    public static User addCustomer(String email, String username, String nickname, String password,
+                                   String phoneNumber) {
         return User.builder()
                 .email(email)
                 .username(username)
@@ -77,6 +77,14 @@ public class User extends TimeStamp {
                 .type(UserLoginType.COMMON)
                 .role(UserRole.USER)
                 .build();
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void deleteUser() {
+        this.status = UserStatus.DELETED;
     }
 
 }

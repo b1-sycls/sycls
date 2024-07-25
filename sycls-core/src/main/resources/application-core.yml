@@ -7,6 +7,30 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      encoding: UTF-8
+  #      mode: always
+
+  mail:
+    host: smtp.naver.com
+    port: 587
+    username: ${NAVER_EMAIL}@naver.com
+    password: ${NAVER_EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.naver.com
+            protocols: TLSv1.2
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   jpa:
     hibernate:

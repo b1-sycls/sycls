@@ -1,13 +1,17 @@
 package com.b1.review;
 
+import com.b1.common.PageResponseDto;
 import com.b1.review.dto.ReviewAddRequestDto;
-import com.b1.review.dto.ReviewGetAllResponseDto;
+import com.b1.review.dto.ReviewGetResponseDto;
 import com.b1.review.dto.ReviewUpdateRequestDto;
 import com.b1.review.entity.Review;
 import com.b1.review.entity.ReviewStatus;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +38,14 @@ public class ReviewService {
      * 리뷰 조회 TODO user&content 완성 후 리팩토링
      */
     @Transactional(readOnly = true)
-    public List<ReviewGetAllResponseDto> getAllReviews(final Long contentId) {
-        return reviewHelper.getAllReviews(contentId);
+    public PageResponseDto<ReviewGetResponseDto> getAllReviews(
+            final Long contentId,
+            final Integer pageNum,
+            final Integer pageSize
+    ) {
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize, Direction.DESC, "createdAt");
+        Page<ReviewGetResponseDto> reviewList = reviewHelper.getAllReviews(contentId, pageable);
+        return PageResponseDto.of(reviewList);
     }
 
     /**
