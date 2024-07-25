@@ -2,7 +2,6 @@ package com.b1.content.entity;
 
 import com.b1.category.entity.Category;
 import com.b1.common.TimeStamp;
-import com.b1.place.entity.Place;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
