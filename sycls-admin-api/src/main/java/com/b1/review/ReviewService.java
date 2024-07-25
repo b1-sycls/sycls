@@ -3,6 +3,8 @@ package com.b1.review;
 import com.b1.common.PageResponseDto;
 import com.b1.review.dto.ReviewGetResponseDto;
 import com.b1.review.dto.ReviewSearchCondRequestDto;
+import com.b1.review.entity.Review;
+import com.b1.review.entity.ReviewStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -51,5 +53,14 @@ public class ReviewService {
      */
     public ReviewGetResponseDto getReview(Long reviewId) {
         return reviewHelper.getReview(reviewId);
+    }
+
+    /**
+     * 리뷰 삭제
+     */
+    public void deleteReview(Long reviewId) {
+        Review review = reviewHelper.findReview(reviewId);
+        ReviewStatus.checkDeleted(review.getStatus());
+        review.deleteReview();
     }
 }

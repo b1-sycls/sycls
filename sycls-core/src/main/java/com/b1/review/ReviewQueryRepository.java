@@ -24,6 +24,9 @@ public class ReviewQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    /**
+     * 사용자 리뷰 전체 조회
+     */
     public Page<ReviewGetResponseDto> getAllReviews(
             final Long contentId,
             final Pageable pageable
@@ -33,7 +36,7 @@ public class ReviewQueryRepository {
                 .select(Projections.constructor
                         (
                                 ReviewGetResponseDto.class,
-                                user.email,
+                                user.nickname,
                                 review.comment,
                                 review.rating,
                                 review.createdAt,

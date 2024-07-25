@@ -1,7 +1,10 @@
 package com.b1.review;
 
+import com.b1.exception.customexception.ReviewNotFoundException;
+import com.b1.exception.errorcode.ReviewErrorCode;
 import com.b1.review.dto.ReviewGetResponseDto;
 import com.b1.review.dto.ReviewSearchCondRequestDto;
+import com.b1.review.entity.Review;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,5 +38,17 @@ public class ReviewHelper {
      */
     public ReviewGetResponseDto getReview(Long reviewId) {
         return reviewQueryRepository.getReview(reviewId);
+    }
+
+    /**
+     * 리뷰 findById
+     */
+    public Review findReview(final Long reviewId) {
+        return reviewRepository.findById(reviewId).orElseThrow(
+                () -> {
+                    log.error("찾을 수 없는 리뷰 | {}", reviewId);
+                    return new ReviewNotFoundException(ReviewErrorCode.NOT_FOUND_REVIEW);
+                }
+        );
     }
 }
