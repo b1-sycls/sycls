@@ -1,6 +1,6 @@
 package com.b1.auth;
 
-import static com.b1.security.JwtProvider.AUTHORIZATION_HEADER;
+import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
 
 import com.b1.auth.entity.Code;
 import com.b1.auth.repository.CodeRepository;

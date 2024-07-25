@@ -1,6 +1,6 @@
 package com.b1.security;
 
-import static com.b1.security.JwtProvider.AUTHORIZATION_HEADER;
+import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;

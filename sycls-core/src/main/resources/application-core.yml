@@ -10,7 +10,7 @@ spring:
   sql:
     init:
       encoding: UTF-8
-      mode: always
+  #      mode: always
 
   mail:
     host: smtp.naver.com

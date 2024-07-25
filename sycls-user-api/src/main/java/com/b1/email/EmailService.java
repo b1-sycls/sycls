@@ -1,16 +1,17 @@
 package com.b1.email;
 
+import static com.b1.constant.EmailConstants.FROM_NAME;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import java.io.UnsupportedEncodingException;
 
 @Service
 @RequiredArgsConstructor
@@ -22,16 +23,14 @@ public class EmailService {
     @Value("${NAVER_EMAIL}")
     private String from;
 
-    private final String fromName = "이메일 인증 서비스";
-
     /**
      * TODO 이메일 전송 실패에 대한 예외클래스 추가
-     * */
+     */
     public void sendVerificationCode(String to, String subject, String text) {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");
-            helper.setFrom(new InternetAddress(from, fromName)); // 발신자 이메일과 이름 설정
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setFrom(new InternetAddress(from, FROM_NAME)); // 발신자 이메일과 이름 설정
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text, true);

@@ -1,5 +1,10 @@
 package com.b1.security;
 
+import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
+import static com.b1.constant.TokenConstants.BEARER_PREFIX;
+import static com.b1.constant.TokenConstants.REFRESH_TOKEN_TIME;
+import static com.b1.constant.TokenConstants.TOKEN_TIME;
+
 import com.b1.auth.entity.BlacklistToken;
 import com.b1.auth.entity.Token;
 import com.b1.auth.repository.BlacklistTokenRepository;
@@ -34,13 +39,10 @@ import org.springframework.util.StringUtils;
 @Slf4j(topic = "Jwt Provider")
 public class JwtProvider {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_PREFIX = "Bearer ";
     private final UserDetailsServiceImpl userDetailsService;
     private final TokenRepository tokenRepository;
     private final BlacklistTokenRepository blacklistTokenRepository;
-    private final long TOKEN_TIME = 30 * 60 * 1000L; // 30분
-    private final long REFRESH_TOKEN_TIME = 14 * 24 * 60 * 60 * 1000L; // 2주
+
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     @Value("${JWT_SECRET_KEY}")
     private String secretKey;
