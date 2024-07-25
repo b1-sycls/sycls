@@ -32,3 +32,6 @@ Content-Type: application/json
   "startTime": "04:00",
   "endTime": "05:00"
 }
+
+### 회차 단일 조회
+GET localhost:8081/v1/rounds/{{roundId}}

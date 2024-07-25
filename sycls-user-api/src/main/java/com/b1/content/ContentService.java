@@ -40,6 +40,7 @@ public class ContentService {
                 roundInfoList);
     }
 
+    @Transactional(readOnly = true)
     public PageResponseDto<ContentGetUserResponseDto> getAllContents(Long categoryId,
             String titleKeyword, int page, String sortProperty, String sortDirection) {
 

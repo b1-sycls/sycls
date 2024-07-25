@@ -132,6 +132,22 @@ public class ContentService {
                 roundInfoList);
     }
 
+    @Transactional(readOnly = true)
+    public PageResponseDto<ContentGetAdminResponseDto> getAllContents(Long categoryId,
+            String titleKeyword,
+            ContentStatus status, int page, String sortProperty, String sortDirection) {
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
+
+        Pageable pageable = PageRequest.of(page - 1, 4, sort);
+
+        Page<ContentGetAdminResponseDto> pageResponseDto = contentHelper.getAllContentForAdmin(
+                categoryId, titleKeyword, status, pageable);
+
+        return PageResponseDto.of(pageResponseDto);
+    }
+
+
     private List<ContentDetailImage> getContentDetailImages(List<String> detailImageList,
             Content content) {
         List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
@@ -145,19 +161,5 @@ public class ContentService {
             contentDetailImageList.add(contentDetailImage);
         }
         return contentDetailImageList;
-    }
-
-    public PageResponseDto<ContentGetAdminResponseDto> getAllContents(Long categoryId,
-            String titleKeyword,
-            ContentStatus status, int page, String sortProperty, String sortDirection) {
-
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
-
-        Pageable pageable = PageRequest.of(page - 1, 4, sort);
-
-        Page<ContentGetAdminResponseDto> pageResponseDto = contentHelper.getAllContentForAdmin(
-                categoryId, titleKeyword, status, pageable);
-
-        return PageResponseDto.of(pageResponseDto);
     }
 }

@@ -1,7 +1,9 @@
 package com.b1.round;
 
+import com.b1.category.entity.QCategory;
 import com.b1.content.entity.QContent;
 import com.b1.place.entity.QPlace;
+import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
 import com.b1.round.entity.QRound;
@@ -75,5 +77,41 @@ public class RoundQueryRepository {
                 .where(content.id.eq(contentId))
                 .orderBy(round.sequence.asc())
                 .fetch();
+    }
+
+    public RoundDetailInfoAdminResponseDto getRoundByRoundIdForAdmin(Long roundId) {
+        QRound round = QRound.round;
+        QContent content = QContent.content;
+        QCategory category = QCategory.category;
+        QPlace place = QPlace.place;
+
+        return queryFactory
+                .select(Projections.constructor(
+                        RoundDetailInfoAdminResponseDto.class,
+                        round.id,
+                        round.sequence,
+                        round.startDate,
+                        round.startTime,
+                        round.endTime,
+                        round.status,
+                        content.id,
+                        content.title,
+                        content.description,
+                        content.mainImagePath,
+                        content.status,
+                        category.id,
+                        category.name,
+                        category.status,
+                        place.id,
+                        place.name,
+                        place.location,
+                        place.status
+                ))
+                .from(round)
+                .leftJoin(round.content, content)
+                .leftJoin(round.place, place)
+                .leftJoin(content.category, category)
+                .where(round.id.eq(roundId))
+                .fetchOne();
     }
 }

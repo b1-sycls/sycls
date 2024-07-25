@@ -2,6 +2,7 @@ package com.b1.round;
 
 import com.b1.exception.customexception.RoundNotFoundException;
 import com.b1.exception.errorcode.RoundErrorCode;
+import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import com.b1.round.entity.Round;
 import java.time.LocalDate;
@@ -33,5 +34,9 @@ public class RoundHelper {
 
     public List<RoundInfoGetAdminResponseDto> getAllRoundsInfoByContentId(Long contentId) {
         return queryRepository.getAllRoundsInfoByContentIdForAdmin(contentId);
+    }
+
+    public RoundDetailInfoAdminResponseDto getRound(Long roundId) {
+        return queryRepository.getRoundByRoundIdForAdmin(roundId);
     }
 }

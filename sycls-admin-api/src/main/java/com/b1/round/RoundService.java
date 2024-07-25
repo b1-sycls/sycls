@@ -10,6 +10,8 @@ import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.place.PlaceHelper;
 import com.b1.place.entity.Place;
 import com.b1.round.dto.RoundAddRequestDto;
+import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
+import com.b1.round.dto.RoundDetailResponseDto;
 import com.b1.round.dto.RoundUpdateRequestDto;
 import com.b1.round.dto.RoundUpdateStatusRequestDto;
 import com.b1.round.entity.Round;
@@ -94,6 +96,14 @@ public class RoundService {
         checkRoundConflictingReservation(roundList, dtoStartTime, dtoEndTime);
 
         round.updateDateAndTime(dtoStartDate, dtoStartTime, dtoEndTime);
+    }
+
+    @Transactional(readOnly = true)
+    public RoundDetailResponseDto getRound(Long roundId) {
+
+        RoundDetailInfoAdminResponseDto responseDto = roundHelper.getRound(roundId);
+
+        return RoundDetailResponseDto.of(responseDto);
     }
 
     private void checkReservationTime(LocalDate startDate, LocalTime startTime,

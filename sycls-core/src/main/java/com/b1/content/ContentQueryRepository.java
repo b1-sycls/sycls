@@ -74,7 +74,8 @@ public class ContentQueryRepository {
                 ))
                 .from(contentDetailImage)
                 .leftJoin(contentDetailImage.content, content)
-                .where(content.id.eq(contentId))
+                .where(content.id.eq(contentId)
+                        .and(content.status.eq(ContentStatus.VISIBLE)))
                 .orderBy(contentDetailImage.id.asc())
                 .fetch();
     }
@@ -115,7 +116,8 @@ public class ContentQueryRepository {
                 ))
                 .from(content)
                 .leftJoin(content.category, category)
-                .where(content.id.eq(contentId))
+                .where(content.id.eq(contentId)
+                        .and(content.status.eq(ContentStatus.VISIBLE)))
                 .fetchOne();
     }
 
@@ -190,7 +192,8 @@ public class ContentQueryRepository {
                 .from(content)
                 .where(
                         categoryEq(categoryId),
-                        titleContains(titleKeyword)
+                        titleContains(titleKeyword),
+                        statusEq(ContentStatus.VISIBLE)
                 );
 
         return PageableExecutionUtils.getPage(contentList, pageable, total::fetchOne);
