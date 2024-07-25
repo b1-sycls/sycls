@@ -15,7 +15,7 @@ import org.springframework.data.redis.core.TimeToLive;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Builder
 public class Code implements Serializable {
 
