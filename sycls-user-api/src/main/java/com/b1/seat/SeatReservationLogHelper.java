@@ -1,11 +1,11 @@
 package com.b1.seat;
 
-import static com.b1.constant.DomainConstant.*;
+import static com.b1.constant.DomainConstant.SEAT_RESERVATION_TIME;
 
 import com.b1.exception.customexception.SeatReservationLogNotAvailableException;
 import com.b1.exception.errorcode.SeatReservationLogErrorCode;
-import com.b1.seat.entity.SeatGrade;
 import com.b1.seat.entity.SeatReservationLog;
+import com.b1.seatgrade.entity.SeatGrade;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +37,8 @@ public class SeatReservationLogHelper {
         if (!seatReservationLogs.isEmpty()) {
             LocalDateTime now = LocalDateTime.now();
             boolean anyOccupied = seatReservationLogs.stream()
-                    .anyMatch(log -> log.getStartTime().plusMinutes(SEAT_RESERVATION_TIME).isAfter(now));
+                    .anyMatch(log -> log.getStartTime().plusMinutes(SEAT_RESERVATION_TIME)
+                            .isAfter(now));
 
             if (anyOccupied) {
                 log.error("점유 중 좌석 등급 | request {}", seatGradeIds);

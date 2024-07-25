@@ -4,15 +4,15 @@ values ('카테고리1', 'ENABLE', now(), now());
 
 -- 공연
 insert into contents (description, main_image_path, title,
-                      category_id, created_at, updated_at)
-values ('공연1', '/mainImagePath', 'title1', 1, now(), now());
+                      category_id, created_at, updated_at, status)
+values ('공연설명1', '/mainImagePath', 'title1', 1, now(), now(), 'HIDDEN');
 -- 공연장
 insert into places(location, max_seat, name, status, created_at, updated_at)
 values ('locationPlace1', 30, '공연장1', 'ENABLE', now(), now());
 
 -- 회차
 insert into rounds(sequence, status, content_id, place_id, end_time, start_date, start_time)
-values (1, 'AVAILABLE', 1, 1, now(), now(), now());
+values (1, 'WAITING', 1, 1, now(), now(), now());
 
 -- 좌석
 insert into seats(code, status, place_id, created_at, updated_at)

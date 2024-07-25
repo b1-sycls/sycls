@@ -1,5 +1,6 @@
 package com.b1.round.entity;
 
+import com.b1.exception.customexception.BookingNotAvailableException;
 import com.b1.exception.customexception.RoundStatusEqualsException;
 import com.b1.exception.errorcode.RoundErrorCode;
 import lombok.Getter;
@@ -21,6 +22,13 @@ public enum RoundStatus {
         if (status.equals(RoundStatus.CLOSED)) {
             log.error("해당 회차가 이미 닫혀있는 상태 request : {}", status);
             throw new RoundStatusEqualsException(RoundErrorCode.STATUS_ALREADY_CLOSED);
+        }
+    }
+
+    public static void checkAvailable(RoundStatus status) {
+        if (!status.equals(AVAILABLE)) {
+            log.error("예매 불가 상태 | request {}", status);
+            throw new BookingNotAvailableException(RoundErrorCode.BOOKING_NOT_AVAILABLE);
         }
     }
 }
