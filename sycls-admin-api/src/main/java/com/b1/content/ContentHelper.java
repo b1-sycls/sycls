@@ -2,9 +2,9 @@ package com.b1.content;
 
 import com.b1.content.dto.ContentDetailImagePathGetAdminResponseDto;
 import com.b1.content.dto.ContentGetAdminResponseDto;
+import com.b1.content.dto.ContentSearchCondRequest;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
-import com.b1.content.entity.ContentStatus;
 import com.b1.exception.customexception.ContentNotFoundException;
 import com.b1.exception.errorcode.ContentErrorCode;
 import java.util.List;
@@ -49,8 +49,9 @@ public class ContentHelper {
         return queryRepository.getAllContentDetailImagesPathByContentIdForAdmin(contentId);
     }
 
-    public Page<ContentGetAdminResponseDto> getAllContentForAdmin(Long categoryId,
-            String titleKeyword, ContentStatus status, Pageable pageable) {
-        return queryRepository.getAllContentForAdmin(categoryId, titleKeyword, status, pageable);
+    public Page<ContentGetAdminResponseDto> getAllContentForAdmin(ContentSearchCondRequest request,
+            Pageable pageable) {
+        return queryRepository.getAllContentForAdmin(request.getCategoryId(),
+                request.getTitleKeyword(), request.getStatus(), pageable);
     }
 }

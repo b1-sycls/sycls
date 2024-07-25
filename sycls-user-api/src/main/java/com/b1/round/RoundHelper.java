@@ -4,6 +4,7 @@ import com.b1.exception.customexception.RoundNotFoundException;
 import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
+import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleUserResponseDto;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
@@ -45,8 +46,8 @@ public class RoundHelper {
         return queryRepository.getRoundDetailInfoForUser(roundId);
     }
 
-    public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(Long contentId,
-            Pageable pageable) {
-        return queryRepository.getAllSimpleRoundsForUser(contentId, pageable);
+    public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(
+            RoundSearchCondRequest request, Pageable pageable) {
+        return queryRepository.getAllSimpleRoundsForUser(request.getContentId(), pageable);
     }
 }

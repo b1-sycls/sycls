@@ -4,9 +4,9 @@ import com.b1.common.PageResponseDto;
 import com.b1.content.dto.ContentAddRequestDto;
 import com.b1.content.dto.ContentDetailResponseDto;
 import com.b1.content.dto.ContentGetAdminResponseDto;
+import com.b1.content.dto.ContentSearchCondRequest;
 import com.b1.content.dto.ContentUpdateRequestDto;
 import com.b1.content.dto.ContentUpdateStatusRequestDto;
-import com.b1.content.entity.ContentStatus;
 import com.b1.globalresponse.RestApiResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -73,15 +73,10 @@ public class ContentRestController {
 
     @GetMapping("/contents")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<ContentGetAdminResponseDto>>> getAllContents(
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) ContentStatus status,
-            @RequestParam(required = false, defaultValue = "") String titleKeyword,
-            @RequestParam(required = false, defaultValue = "1") int page,
-            @RequestParam(required = false, defaultValue = "createdAt") String sortProperty,
-            @RequestParam(required = false, defaultValue = "DESC") String sortDirection
+            @ModelAttribute ContentSearchCondRequest request
     ) {
         PageResponseDto<ContentGetAdminResponseDto> response = contentService.getAllContents(
-                categoryId, titleKeyword, status, page, sortProperty, sortDirection);
+                request);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("전체 조회 성공", response));
     }

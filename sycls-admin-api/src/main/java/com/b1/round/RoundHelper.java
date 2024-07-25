@@ -4,9 +4,9 @@ import com.b1.exception.customexception.RoundNotFoundException;
 import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
+import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.entity.Round;
-import com.b1.round.entity.RoundStatus;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +44,9 @@ public class RoundHelper {
         return queryRepository.getRoundDetailInfoForAdmin(roundId);
     }
 
-    public Page<RoundSimpleAdminResponseDto> getAllSimpleRoundsForAdmin(Long contentId,
-            RoundStatus status, Pageable pageable) {
-        return queryRepository.getAllSimpleRoundsForAdmin(contentId, status, pageable);
+    public Page<RoundSimpleAdminResponseDto> getAllSimpleRoundsForAdmin(
+            RoundSearchCondRequest request, Pageable pageable) {
+        return queryRepository.getAllSimpleRoundsForAdmin(request.getContentId(),
+                request.getStatus(), pageable);
     }
 }

@@ -4,6 +4,9 @@ import com.b1.common.PageResponseDto;
 import com.b1.content.dto.ContentDetailImagePathGetUserResponseDto;
 import com.b1.content.dto.ContentDetailResponseDto;
 import com.b1.content.dto.ContentGetUserResponseDto;
+import com.b1.content.dto.ContentSearchCondRequest;
+import com.b1.exception.customexception.InvalidPageNumberException;
+import com.b1.exception.errorcode.PageErrorCode;
 import com.b1.round.RoundHelper;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
 import com.b1.s3.S3Util;
@@ -50,15 +53,21 @@ public class ContentService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponseDto<ContentGetUserResponseDto> getAllContents(Long categoryId,
-            String titleKeyword, int page, String sortProperty, String sortDirection) {
+    public PageResponseDto<ContentGetUserResponseDto> getAllContents(
+            ContentSearchCondRequest request) {
 
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
+        Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
+                request.getSortProperty());
 
-        Pageable pageable = PageRequest.of(page - 1, 4, sort);
+        if (request.getPage() <= 0) {
+            log.error("페이지 값이 0이하 request : {}", request.getPage());
+            throw new InvalidPageNumberException(PageErrorCode.INVALID_PAGE_NUMBER);
+        }
+
+        Pageable pageable = PageRequest.of(request.getPage() - 1, 4, sort);
 
         Page<ContentGetUserResponseDto> pageResponseDto = contentHelper.getAllContentForAdmin(
-                categoryId, titleKeyword, pageable);
+                request, pageable);
 
         for (ContentGetUserResponseDto dto : pageResponseDto) {
             dto.updateImagePath(S3Util.makeResponseImageDir(dto.getMainImagePath()));

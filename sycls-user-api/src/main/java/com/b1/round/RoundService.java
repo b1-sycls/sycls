@@ -1,8 +1,11 @@
 package com.b1.round;
 
 import com.b1.common.PageResponseDto;
+import com.b1.exception.customexception.InvalidPageNumberException;
+import com.b1.exception.errorcode.PageErrorCode;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
+import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleUserResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,15 +37,21 @@ public class RoundService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponseDto<RoundSimpleUserResponseDto> getAllRounds(Long contentId, int page,
-            String sortProperty, String sortDirection) {
+    public PageResponseDto<RoundSimpleUserResponseDto> getAllRounds(
+            RoundSearchCondRequest request) {
 
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
+        Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
+                request.getSortProperty());
 
-        Pageable pageable = PageRequest.of(page - 1, 10, sort);
+        if (request.getPage() <= 0) {
+            log.error("페이지 값이 0이하 request : {}", request.getPage());
+            throw new InvalidPageNumberException(PageErrorCode.INVALID_PAGE_NUMBER);
+        }
+
+        Pageable pageable = PageRequest.of(request.getPage() - 1, 10, sort);
 
         Page<RoundSimpleUserResponseDto> pageResponseDto = roundHelper.getAllSimpleRoundsForUser(
-                contentId, pageable);
+                request, pageable);
 
         return PageResponseDto.of(pageResponseDto);
     }

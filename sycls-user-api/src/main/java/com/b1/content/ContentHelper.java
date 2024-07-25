@@ -2,6 +2,7 @@ package com.b1.content;
 
 import com.b1.content.dto.ContentDetailImagePathGetUserResponseDto;
 import com.b1.content.dto.ContentGetUserResponseDto;
+import com.b1.content.dto.ContentSearchCondRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,10 @@ public class ContentHelper {
         return queryRepository.getAllContentDetailImagesPathByContentIdForUser(contentId);
     }
 
-    public Page<ContentGetUserResponseDto> getAllContentForAdmin(Long categoryId,
-            String titleKeyword, Pageable pageable) {
-        return queryRepository.getAllContentForUser(categoryId, titleKeyword, pageable);
+    public Page<ContentGetUserResponseDto> getAllContentForAdmin(ContentSearchCondRequest request,
+            Pageable pageable) {
+        return queryRepository.getAllContentForUser(request.getCategoryId(),
+                request.getTitleKeyword(), pageable);
     }
 }
 

@@ -4,22 +4,22 @@ import com.b1.common.PageResponseDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.round.dto.RoundAddRequestDto;
 import com.b1.round.dto.RoundDetailResponseDto;
+import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.dto.RoundUpdateRequestDto;
 import com.b1.round.dto.RoundUpdateStatusRequestDto;
-import com.b1.round.entity.RoundStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j(topic = "Round Rest Controller")
@@ -70,15 +70,10 @@ public class RoundRestController {
     // 공연정보에 해당하는 것만 불러온다면 PathVariable 로 변경
     @GetMapping("/rounds")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<RoundSimpleAdminResponseDto>>> getAllRounds(
-            @RequestParam(required = false) Long contentId,
-            @RequestParam(required = false) RoundStatus status,
-            @RequestParam(required = false, defaultValue = "1") int page,
-            @RequestParam(required = false, defaultValue = "createdAt") String sortProperty,
-            @RequestParam(required = false, defaultValue = "DESC") String sortDirection
+            @ModelAttribute RoundSearchCondRequest request
     ) {
         PageResponseDto<RoundSimpleAdminResponseDto> responseDto = roundService.getAllRounds(
-                contentId,
-                status, page, sortProperty, sortDirection);
+                request);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("정보 조회 성공", responseDto));
     }

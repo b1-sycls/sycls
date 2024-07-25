@@ -4,15 +4,18 @@ import com.b1.common.PageResponseDto;
 import com.b1.content.ContentHelper;
 import com.b1.content.entity.Content;
 import com.b1.exception.customexception.InvalidDateException;
+import com.b1.exception.customexception.InvalidPageNumberException;
 import com.b1.exception.customexception.InvalidTimeException;
 import com.b1.exception.customexception.RoundConflictingReservationException;
 import com.b1.exception.customexception.RoundStatusEqualsException;
+import com.b1.exception.errorcode.PageErrorCode;
 import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.place.PlaceHelper;
 import com.b1.place.entity.Place;
 import com.b1.round.dto.RoundAddRequestDto;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
+import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.dto.RoundUpdateRequestDto;
 import com.b1.round.dto.RoundUpdateStatusRequestDto;
@@ -117,16 +120,21 @@ public class RoundService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponseDto<RoundSimpleAdminResponseDto> getAllRounds(Long contentId,
-            RoundStatus status,
-            int page, String sortProperty, String sortDirection) {
+    public PageResponseDto<RoundSimpleAdminResponseDto> getAllRounds(
+            RoundSearchCondRequest request) {
 
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
+        Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
+                request.getSortProperty());
 
-        Pageable pageable = PageRequest.of(page - 1, 10, sort);
+        if (request.getPage() <= 0) {
+            log.error("페이지 값이 0이하 request : {}", request.getPage());
+            throw new InvalidPageNumberException(PageErrorCode.INVALID_PAGE_NUMBER);
+        }
+
+        Pageable pageable = PageRequest.of(request.getPage() - 1, 10, sort);
 
         Page<RoundSimpleAdminResponseDto> pageResponseDto = roundHelper.getAllSimpleRoundsForAdmin(
-                contentId, status, pageable);
+                request, pageable);
 
         return PageResponseDto.of(pageResponseDto);
     }
