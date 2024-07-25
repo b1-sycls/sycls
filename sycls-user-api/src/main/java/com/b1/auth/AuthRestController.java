@@ -4,11 +4,14 @@ import com.b1.auth.dto.EmailVerificationRequestDto;
 import com.b1.auth.dto.UserVerificationCodeRequestDto;
 import com.b1.email.EmailService;
 import com.b1.globalresponse.RestApiResponseDto;
+import com.b1.security.UserDetailsImpl;
 import com.b1.user.dto.UserResetPasswordRequestDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -75,13 +78,14 @@ public class AuthRestController {
     public ResponseEntity<RestApiResponseDto<Boolean>> checkVerificationCode (
             @Valid @RequestBody UserVerificationCodeRequestDto requestDto
     ) {
-        boolean isVerified = authService.verifyCode(requestDto.email(), requestDto.code());
-        if (isVerified) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(RestApiResponseDto.of("본인 인증이 완료됐습니다.", true));
+        String message = "본인 인증이 완료됐습니다.";
+        boolean isChecked = true;
+        if (!authService.verifyCode(requestDto.email(), requestDto.code())) {
+            message = "인증 코드가 일치하지 않습니다.";
+            isChecked = false;
         }
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("인증 코드가 일치하지 않습니다.", false));
+                .body(RestApiResponseDto.of(message, isChecked));
     }
 
     /**
@@ -96,5 +100,15 @@ public class AuthRestController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("비밀번호가 성공적으로 변경되었습니다."));
+    }
+
+    @PostMapping("/auth/token")
+    public ResponseEntity<RestApiResponseDto<String>> refreshToken (
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            HttpServletRequest request
+    ) {
+        authService.refreshToken(userDetails.getEmail(), request);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("토큰이 성공적으로 재발급 됐습니다."));
     }
 }

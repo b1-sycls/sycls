@@ -1,12 +1,19 @@
 package com.b1.auth;
 
-import com.b1.auth.entity.EmailVerificationCode;
-import com.b1.auth.repository.EmailVerificationCodeRepository;
+import com.b1.auth.entity.Code;
+import com.b1.auth.entity.Token;
+import com.b1.auth.repository.CodeRepository;
+import com.b1.exception.customexception.TokenException;
+import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserNotFoundException;
+import com.b1.exception.errorcode.TokenErrorCode;
 import com.b1.exception.errorcode.UserErrorCode;
+import com.b1.security.JwtProvider;
 import com.b1.user.UserHelper;
 import com.b1.user.dto.UserResetPasswordRequestDto;
 import com.b1.user.entity.User;
+import com.b1.user.entity.UserStatus;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +29,9 @@ import java.util.Random;
 public class AuthService {
 
     private final UserHelper userHelper;
+    private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
-    private final EmailVerificationCodeRepository emailVerificationCodeRepository;
+    private final CodeRepository codeRepository;
 
     public boolean checkEmailExists(String email) {
         return userHelper.checkEmailExists(email);
@@ -35,20 +43,29 @@ public class AuthService {
 
     public void resetPassword (UserResetPasswordRequestDto requestDto) {
         User user = userHelper.findByEmail(requestDto.email());
+        if (UserStatus.DELETED == user.getStatus()) {
+            throw new UserAlreadyDeletedException(UserErrorCode.USER_ALREADY_DELETED);
+        }
         user.changePassword(passwordEncoder.encode(requestDto.newPassword()));
     }
 
     public void saveVerificationCode (String email, String code) {
-        EmailVerificationCode emailVerificationCode = EmailVerificationCode.builder()
+        if (userHelper.checkEmailExists(email)) {
+            User user = userHelper.findByEmail(email);
+            if (UserStatus.DELETED == user.getStatus()) {
+                throw new UserAlreadyDeletedException(UserErrorCode.USER_ALREADY_DELETED);
+            }
+        }
+        Code emailVerificationCode = Code.builder()
                 .email(email)
                 .code(code)
                 .ttl(300)
                 .build();
-        emailVerificationCodeRepository.save(emailVerificationCode);
+        codeRepository.save(emailVerificationCode);
     }
 
     public boolean verifyCode  (String email, String code) {
-        String storedCode = emailVerificationCodeRepository.findByEmail(email).orElseThrow(
+        String storedCode = codeRepository.findByEmail(email).orElseThrow(
                 () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND)
         ).getCode();
         return storedCode != null && storedCode.equals(code);
@@ -58,5 +75,17 @@ public class AuthService {
         Random random = new Random();
         int code = random.nextInt(899999) + 100000; // 100000 ~ 999999 사이의 숫자 생성
         return String.valueOf(code);
+    }
+
+    public void refreshToken(String email, HttpServletRequest request) {
+        String accessToken = request.getHeader("Authorization");
+        String refreshToken = jwtProvider.getToken(accessToken).getRefresh();
+
+        log.info("{}" , jwtProvider.getRemainingValidityMillis(jwtProvider.substringToken(refreshToken)));
+        long blacklistTokenTtl = jwtProvider.getRemainingValidityMillis(jwtProvider.substringToken(refreshToken));
+
+        jwtProvider.addBlacklistToken(accessToken, blacklistTokenTtl);
+        jwtProvider.addBlacklistToken(refreshToken, blacklistTokenTtl);
+        jwtProvider.deleteToken(accessToken);
     }
 }
