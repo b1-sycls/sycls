@@ -3,33 +3,5 @@ spring:
     include:
       - core
 
-
-  mail:
-    host: smtp.naver.com
-    port: 587
-    username: ${NAVER_EMAIL}@naver.com
-    password: ${NAVER_EMAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          ssl:
-            trust: smtp.naver.com
-            protocols: TLSv1.2
-  redis:
-    host: localhost
-    port: 6379
-
 server:
   port: 8080
-
-logging:
-   level:
-     org:
-       springframework:
-         data:
-           redis:
-            DEBUG
