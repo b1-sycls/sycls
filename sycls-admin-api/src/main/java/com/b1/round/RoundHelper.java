@@ -40,8 +40,8 @@ public class RoundHelper {
         return queryRepository.getAllRoundsInfoByContentIdForAdmin(contentId);
     }
 
-    public RoundDetailInfoAdminResponseDto getRound(Long roundId) {
-        return queryRepository.getRoundByRoundIdForAdmin(roundId);
+    public RoundDetailInfoAdminResponseDto getRoundDetail(Long roundId) {
+        return queryRepository.getRoundDetailInfoForAdmin(roundId);
     }
 
     public Page<RoundSimpleResponseDto> getAllSimpleRoundsForAdmin(Long contentId,

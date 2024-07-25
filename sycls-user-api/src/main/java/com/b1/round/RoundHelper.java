@@ -2,6 +2,7 @@ package com.b1.round;
 
 import com.b1.exception.customexception.RoundNotFoundException;
 import com.b1.exception.errorcode.RoundErrorCode;
+import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
@@ -35,5 +36,9 @@ public class RoundHelper {
                 });
         RoundStatus.checkAvailable(round.getStatus());
         return round;
+    }
+
+    public RoundDetailInfoUserResponseDto getRoundDetail(Long roundId) {
+        return queryRepository.getRoundDetailInfoForUser(roundId);
     }
 }

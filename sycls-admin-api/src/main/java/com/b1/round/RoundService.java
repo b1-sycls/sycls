@@ -107,7 +107,7 @@ public class RoundService {
     @Transactional(readOnly = true)
     public RoundDetailResponseDto getRound(Long roundId) {
 
-        RoundDetailInfoAdminResponseDto responseDto = roundHelper.getRound(roundId);
+        RoundDetailInfoAdminResponseDto responseDto = roundHelper.getRoundDetail(roundId);
 
         return RoundDetailResponseDto.of(responseDto);
     }
