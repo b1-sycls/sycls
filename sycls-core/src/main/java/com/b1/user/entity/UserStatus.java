@@ -11,4 +11,8 @@ public enum UserStatus {
     ;
 
     private final String value;
+
+    public static boolean isDeleted(UserStatus status) {
+        return DELETED == status;
+    }
 }
