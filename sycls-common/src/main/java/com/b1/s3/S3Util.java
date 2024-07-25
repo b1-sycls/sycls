@@ -1,5 +1,6 @@
 package com.b1.s3;
 
+import com.b1.constant.S3Constant;
 import com.b1.exception.customexception.S3InvalidImageTypeException;
 import com.b1.exception.errorcode.S3ErrorCode;
 import java.util.Arrays;
@@ -16,14 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class S3Util {
 
-    private static final String URL_PREFIX = "content";
-
     public static boolean isFileExists(MultipartFile multipartFile) {
         return multipartFile != null && !multipartFile.isEmpty();
     }
 
     public static String getCheckImageExtension(String fileName) {
-        List<String> validExtensionList = Arrays.asList("jpg", "jpeg", "png", "webp");
+        List<String> validExtensionList = Arrays.asList(S3Constant.VALID_EXTENSIONS);
 
         int extensionIndex = fileName.lastIndexOf(".");
 
@@ -38,7 +37,7 @@ public class S3Util {
     }
 
     public static String createImageDir(S3Type type) {
-        return URL_PREFIX + "/"
+        return S3Constant.URL_PREFIX + "/"
                 + type.getValue() + "/";
     }
 
@@ -47,11 +46,11 @@ public class S3Util {
     }
 
     public static String subStringImageDir(String imageDir) {
-        String splitStr = ".com";
-        return imageDir.substring(imageDir.lastIndexOf(splitStr) + splitStr.length());
+        return imageDir.substring(
+                imageDir.lastIndexOf(S3Constant.SPLIT_STR) + S3Constant.SPLIT_STR.length());
     }
 
     public static String makeResponseImageDir(String imageDir) {
-        return "https://sycls-test.s3.ap-northeast-2.amazonaws.com" + imageDir;
+        return S3Constant.S3_BASE_URL + imageDir;
     }
 }

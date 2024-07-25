@@ -7,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SeatGradeType {
 
-    VIP("vip"),
-    ROYAL("royal"),
-    SUPERIOR("superior"),
-    A_GRADE("a"),
+    VIP("VIP"),
+    ROYAL("ROYAL"),
+    SUPERIOR("SUPERIOR"),
+    A("A"),
     ;
-
 
     private final String value;
 }
