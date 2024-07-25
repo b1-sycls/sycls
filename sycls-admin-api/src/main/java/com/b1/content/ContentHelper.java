@@ -50,8 +50,7 @@ public class ContentHelper {
     }
 
     public Page<ContentGetAdminResponseDto> getAllContentForAdmin(Long categoryId,
-            String titleKeyword,
-            ContentStatus status, Pageable pageable) {
+            String titleKeyword, ContentStatus status, Pageable pageable) {
         return queryRepository.getAllContentForAdmin(categoryId, titleKeyword, status, pageable);
     }
 }

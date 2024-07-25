@@ -5,6 +5,8 @@ import com.b1.content.dto.ContentGetUserResponseDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Slf4j(topic = "Content Helper ")
@@ -22,6 +24,11 @@ public class ContentHelper {
     public List<ContentDetailImagePathGetUserResponseDto> getAllContentDetailImagesPathByContentId(
             Long contentId) {
         return queryRepository.getAllContentDetailImagesPathByContentIdForUser(contentId);
+    }
+
+    public Page<ContentGetUserResponseDto> getAllContentForAdmin(Long categoryId,
+            String titleKeyword, Pageable pageable) {
+        return queryRepository.getAllContentForUser(categoryId, titleKeyword, pageable);
     }
 }
 

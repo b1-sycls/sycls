@@ -134,7 +134,7 @@ public class ContentQueryRepository {
                         content.description,
                         content.mainImagePath,
                         content.status,
-                        content.category.name
+                        category.name
                 ))
                 .from(content)
                 .leftJoin(content.category, category)
@@ -152,8 +152,45 @@ public class ContentQueryRepository {
                 .select(content.count())
                 .from(content)
                 .where(
+                        categoryEq(categoryId),
                         titleContains(titleKeyword),
                         statusEq(status)
+                );
+
+        return PageableExecutionUtils.getPage(contentList, pageable, total::fetchOne);
+    }
+
+    public Page<ContentGetUserResponseDto> getAllContentForUser(Long categoryId,
+            String titleKeyword, Pageable pageable) {
+        QContent content = QContent.content;
+        QCategory category = QCategory.category;
+
+        List<ContentGetUserResponseDto> contentList = queryFactory
+                .select(Projections.constructor(
+                        ContentGetUserResponseDto.class,
+                        content.id,
+                        content.title,
+                        content.description,
+                        content.mainImagePath,
+                        category.name
+                ))
+                .from(content)
+                .leftJoin(content.category, category)
+                .where(
+                        categoryEq(categoryId),
+                        titleContains(titleKeyword)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(content.createdAt.desc())
+                .fetch();
+
+        JPAQuery<Long> total = queryFactory
+                .select(content.count())
+                .from(content)
+                .where(
+                        categoryEq(categoryId),
+                        titleContains(titleKeyword)
                 );
 
         return PageableExecutionUtils.getPage(contentList, pageable, total::fetchOne);

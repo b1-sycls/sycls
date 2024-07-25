@@ -4,4 +4,4 @@
 GET http://localhost:8080/v1/contents/{{contentId}}
 
 ### 공연 전체 조회
-GET http://localhost:8080/v1/contents?titleKeyword=예시&status=VISIBLE&categoryId=1
+GET http://localhost:8080/v1/contents?titleKeyword=title&categoryId=1
