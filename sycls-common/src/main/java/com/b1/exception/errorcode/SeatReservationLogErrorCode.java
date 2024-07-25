@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum SeatReservationLogErrorCode implements ErrorCode {
 
-    SEAT_RESERVATION_NOT_AVAILABLE(HttpStatus.BAD_REQUEST.value(), "이미 매진 된 좌석입니다."),
+    SEAT_RESERVATION_NOT_AVAILABLE(HttpStatus.BAD_REQUEST.value(), "이미 예매 된 좌석입니다."),
     ;
 
     private final Integer httpStatusCode;
