@@ -40,7 +40,7 @@ public class RoundDetailResponseDto {
 
     // 티켓정보?
 
-    public static RoundDetailResponseDto of(RoundDetailInfoUserResponseDto responseDto) {
+    public static RoundDetailResponseDto of(final RoundDetailInfoUserResponseDto responseDto) {
         return RoundDetailResponseDto.builder()
                 .roundId(responseDto.getRoundId())
                 .sequence(responseDto.getSequence())

@@ -17,18 +17,27 @@ public class ContentHelper {
 
     private final ContentQueryRepository queryRepository;
 
-
-    public ContentGetUserResponseDto getContentByContentId(Long contentId) {
+    /**
+     * 단일 조회시 필요한 공연의 정보 조회
+     */
+    public ContentGetUserResponseDto getContentByContentId(final Long contentId) {
         return queryRepository.getByContentByContentIdForUser(contentId);
     }
 
+    /**
+     * 단일 조회시 필요한 공연의 서브이미지 정보 조회
+     */
     public List<ContentDetailImagePathGetUserResponseDto> getAllContentDetailImagesPathByContentId(
-            Long contentId) {
+            final Long contentId) {
         return queryRepository.getAllContentDetailImagesPathByContentIdForUser(contentId);
     }
 
-    public Page<ContentGetUserResponseDto> getAllContentForAdmin(ContentSearchCondRequest request,
-            Pageable pageable) {
+    /**
+     * 단일 조회시 필요한 공연의 회차 정보 페이징
+     */
+    public Page<ContentGetUserResponseDto> getAllContentForAdmin(
+            final ContentSearchCondRequest request,
+            final Pageable pageable) {
         return queryRepository.getAllContentForUser(request.getCategoryId(),
                 request.getTitleKeyword(), pageable);
     }

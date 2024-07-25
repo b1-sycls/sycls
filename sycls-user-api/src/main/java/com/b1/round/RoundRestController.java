@@ -23,9 +23,12 @@ public class RoundRestController {
 
     private final RoundService roundService;
 
+    /**
+     * 회차 단일 조회
+     */
     @GetMapping("/rounds/{roundId}")
     public ResponseEntity<RestApiResponseDto<RoundDetailResponseDto>> getRound(
-            @PathVariable Long roundId
+            @PathVariable final Long roundId
     ) {
         RoundDetailResponseDto responseDto = roundService.getRound(roundId);
 
@@ -37,9 +40,12 @@ public class RoundRestController {
                 .body(RestApiResponseDto.of("정보 조회 성공", responseDto));
     }
 
+    /**
+     * 회차 전체 조회
+     */
     @GetMapping("/rounds")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<RoundSimpleUserResponseDto>>> getAllRounds(
-            @ModelAttribute RoundSearchCondRequest request
+            @ModelAttribute final RoundSearchCondRequest request
     ) {
         PageResponseDto<RoundSimpleUserResponseDto> responseDto = roundService.getAllRounds(
                 request);

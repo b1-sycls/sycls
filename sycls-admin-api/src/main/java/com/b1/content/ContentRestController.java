@@ -32,48 +32,63 @@ public class ContentRestController {
 
     private final ContentService contentService;
 
+    /**
+     * 공연 등록 기능
+     */
     @PostMapping("/contents")
     public ResponseEntity<RestApiResponseDto<String>> addContent(
-            @Valid @RequestPart("dto") ContentAddRequestDto requestDto,
-            @RequestPart(value = "mainImage") MultipartFile mainImage,
-            @RequestPart(value = "detailImages", required = false) MultipartFile[] detailImages
+            @Valid @RequestPart("dto") final ContentAddRequestDto requestDto,
+            @RequestPart(value = "mainImage") final MultipartFile mainImage,
+            @RequestPart(value = "detailImages", required = false) final MultipartFile[] detailImages
     ) {
         contentService.addContent(requestDto, mainImage, detailImages);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("등록 성공"));
     }
 
+    /**
+     * 공연 정보 수정 기능
+     */
     @PatchMapping("/contents/{contentId}")
     public ResponseEntity<RestApiResponseDto<String>> updateContent(
             @PathVariable Long contentId,
-            @Valid @RequestPart("dto") ContentUpdateRequestDto requestDto,
-            @RequestPart(value = "mainImage", required = false) MultipartFile mainImage,
-            @RequestPart(value = "detailImages", required = false) MultipartFile[] detailImages
+            @Valid @RequestPart("dto") final ContentUpdateRequestDto requestDto,
+            @RequestPart(value = "mainImage", required = false) final MultipartFile mainImage,
+            @RequestPart(value = "detailImages", required = false) final MultipartFile[] detailImages
     ) {
         contentService.updateContent(contentId, requestDto, mainImage, detailImages);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("정보 수정 성공"));
     }
 
+    /**
+     * 공연 상태 수정 기능
+     */
     @PatchMapping("/contents/{contentId}/status")
     public ResponseEntity<RestApiResponseDto<String>> updateContentStatus(
-            @PathVariable Long contentId,
-            @Valid @RequestBody ContentUpdateStatusRequestDto requestDto
+            @PathVariable final Long contentId,
+            @Valid @RequestBody final ContentUpdateStatusRequestDto requestDto
     ) {
         contentService.updateContentStatus(contentId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("상태 수정 성공"));
     }
 
+    /**
+     * 공연 단일 조회
+     */
     @GetMapping("/contents/{contentId}")
     public ResponseEntity<RestApiResponseDto<ContentDetailResponseDto>> getContent(
-            @PathVariable Long contentId
+            @PathVariable final Long contentId
     ) {
         ContentDetailResponseDto response = contentService.getContent(contentId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("단일 조회 성공", response));
     }
 
+    /**
+     * 공연 전체 조회
+     */
     @GetMapping("/contents")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<ContentGetAdminResponseDto>>> getAllContents(
-            @ModelAttribute ContentSearchCondRequest request
+            @ModelAttribute final ContentSearchCondRequest request
     ) {
         PageResponseDto<ContentGetAdminResponseDto> response = contentService.getAllContents(
                 request);

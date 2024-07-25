@@ -24,7 +24,10 @@ public class CategoryService {
     private final CategoryHelper categoryHelper;
     private final ContentHelper contentHelper;
 
-    public void addCategory(CategoryAddRequestDto requestDto) {
+    /**
+     * 카테고리 등록
+     */
+    public void addCategory(final CategoryAddRequestDto requestDto) {
         String name = requestDto.name();
 
         checkCategoryDuplicatedName(name);
@@ -34,8 +37,10 @@ public class CategoryService {
         categoryHelper.saveCategory(category);
     }
 
-    // TODO 상태변경 기능 추가 생각중
-    public void updateCategory(Long categoryId, CategoryUpdateRequestDto requestDto) {
+    /**
+     * 카테고리 수정 TODO 상태변경 기능 추가 생각중
+     */
+    public void updateCategory(final Long categoryId, final CategoryUpdateRequestDto requestDto) {
         String name = requestDto.name();
 
         checkCategoryDuplicatedName(name);
@@ -45,7 +50,10 @@ public class CategoryService {
         category.update(name);
     }
 
-    public void disableCategoryStatus(Long categoryId) {
+    /**
+     * 카테고리 비활성화
+     */
+    public void disableCategoryStatus(final Long categoryId) {
         Category category = categoryHelper.findById(categoryId);
 
         CategoryStatus.checkDisable(category.getStatus());
@@ -58,7 +66,10 @@ public class CategoryService {
         category.disableStatus();
     }
 
-    public void enableCategoryStatus(Long categoryId) {
+    /**
+     * 카테고리 활성화
+     */
+    public void enableCategoryStatus(final Long categoryId) {
         Category category = categoryHelper.findById(categoryId);
 
         CategoryStatus.checkEnable(category.getStatus());
@@ -66,12 +77,18 @@ public class CategoryService {
         category.enableStatus();
     }
 
+    /**
+     * 카테고리 전체조회
+     */
     @Transactional(readOnly = true)
     public List<CategoryGetAdminResponseDto> getAllCategory() {
         return categoryHelper.getAllCategoryOrderByNameAsc();
     }
 
-    private void checkCategoryDuplicatedName(String name) {
+    /**
+     * 카테고리 이름 중복 확인
+     */
+    private void checkCategoryDuplicatedName(final String name) {
         if (categoryHelper.existsByName(name)) {
             log.error("중복된 카테고리 이름 | name : {}", name);
             throw new CategoryNameDuplicatedException(CategoryErrorCode.CATEGORY_NAME_DUPLICATED);

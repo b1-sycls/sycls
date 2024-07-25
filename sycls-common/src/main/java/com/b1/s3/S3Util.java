@@ -17,11 +17,17 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class S3Util {
 
-    public static boolean isFileExists(MultipartFile multipartFile) {
+    /**
+     * 이미지 누락 확인
+     */
+    public static boolean isFileExists(final MultipartFile multipartFile) {
         return multipartFile != null && !multipartFile.isEmpty();
     }
 
-    public static String getCheckImageExtension(String fileName) {
+    /**
+     * 이미지 파일 타입 확인
+     */
+    public static String getCheckImageExtension(final String fileName) {
         List<String> validExtensionList = Arrays.asList(S3Constant.VALID_EXTENSIONS);
 
         int extensionIndex = fileName.lastIndexOf(".");
@@ -36,21 +42,33 @@ public class S3Util {
         return extension;
     }
 
-    public static String createImageDir(S3Type type) {
+    /**
+     * 이미지 경로 생성
+     */
+    public static String createImageDir(final S3Type type) {
         return S3Constant.URL_PREFIX + "/"
                 + type.getValue() + "/";
     }
 
-    public static String createFileName(String extension) {
+    /**
+     * 이미지 파일 UUID 생성
+     */
+    public static String createFileName(final String extension) {
         return UUID.randomUUID().toString().concat(extension);
     }
 
-    public static String subStringImageDir(String imageDir) {
+    /**
+     * 이미지 파일 경로에 리전 주소값 제거
+     */
+    public static String subStringImageDir(final String imageDir) {
         return imageDir.substring(
                 imageDir.lastIndexOf(S3Constant.SPLIT_STR) + S3Constant.SPLIT_STR.length());
     }
 
-    public static String makeResponseImageDir(String imageDir) {
+    /**
+     * 이미지 파일 경로에 리전 주소값 추가
+     */
+    public static String makeResponseImageDir(final String imageDir) {
         return S3Constant.S3_BASE_URL + imageDir;
     }
 }

@@ -31,7 +31,10 @@ public class ContentQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<ContentDetailImage> getByContentDetailImagesByContentId(Long contentId) {
+    /**
+     * 서브이미지 리스트 반환
+     */
+    public List<ContentDetailImage> getByContentDetailImagesByContentId(final Long contentId) {
 
         QContent content = QContent.content;
         QContentDetailImage contentDetailImage = QContentDetailImage.contentDetailImage;
@@ -43,8 +46,11 @@ public class ContentQueryRepository {
                 .fetch();
     }
 
+    /**
+     * (어드민) 단일 조회시 필요한 공연의 서브이미지 정보 조회
+     */
     public List<ContentDetailImagePathGetAdminResponseDto> getAllContentDetailImagesPathByContentIdForAdmin(
-            Long contentId) {
+            final Long contentId) {
 
         QContentDetailImage contentDetailImage = QContentDetailImage.contentDetailImage;
         QContent content = QContent.content;
@@ -63,8 +69,12 @@ public class ContentQueryRepository {
                 .fetch();
     }
 
+    /**
+     * (유저) 단일 조회시 필요한 공연의 서브이미지 정보 조회
+     */
     public List<ContentDetailImagePathGetUserResponseDto> getAllContentDetailImagesPathByContentIdForUser(
-            Long contentId) {
+            final Long contentId) {
+
         QContentDetailImage contentDetailImage = QContentDetailImage.contentDetailImage;
         QContent content = QContent.content;
 
@@ -83,7 +93,10 @@ public class ContentQueryRepository {
                 .fetch();
     }
 
-    public ContentGetAdminResponseDto getByContentByContentIdForAdmin(Long contentId) {
+    /**
+     * (어드민) 단일 조회시 필요한 공연의 정보 조회
+     */
+    public ContentGetAdminResponseDto getByContentByContentIdForAdmin(final Long contentId) {
 
         QContent content = QContent.content;
         QCategory category = QCategory.category;
@@ -104,7 +117,11 @@ public class ContentQueryRepository {
                 .fetchOne();
     }
 
-    public ContentGetUserResponseDto getByContentByContentIdForUser(Long contentId) {
+    /**
+     * (유저) 단일 조회시 필요한 공연의 정보 조회
+     */
+    public ContentGetUserResponseDto getByContentByContentIdForUser(final Long contentId) {
+
         QContent content = QContent.content;
         QCategory category = QCategory.category;
 
@@ -125,9 +142,11 @@ public class ContentQueryRepository {
                 .fetchOne();
     }
 
-    public Page<ContentGetAdminResponseDto> getAllContentForAdmin(Long categoryId,
-            String titleKeyword,
-            ContentStatus status, Pageable pageable) {
+    /**
+     * (어드민) 단일 조회시 필요한 공연의 회차 정보 페이징
+     */
+    public Page<ContentGetAdminResponseDto> getAllContentForAdmin(final Long categoryId,
+            final String titleKeyword, final ContentStatus status, final Pageable pageable) {
 
         QContent content = QContent.content;
         QCategory category = QCategory.category;
@@ -166,8 +185,12 @@ public class ContentQueryRepository {
         return PageableExecutionUtils.getPage(contentList, pageable, total::fetchOne);
     }
 
-    public Page<ContentGetUserResponseDto> getAllContentForUser(Long categoryId,
-            String titleKeyword, Pageable pageable) {
+    /**
+     * (유저) 단일 조회시 필요한 공연의 회차 정보 페이징
+     */
+    public Page<ContentGetUserResponseDto> getAllContentForUser(final Long categoryId,
+            final String titleKeyword, final Pageable pageable) {
+
         QContent content = QContent.content;
         QCategory category = QCategory.category;
 
@@ -205,7 +228,10 @@ public class ContentQueryRepository {
         return PageableExecutionUtils.getPage(contentList, pageable, total::fetchOne);
     }
 
-    public Long checkRoundStatusByContentId(Long contentId) {
+    /**
+     * 공연이 활성화 상태로 변환 가능인지 회차 확인
+     */
+    public Long checkRoundStatusByContentId(final Long contentId) {
 
         QContent content = QContent.content;
         QRound round = QRound.round;
@@ -219,16 +245,25 @@ public class ContentQueryRepository {
                 .fetchOne();
     }
 
-    private BooleanExpression categoryEq(Long categoryId) {
+    /**
+     * 카테고리 id 별 조건 설정
+     */
+    private BooleanExpression categoryEq(final Long categoryId) {
         return categoryId == null ? null : QCategory.category.id.eq(categoryId);
     }
 
-    private BooleanExpression titleContains(String titleKeyword) {
+    /**
+     * 단어별 검색 조건 설정
+     */
+    private BooleanExpression titleContains(final String titleKeyword) {
         return StringUtils.hasText(titleKeyword) ? QContent.content.title.containsIgnoreCase(
                 titleKeyword) : null;
     }
 
-    private BooleanExpression statusEq(ContentStatus status) {
+    /**
+     * 상태별 검색 조건 설정
+     */
+    private BooleanExpression statusEq(final ContentStatus status) {
         return status == null ? null : QContent.content.status.eq(status);
     }
 }

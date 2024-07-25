@@ -23,18 +23,24 @@ public class ContentRestController {
 
     private final ContentService contentService;
 
+    /**
+     * 공연 단일 조회
+     */
     @GetMapping("/contents/{contentId}")
     public ResponseEntity<RestApiResponseDto<ContentDetailResponseDto>> getContent(
-            @PathVariable Long contentId
+            @PathVariable final Long contentId
     ) {
         ContentDetailResponseDto response = contentService.getContent(contentId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("단일 조회 성공", response));
     }
 
+    /**
+     * 공연 전체 조회
+     */
     @GetMapping("/contents")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<ContentGetUserResponseDto>>> getAllContents(
-            @ModelAttribute ContentSearchCondRequest request
+            @ModelAttribute final ContentSearchCondRequest request
     ) {
         PageResponseDto<ContentGetUserResponseDto> response = contentService.getAllContents(
                 request);

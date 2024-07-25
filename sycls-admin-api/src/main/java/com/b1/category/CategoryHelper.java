@@ -17,15 +17,24 @@ public class CategoryHelper {
     private final CategoryRepository categoryRepository;
     private final CategoryQueryRepository categoryQueryRepository;
 
-    public void saveCategory(Category category) {
+    /**
+     * 카테고리 저장
+     */
+    public void saveCategory(final Category category) {
         categoryRepository.save(category);
     }
 
-    public boolean existsByName(String name) {
+    /**
+     * 카테고리 이름 중복 확인
+     */
+    public boolean existsByName(final String name) {
         return categoryRepository.existsByName(name);
     }
 
-    public Category findById(Long categoryId) {
+    /**
+     * 카테고리 아이디로 카테고리 반환
+     */
+    public Category findById(final Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> {
                     log.error("카테고리를 찾지 못함 | request : {}", categoryId);
@@ -34,6 +43,9 @@ public class CategoryHelper {
                 });
     }
 
+    /**
+     * 카테고리 전체 조회
+     */
     public List<CategoryGetAdminResponseDto> getAllCategoryOrderByNameAsc() {
         return categoryQueryRepository.getAllOrderByNameAscForAdmin();
     }

@@ -23,29 +23,47 @@ public class RoundHelper {
     private final RoundRepository roundRepository;
     private final RoundQueryRepository queryRepository;
 
-    public Round findById(Long roundId) {
+    /**
+     * 회차 Entity 반환
+     */
+    public Round findById(final Long roundId) {
         return roundRepository.findById(roundId)
                 .orElseThrow(() -> new RoundNotFoundException(RoundErrorCode.NOT_FOUND_ROUND));
     }
 
-    public List<Round> getAllRoundsByPlaceId(Long placeId, LocalDate startDate) {
+    /**
+     * 회차 Entity List 반환
+     */
+    public List<Round> getAllRoundsByPlaceId(final Long placeId, final LocalDate startDate) {
         return queryRepository.getAllRoundsByPlaceId(placeId, startDate);
     }
 
-    public void saveRound(Round round) {
+    /**
+     * 회차 저장
+     */
+    public void saveRound(final Round round) {
         roundRepository.save(round);
     }
 
-    public List<RoundInfoGetAdminResponseDto> getAllRoundsInfoByContentId(Long contentId) {
+    /**
+     * 공연 단일 조회 기능에 들어가는 회차 정보
+     */
+    public List<RoundInfoGetAdminResponseDto> getAllRoundsInfoByContentId(final Long contentId) {
         return queryRepository.getAllRoundsInfoByContentIdForAdmin(contentId);
     }
 
-    public RoundDetailInfoAdminResponseDto getRoundDetail(Long roundId) {
+    /**
+     * 회차 단일 상세 조회 TODO 필드 추가 가능성 농후
+     */
+    public RoundDetailInfoAdminResponseDto getRoundDetail(final Long roundId) {
         return queryRepository.getRoundDetailInfoForAdmin(roundId);
     }
 
+    /**
+     * 회차 목록 정보 반환
+     */
     public Page<RoundSimpleAdminResponseDto> getAllSimpleRoundsForAdmin(
-            RoundSearchCondRequest request, Pageable pageable) {
+            final RoundSearchCondRequest request, final Pageable pageable) {
         return queryRepository.getAllSimpleRoundsForAdmin(request.getContentId(),
                 request.getStatus(), pageable);
     }

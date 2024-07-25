@@ -30,30 +30,44 @@ public class RoundRestController {
 
     private final RoundService roundService;
 
+    /**
+     * 회차 등록
+     */
     @PostMapping("/rounds")
     public ResponseEntity<RestApiResponseDto<String>> addRound(
-            @Valid @RequestBody RoundAddRequestDto requestDto) {
+            @Valid @RequestBody final RoundAddRequestDto requestDto) {
         roundService.addRound(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("등록 성공"));
     }
 
+    /**
+     * 회차 상태 수정
+     */
     @PatchMapping("/rounds/{roundId}/status")
-    public ResponseEntity<RestApiResponseDto<String>> updateRoundStatus(@PathVariable Long roundId,
-            @Valid @RequestBody RoundUpdateStatusRequestDto requestDto) {
+    public ResponseEntity<RestApiResponseDto<String>> updateRoundStatus(
+            @PathVariable final Long roundId,
+            @Valid @RequestBody final RoundUpdateStatusRequestDto requestDto) {
         roundService.updateRoundStatus(roundId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("상태 수정 성공"));
     }
 
+    /**
+     * 회차 정보 수정
+     */
     @PatchMapping("/rounds/{roundId}")
     public ResponseEntity<RestApiResponseDto<String>> updateRound(
-            @PathVariable Long roundId, @Valid @RequestBody RoundUpdateRequestDto requestDto) {
+            @PathVariable final Long roundId,
+            @Valid @RequestBody final RoundUpdateRequestDto requestDto) {
         roundService.updateRound(roundId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("정보 수정 성공"));
     }
 
+    /**
+     * 회차 단일 조회
+     */
     @GetMapping("/rounds/{roundId}")
     public ResponseEntity<RestApiResponseDto<RoundDetailResponseDto>> getRound(
-            @PathVariable Long roundId
+            @PathVariable final Long roundId
     ) {
         RoundDetailResponseDto responseDto = roundService.getRound(roundId);
 
@@ -65,12 +79,15 @@ public class RoundRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("정보 조회 성공", responseDto));
     }
-
+    
+    /**
+     * 회차 전체 조회
+     */
     // 공연정보 상관없이 전체조회할 일이 있을지도 모른다고 생각해서 contentId를 동적쿼리화
     // 공연정보에 해당하는 것만 불러온다면 PathVariable 로 변경
     @GetMapping("/rounds")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<RoundSimpleAdminResponseDto>>> getAllRounds(
-            @ModelAttribute RoundSearchCondRequest request
+            @ModelAttribute final RoundSearchCondRequest request
     ) {
         PageResponseDto<RoundSimpleAdminResponseDto> responseDto = roundService.getAllRounds(
                 request);

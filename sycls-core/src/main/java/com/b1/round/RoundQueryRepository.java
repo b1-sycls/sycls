@@ -32,8 +32,11 @@ public class RoundQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<Round> getAllRoundsByPlaceId(Long placeId,
-            LocalDate startDate) {
+    /**
+     * 회차 Entity List 반환
+     */
+    public List<Round> getAllRoundsByPlaceId(final Long placeId, final LocalDate startDate) {
+
         QRound round = QRound.round;
         QPlace place = QPlace.place;
 
@@ -46,7 +49,12 @@ public class RoundQueryRepository {
                 ).fetch();
     }
 
-    public List<RoundInfoGetAdminResponseDto> getAllRoundsInfoByContentIdForAdmin(Long contentId) {
+    /**
+     * (어드민) 공연 단일 조회 기능에 들어가는 회차 정보
+     */
+    public List<RoundInfoGetAdminResponseDto> getAllRoundsInfoByContentIdForAdmin(
+            final Long contentId) {
+
         QRound round = QRound.round;
         QContent content = QContent.content;
 
@@ -67,7 +75,12 @@ public class RoundQueryRepository {
                 .fetch();
     }
 
-    public List<RoundInfoGetUserResponseDto> getAllRoundsInfoByContentIdForUser(Long contentId) {
+    /**
+     * (유저) 공연 단일 조회 기능에 들어가는 회차 정보
+     */
+    public List<RoundInfoGetUserResponseDto> getAllRoundsInfoByContentIdForUser(
+            final Long contentId) {
+
         QRound round = QRound.round;
         QContent content = QContent.content;
 
@@ -88,7 +101,11 @@ public class RoundQueryRepository {
                 .fetch();
     }
 
-    public RoundDetailInfoAdminResponseDto getRoundDetailInfoForAdmin(Long roundId) {
+    /**
+     * (어드민) 회차 단일 상세 조회
+     */
+    public RoundDetailInfoAdminResponseDto getRoundDetailInfoForAdmin(final Long roundId) {
+
         QRound round = QRound.round;
         QContent content = QContent.content;
         QCategory category = QCategory.category;
@@ -124,7 +141,11 @@ public class RoundQueryRepository {
                 .fetchOne();
     }
 
-    public RoundDetailInfoUserResponseDto getRoundDetailInfoForUser(Long roundId) {
+    /**
+     * (유저) 회차 단일 상세 조회
+     */
+    public RoundDetailInfoUserResponseDto getRoundDetailInfoForUser(final Long roundId) {
+        
         QRound round = QRound.round;
         QContent content = QContent.content;
         QCategory category = QCategory.category;
@@ -161,8 +182,12 @@ public class RoundQueryRepository {
                 .fetchOne();
     }
 
-    public Page<RoundSimpleAdminResponseDto> getAllSimpleRoundsForAdmin(Long contentId,
-            RoundStatus status, Pageable pageable) {
+    /**
+     * (어드민) 회차 목록 정보 반환
+     */
+    public Page<RoundSimpleAdminResponseDto> getAllSimpleRoundsForAdmin(final Long contentId,
+            final RoundStatus status, final Pageable pageable) {
+
         QRound round = QRound.round;
         QContent content = QContent.content;
 
@@ -199,8 +224,12 @@ public class RoundQueryRepository {
         return PageableExecutionUtils.getPage(roundList, pageable, total::fetchOne);
     }
 
-    public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(Long contentId,
-            Pageable pageable) {
+    /**
+     * (유저) 회차 목록 정보 반환
+     */
+    public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(final Long contentId,
+            final Pageable pageable) {
+
         QRound round = QRound.round;
         QContent content = QContent.content;
 
@@ -237,14 +266,23 @@ public class RoundQueryRepository {
         return PageableExecutionUtils.getPage(roundList, pageable, total::fetchOne);
     }
 
-    private BooleanExpression contentIdEq(Long contentId) {
+    /**
+     * 공연 고유번호 검색 조건 설정
+     */
+    private BooleanExpression contentIdEq(final Long contentId) {
         return contentId == null ? null : QRound.round.content.id.eq(contentId);
     }
 
-    private BooleanExpression statusEq(RoundStatus status) {
+    /**
+     * 회차 상태 검색 조건 설정
+     */
+    private BooleanExpression statusEq(final RoundStatus status) {
         return status == null ? null : QRound.round.status.eq(status);
     }
 
+    /**
+     * 유저 상태 검증 조건 설정
+     */
     private BooleanExpression statusNotClosed() {
         return QRound.round.status.eq(RoundStatus.WAITING)
                 .or(QRound.round.status.eq(RoundStatus.AVAILABLE));

@@ -28,7 +28,10 @@ public class S3Uploader {
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String saveMainImage(MultipartFile file) {
+    /**
+     * S3 에 파일 저장 후 저장경로 반환
+     */
+    public String saveMainImage(final MultipartFile file) {
         checkImageIsPresent(file);
 
         String extension = S3Util.getCheckImageExtension(
@@ -40,7 +43,10 @@ public class S3Uploader {
         return uploadFileToS3(file, uploadFileName);
     }
 
-    public List<String> saveDetailImage(MultipartFile[] fileList) {
+    /**
+     * S3 에 파일들 저장 후 저장경로 반환
+     */
+    public List<String> saveDetailImage(final MultipartFile[] fileList) {
         List<String> subImageList = new ArrayList<>();
 
         for (MultipartFile file : fileList) {
@@ -60,14 +66,20 @@ public class S3Uploader {
         return subImageList;
     }
 
-    private void checkImageIsPresent(MultipartFile file) {
+    /**
+     * 이미지 누락 검사
+     */
+    private void checkImageIsPresent(final MultipartFile file) {
         if (!S3Util.isFileExists(file)) {
             log.error("이미지 누락 오류");
             throw new S3MainImageMissingException(S3ErrorCode.S3_MISSING_IMAGE);
         }
     }
 
-    private String uploadFileToS3(MultipartFile file, String uploadFileName) {
+    /**
+     * 이미지 업로드 로직
+     */
+    private String uploadFileToS3(final MultipartFile file, final String uploadFileName) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
 
@@ -82,7 +94,10 @@ public class S3Uploader {
         return S3Util.subStringImageDir(amazonS3Client.getUrl(bucket, uploadFileName).toString());
     }
 
-    public void deleteFileFromS3(String imageDir) {
+    /**
+     * 이미지 삭제 로직
+     */
+    public void deleteFileFromS3(final String imageDir) {
         String substringImageDir = S3Util.subStringImageDir(imageDir);
 
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, substringImageDir));

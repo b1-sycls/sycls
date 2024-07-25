@@ -5,5 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    boolean existsByName(String name);
+    /**
+     * 카테고리 이름 중복 확인
+     */
+    boolean existsByName(final String name);
 }

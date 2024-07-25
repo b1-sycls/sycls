@@ -23,7 +23,7 @@ public class RoundHelper {
     private final RoundRepository roundRepository;
     private final RoundQueryRepository queryRepository;
 
-    public List<RoundInfoGetUserResponseDto> getAllRoundsInfoByContentId(Long contentId) {
+    public List<RoundInfoGetUserResponseDto> getAllRoundsInfoByContentId(final Long contentId) {
         return queryRepository.getAllRoundsInfoByContentIdForUser(contentId);
     }
 
@@ -32,7 +32,7 @@ public class RoundHelper {
      *
      * @throws RoundNotFoundException 찾을 수 없는 공연입니다.
      */
-    public Round getRound(Long roundId) {
+    public Round getRound(final Long roundId) {
         Round round = roundRepository.findById(roundId)
                 .orElseThrow(() -> {
                     log.error("찾을 수 없는 공연 | request : {}", roundId);
@@ -42,12 +42,18 @@ public class RoundHelper {
         return round;
     }
 
-    public RoundDetailInfoUserResponseDto getRoundDetail(Long roundId) {
+    /**
+     * 회차 단일 상세 조회
+     */
+    public RoundDetailInfoUserResponseDto getRoundDetail(final Long roundId) {
         return queryRepository.getRoundDetailInfoForUser(roundId);
     }
 
+    /**
+     * 회차 목록 조회
+     */
     public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(
-            RoundSearchCondRequest request, Pageable pageable) {
+            final RoundSearchCondRequest request, final Pageable pageable) {
         return queryRepository.getAllSimpleRoundsForUser(request.getContentId(), pageable);
     }
 }

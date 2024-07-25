@@ -43,7 +43,10 @@ public class RoundService {
     private final ContentHelper contentHelper;
     private final PlaceHelper placeHelper;
 
-    public void addRound(RoundAddRequestDto requestDto) {
+    /**
+     * 회차 등록
+     */
+    public void addRound(final RoundAddRequestDto requestDto) {
 
         final LocalDate dtoStartDate = requestDto.startDate();
         final LocalTime dtoStartTime = requestDto.startTime();
@@ -72,7 +75,11 @@ public class RoundService {
         roundHelper.saveRound(round);
     }
 
-    public void updateRoundStatus(Long roundId, RoundUpdateStatusRequestDto requestDto) {
+    /**
+     * 회차 상태 수정
+     */
+    public void updateRoundStatus(final Long roundId,
+            final RoundUpdateStatusRequestDto requestDto) {
 
         Round round = roundHelper.findById(roundId);
 
@@ -84,7 +91,10 @@ public class RoundService {
         round.updateStatus(requestDto.status());
     }
 
-    public void updateRound(Long roundId, RoundUpdateRequestDto requestDto) {
+    /**
+     * 회차 정보 수정
+     */
+    public void updateRound(final Long roundId, final RoundUpdateRequestDto requestDto) {
 
         final LocalDate dtoStartDate = requestDto.startDate();
         final LocalTime dtoStartTime = requestDto.startTime();
@@ -107,8 +117,11 @@ public class RoundService {
         round.updateDateAndTime(dtoStartDate, dtoStartTime, dtoEndTime);
     }
 
+    /**
+     * 회차 단일 조회
+     */
     @Transactional(readOnly = true)
-    public RoundDetailResponseDto getRound(Long roundId) {
+    public RoundDetailResponseDto getRound(final Long roundId) {
 
         RoundDetailInfoAdminResponseDto responseDto = roundHelper.getRoundDetail(roundId);
 
@@ -119,9 +132,12 @@ public class RoundService {
         return RoundDetailResponseDto.of(responseDto);
     }
 
+    /**
+     * 회차 상세조회
+     */
     @Transactional(readOnly = true)
     public PageResponseDto<RoundSimpleAdminResponseDto> getAllRounds(
-            RoundSearchCondRequest request) {
+            final RoundSearchCondRequest request) {
 
         Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
                 request.getSortProperty());
@@ -139,8 +155,11 @@ public class RoundService {
         return PageResponseDto.of(pageResponseDto);
     }
 
-    private void checkReservationTime(LocalDate startDate, LocalTime startTime,
-            LocalTime endTime) {
+    /**
+     * 예약 시간 유효성 검증
+     */
+    private void checkReservationTime(final LocalDate startDate, final LocalTime startTime,
+            final LocalTime endTime) {
 
         LocalDate today = LocalDate.now();
 
@@ -155,8 +174,11 @@ public class RoundService {
         }
     }
 
-    private void checkRoundConflictingReservation(List<Round> roundList,
-            LocalTime dtoStartTime, LocalTime dtoEndTime) {
+    /**
+     * 기존예약과 충돌 확인
+     */
+    private void checkRoundConflictingReservation(final List<Round> roundList,
+            final LocalTime dtoStartTime, final LocalTime dtoEndTime) {
         for (Round roundInList : roundList) {
 
             final LocalTime savedStartTime = roundInList.getStartTime();

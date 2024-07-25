@@ -12,6 +12,7 @@ import com.b1.content.dto.ContentUpdateRequestDto;
 import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
+import com.b1.content.entity.ContentStatus;
 import com.b1.exception.customexception.ContentStatusEqualsException;
 import com.b1.exception.customexception.InvalidPageNumberException;
 import com.b1.exception.errorcode.ContentErrorCode;
@@ -43,8 +44,11 @@ public class ContentService {
     private final RoundHelper roundHelper;
     private final S3Uploader s3Uploader;
 
-    public void addContent(ContentAddRequestDto requestDto, MultipartFile mainImage,
-            MultipartFile[] detailImages) {
+    /**
+     * 공연 등록 기능
+     */
+    public void addContent(final ContentAddRequestDto requestDto, final MultipartFile mainImage,
+            final MultipartFile[] detailImages) {
 
         Category category = categoryHelper.findById(requestDto.categoryId());
 
@@ -54,7 +58,7 @@ public class ContentService {
                 category
         );
 
-        String mainImagePath = s3Uploader.saveMainImage(mainImage);
+        final String mainImagePath = s3Uploader.saveMainImage(mainImage);
 
         content.addMainImagePath(mainImagePath);
 
@@ -63,9 +67,10 @@ public class ContentService {
             return;
         }
 
-        List<String> detailImageList = s3Uploader.saveDetailImage(detailImages);
+        final List<String> detailImageList = s3Uploader.saveDetailImage(detailImages);
 
-        List<ContentDetailImage> contentDetailImageList = getContentDetailImages(detailImageList,
+        final List<ContentDetailImage> contentDetailImageList = getContentDetailImages(
+                detailImageList,
                 content);
 
         content.addContentDetailImageList(contentDetailImageList);
@@ -73,8 +78,11 @@ public class ContentService {
         contentHelper.saveContent(content);
     }
 
-    public void updateContent(Long contentId, ContentUpdateRequestDto requestDto,
-            MultipartFile mainImage, MultipartFile[] detailImages) {
+    /**
+     * 공연 정보 수정 기능
+     */
+    public void updateContent(final Long contentId, final ContentUpdateRequestDto requestDto,
+            final MultipartFile mainImage, final MultipartFile[] detailImages) {
 
         Content content = contentHelper.getContent(contentId);
 
@@ -95,7 +103,7 @@ public class ContentService {
                 detailImage.disableStatus();
             }
 
-            List<String> newDetailImageList = s3Uploader.saveDetailImage(detailImages);
+            final List<String> newDetailImageList = s3Uploader.saveDetailImage(detailImages);
             detailImageList = getContentDetailImages(newDetailImageList, content);
         }
 
@@ -103,7 +111,11 @@ public class ContentService {
                 contentMainImagePath, detailImageList);
     }
 
-    public void updateContentStatus(Long contentId, ContentUpdateStatusRequestDto requestDto) {
+    /**
+     * 공연 상태 수정 기능
+     */
+    public void updateContentStatus(final Long contentId,
+            final ContentUpdateStatusRequestDto requestDto) {
 
         Content content = contentHelper.getContent(contentId);
 
@@ -112,13 +124,18 @@ public class ContentService {
             throw new ContentStatusEqualsException(ContentErrorCode.CONTENT_STATUS_EQUALS);
         }
 
-        contentHelper.checkRoundStatusByContentId(content.getId());
+        if (requestDto.status() == ContentStatus.VISIBLE) {
+            contentHelper.checkRoundStatusByContentId(content.getId());
+        }
 
         content.updateStatus(requestDto.status());
     }
 
+    /**
+     * 공연 단일 조회 기능
+     */
     @Transactional(readOnly = true)
-    public ContentDetailResponseDto getContent(Long contentId) {
+    public ContentDetailResponseDto getContent(final Long contentId) {
 
         ContentGetAdminResponseDto contentGetAdmin = contentHelper.getContentByContentId(
                 contentId);
@@ -141,9 +158,12 @@ public class ContentService {
                 roundInfoList);
     }
 
+    /**
+     * 공연 전체 조회 기능
+     */
     @Transactional(readOnly = true)
     public PageResponseDto<ContentGetAdminResponseDto> getAllContents(
-            ContentSearchCondRequest request) {
+            final ContentSearchCondRequest request) {
 
         Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
                 request.getSortProperty());
@@ -165,8 +185,11 @@ public class ContentService {
         return PageResponseDto.of(pageResponseDto);
     }
 
-    private List<ContentDetailImage> getContentDetailImages(List<String> detailImageList,
-            Content content) {
+    /**
+     * 공연 서브 이미지 생성로직
+     */
+    private List<ContentDetailImage> getContentDetailImages(final List<String> detailImageList,
+            final Content content) {
         List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
 
         for (String detailImagePath : detailImageList) {

@@ -24,8 +24,11 @@ public class RoundService {
 
     private final RoundHelper roundHelper;
 
+    /**
+     * 회차 단일 조회
+     */
     @Transactional(readOnly = true)
-    public RoundDetailResponseDto getRound(Long roundId) {
+    public RoundDetailResponseDto getRound(final Long roundId) {
 
         RoundDetailInfoUserResponseDto responseDto = roundHelper.getRoundDetail(roundId);
 
@@ -36,9 +39,12 @@ public class RoundService {
         return RoundDetailResponseDto.of(responseDto);
     }
 
+    /**
+     * 회차 전체 조회
+     */
     @Transactional(readOnly = true)
     public PageResponseDto<RoundSimpleUserResponseDto> getAllRounds(
-            RoundSearchCondRequest request) {
+            final RoundSearchCondRequest request) {
 
         Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
                 request.getSortProperty());

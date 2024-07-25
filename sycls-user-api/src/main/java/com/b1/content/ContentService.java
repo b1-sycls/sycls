@@ -29,8 +29,11 @@ public class ContentService {
     private final ContentHelper contentHelper;
     private final RoundHelper roundHelper;
 
+    /**
+     * 공연 단일 조회
+     */
     @Transactional(readOnly = true)
-    public ContentDetailResponseDto getContent(Long contentId) {
+    public ContentDetailResponseDto getContent(final Long contentId) {
 
         ContentGetUserResponseDto contentGetUser = contentHelper.getContentByContentId(contentId);
 
@@ -52,9 +55,12 @@ public class ContentService {
                 roundInfoList);
     }
 
+    /**
+     * 공연 전체조회
+     */
     @Transactional(readOnly = true)
     public PageResponseDto<ContentGetUserResponseDto> getAllContents(
-            ContentSearchCondRequest request) {
+            final ContentSearchCondRequest request) {
 
         Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
                 request.getSortProperty());

@@ -20,9 +20,9 @@ public class ContentDetailResponseDto {
     private final List<ContentDetailImagePathGetUserResponseDto> detailImageList;
     private final List<RoundInfoGetUserResponseDto> roundList;
 
-    public static ContentDetailResponseDto of(ContentGetUserResponseDto contentDto,
-            List<ContentDetailImagePathGetUserResponseDto> detailImageList,
-            List<RoundInfoGetUserResponseDto> roundList) {
+    public static ContentDetailResponseDto of(final ContentGetUserResponseDto contentDto,
+            final List<ContentDetailImagePathGetUserResponseDto> detailImageList,
+            final List<RoundInfoGetUserResponseDto> roundList) {
         return ContentDetailResponseDto.builder()
                 .contentId(contentDto.getContentId())
                 .title(contentDto.getTitle())
