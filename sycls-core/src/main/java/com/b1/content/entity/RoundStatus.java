@@ -1,5 +1,7 @@
 package com.b1.content.entity;
 
+import com.b1.exception.customexception.BookingNotAvailableException;
+import com.b1.exception.errorcode.RoundErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,4 +14,10 @@ public enum RoundStatus {
     ;
 
     private final String value;
+
+    public static void checkAvailable(RoundStatus status) {
+        if (!status.equals(AVAILABLE)) {
+            throw new BookingNotAvailableException(RoundErrorCode.BOOKING_NOT_AVAILABLE);
+        }
+    }
 }
