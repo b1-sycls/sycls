@@ -253,6 +253,7 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+### env
+.env
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,windows,gradle,macos
-/.env
-/docker-compose-local.yml

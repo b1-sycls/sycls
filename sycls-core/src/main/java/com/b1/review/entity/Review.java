@@ -5,6 +5,8 @@ import com.b1.content.entity.Content;
 import com.b1.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,6 +37,7 @@ public class Review extends TimeStamp {
     private Integer rating;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReviewStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,5 +56,34 @@ public class Review extends TimeStamp {
         this.status = status;
         this.user = user;
         this.content = content;
+    }
+
+    /**
+     * 리뷰 등록
+     */
+    public static Review addReview(String comment, Integer rating,
+            ReviewStatus status, User user, Content content) {
+        return Review.builder()
+                .comment(comment)
+                .rating(rating)
+                .status(status)
+                .user(user)
+                .content(content)
+                .build();
+    }
+
+    /**
+     * 리뷰 수정
+     */
+    public void updateReview(String comment, Integer rating) {
+        this.comment = comment;
+        this.rating = rating;
+    }
+
+    /**
+     * 리뷰 삭제
+     */
+    public void deleteReview() {
+        this.status = ReviewStatus.DISABLE;
     }
 }

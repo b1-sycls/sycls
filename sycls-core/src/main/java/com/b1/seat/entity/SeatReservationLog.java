@@ -38,4 +38,11 @@ public class SeatReservationLog {
         this.startTime = startTime;
         this.seatGrade = seatGrade;
     }
+
+    public static SeatReservationLog addSeatReservationLog(SeatGrade seatGrade) {
+        return SeatReservationLog.builder()
+                .startTime(LocalDateTime.now())
+                .seatGrade(seatGrade)
+                .build();
+    }
 }

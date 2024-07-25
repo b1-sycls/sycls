@@ -50,7 +50,7 @@ public class Content extends TimeStamp {
 
     @Builder(access = AccessLevel.PRIVATE)
     private Content(String title, String description, String mainImagePath,
-            List<ContentDetailImage> contentDetailImageList, Category category, Place place) {
+             List<ContentDetailImage> contentDetailImageList, Category category) {
         this.title = title;
         this.description = description;
         this.mainImagePath = mainImagePath;
