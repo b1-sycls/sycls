@@ -1,4 +1,4 @@
-package com.b1.ticket.dto;
+package com.b1.reservation.dto;
 
 import com.b1.seat.entity.SeatGrade;
 import java.util.HashSet;
@@ -13,17 +13,17 @@ import lombok.Getter;
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TicketAddResponseDto {
+public class ReservationAddResponseDto {
 
     private final Long roundId;
     private final Set<Long> seatGradeIds;
     private final Set<String> seatCodes;
 
-    public static TicketAddResponseDto of(Long roundId, Set<SeatGrade> seatGrades) {
+    public static ReservationAddResponseDto of(Long roundId, Set<SeatGrade> seatGrades) {
         Map<Long, String> seatGradeMap = seatGrades.stream()
                 .collect(Collectors.toMap(SeatGrade::getId, sg -> sg.getSeat().getCode()));
 
-        return TicketAddResponseDto.builder()
+        return ReservationAddResponseDto.builder()
                 .roundId(roundId)
                 .seatGradeIds(seatGradeMap.keySet())
                 .seatCodes(new HashSet<>(seatGradeMap.values()))
