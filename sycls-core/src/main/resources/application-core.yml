@@ -10,6 +10,7 @@ spring:
   sql:
     init:
       encoding: UTF-8
+      mode: always
 
   mail:
     host: smtp.naver.com
@@ -33,7 +34,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -42,10 +43,6 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
   #    더미 데이터 셋
-  sql:
-    init:
-      encoding: UTF-8
-      mode: always
 
 ---
 spring:

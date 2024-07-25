@@ -6,10 +6,20 @@ import com.b1.auth.repository.BlacklistTokenRepository;
 import com.b1.auth.repository.TokenRepository;
 import com.b1.exception.customexception.TokenException;
 import com.b1.exception.errorcode.TokenErrorCode;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.Key;
+import java.util.Base64;
+import java.util.Date;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,31 +29,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
-import java.util.function.Function;
-
 @Component
 @RequiredArgsConstructor
 @Slf4j(topic = "Jwt Provider")
 public class JwtProvider {
 
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String BEARER_PREFIX = "Bearer ";
     private final UserDetailsServiceImpl userDetailsService;
     private final TokenRepository tokenRepository;
     private final BlacklistTokenRepository blacklistTokenRepository;
-
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_PREFIX = "Bearer ";
     private final long TOKEN_TIME = 30 * 60 * 1000L; // 30분
     private final long REFRESH_TOKEN_TIME = 14 * 24 * 60 * 60 * 1000L; // 2주
-
+    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     @Value("${JWT_SECRET_KEY}")
     private String secretKey;
-
     private Key key;
-
-    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
     @PostConstruct
     public void init() {
@@ -79,7 +80,7 @@ public class JwtProvider {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        log.error("토큰을 찾을 수 없음 : {}" , tokenValue);
+        log.error("토큰을 찾을 수 없음 : {}", tokenValue);
         throw new TokenException(TokenErrorCode.TOKEN_NOT_FOUND);
     }
 
@@ -110,11 +111,12 @@ public class JwtProvider {
     public Authentication getAuthentication(String token) {
         String email = extractEmail(token);
         UserDetails userDetails = userDetailsService.loadUserByEmail(email);
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "",
+                userDetails.getAuthorities());
     }
 
     public String getTokenFromRequest(HttpServletRequest req) {
-        String accessToken = req.getHeader("Authorization");
+        String accessToken = req.getHeader(AUTHORIZATION_HEADER);
         return substringToken(accessToken);
     }
 

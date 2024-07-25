@@ -10,11 +10,11 @@ import com.b1.user.dto.UserResignRequestDto;
 import com.b1.user.dto.UserSignupRequestDto;
 import com.b1.user.entity.User;
 import com.b1.user.entity.UserStatus;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +52,7 @@ public class UserService {
 
     public void resign(UserResignRequestDto requestDto, UserDetailsImpl user) {
         User getUser = userHelper.findByEmail(user.getEmail());
-        if (UserStatus.DELETED == getUser.getStatus()) {
+        if (UserStatus.isDeleted(getUser.getStatus())) {
             log.error("이미 삭제된 유저 | request : {}", getUser.getId());
             throw new UserAlreadyDeletedException(UserErrorCode.USER_ALREADY_DELETED);
         }

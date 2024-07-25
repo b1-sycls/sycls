@@ -14,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "Email Service")
 public class EmailService {
 
     private final JavaMailSender javaMailSender;

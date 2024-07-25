@@ -6,5 +6,4 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface CodeRepository extends CrudRepository<Code, String> {
-    Optional<Code> findByEmail(String email);
 }

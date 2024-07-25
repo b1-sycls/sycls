@@ -1,8 +1,7 @@
 package com.b1.security;
 
-import com.b1.auth.entity.Token;
-import com.b1.exception.customexception.TokenException;
-import com.b1.exception.errorcode.TokenErrorCode;
+import static com.b1.security.JwtProvider.AUTHORIZATION_HEADER;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +19,14 @@ public class JwtLogoutHandler implements LogoutHandler {
     private final JwtProvider jwtProvider;
 
     @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    public void logout(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) {
         log.info("로그아웃 시도");
-        String accessToken = request.getHeader("Authorization");
+        String accessToken = request.getHeader(AUTHORIZATION_HEADER);
         String refreshToken = jwtProvider.getToken(accessToken).getRefresh();
 
-        long blacklistTokenTtl = jwtProvider.getRemainingValidityMillis(jwtProvider.substringToken(refreshToken));
+        long blacklistTokenTtl = jwtProvider.getRemainingValidityMillis(
+                jwtProvider.substringToken(refreshToken));
 
         jwtProvider.addBlacklistToken(accessToken, blacklistTokenTtl);
         jwtProvider.addBlacklistToken(refreshToken, blacklistTokenTtl);
