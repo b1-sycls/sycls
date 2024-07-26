@@ -1,5 +1,6 @@
 package com.b1.seatgrade;
 
+import com.b1.seatgrade.dto.SeatGradeGetResponseDto;
 import com.b1.seatgrade.entity.SeatGrade;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +13,19 @@ import org.springframework.stereotype.Component;
 public class SeatGradeHelper {
 
     private final SeatGradeRepository seatGradeRepository;
+    private final SeatGradeQueryRepository seatGradeQueryRepository;
 
     /**
      * 좌석-등급 등록
      */
-    public void saveSeatGrades(List<SeatGrade> seatGradeList) {
+    public void saveSeatGrades(final List<SeatGrade> seatGradeList) {
         seatGradeRepository.saveAll(seatGradeList);
+    }
+
+    /**
+     * 좌석 등급 전체 조회
+     */
+    public List<SeatGradeGetResponseDto> getAllSeatGrades(final Long roundId) {
+        return seatGradeQueryRepository.getAllSeatGrades(roundId);
     }
 }
