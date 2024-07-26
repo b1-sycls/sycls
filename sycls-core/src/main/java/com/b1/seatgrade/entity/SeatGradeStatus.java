@@ -1,5 +1,6 @@
 package com.b1.seatgrade.entity;
 
+import com.b1.exception.customexception.SeatGradeAlreadyDeletedException;
 import com.b1.exception.customexception.SeatGradeAlreadySoldOutException;
 import com.b1.exception.errorcode.SeatGradeErrorCode;
 import java.util.Set;
@@ -25,6 +26,14 @@ public enum SeatGradeStatus {
                                 SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
                     }
                 });
+    }
+
+    public static void checkDeleted(SeatGradeStatus status) {
+        if (status.equals(DISABLE)) {
+            log.error("삭제된 상태. | {}", status);
+            throw new SeatGradeAlreadyDeletedException(
+                    SeatGradeErrorCode.SEAT_GRADE_ALREADY_DELETED);
+        }
     }
 
 }

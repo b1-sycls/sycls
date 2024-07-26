@@ -83,4 +83,11 @@ public class SeatGrade {
         this.grade = grade;
         this.price = price;
     }
+
+    /**
+     * 좌석-등급 삭제
+     */
+    public void deleteSeatGrade() {
+        this.status = SeatGradeStatus.DISABLE;
+    }
 }

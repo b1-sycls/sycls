@@ -2,12 +2,14 @@ package com.b1.seatgrade;
 
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
+import com.b1.seatgrade.dto.SeatGradeDeleteRequestDto;
 import com.b1.seatgrade.dto.SeatGradeGetAllResponseDto;
 import com.b1.seatgrade.dto.SeatGradeUpdateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,6 +59,18 @@ public class SeatGradeRestController {
         seatGradeService.updateSeatGrades(requestDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("수정되었습니다."));
+    }
+
+    /**
+     * 좌석 등급 삭제
+     */
+    @DeleteMapping("/seat-grades")
+    public ResponseEntity<RestApiResponseDto<String>> deleteSeatGrade(
+            @Valid @RequestBody SeatGradeDeleteRequestDto requestDto
+    ) {
+        seatGradeService.deleteSeatGrades(requestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("삭제되었습니다."));
     }
 
 }

@@ -6,10 +6,12 @@ import com.b1.round.entity.Round;
 import com.b1.seat.SeatHelper;
 import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
+import com.b1.seatgrade.dto.SeatGradeDeleteRequestDto;
 import com.b1.seatgrade.dto.SeatGradeGetAllResponseDto;
 import com.b1.seatgrade.dto.SeatGradeGetResponseDto;
 import com.b1.seatgrade.dto.SeatGradeUpdateRequestDto;
 import com.b1.seatgrade.entity.SeatGrade;
+import com.b1.seatgrade.entity.SeatGradeStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +63,7 @@ public class SeatGradeService {
     }
 
     /**
-     * 좌석 등급 수정
+     * 좌석-등급 수정
      */
     public void updateSeatGrades(final SeatGradeUpdateRequestDto requestDto) {
         seatGradeHelper.findAllByIdIn(requestDto.seatGradeIdList())
@@ -69,5 +71,16 @@ public class SeatGradeService {
                         requestDto.seatGradeType(),
                         requestDto.price())
                 );
+    }
+
+    /**
+     * 좌석-등급 삭제
+     */
+    public void deleteSeatGrades(final SeatGradeDeleteRequestDto requestDto) {
+        seatGradeHelper.findAllByIdIn(requestDto.seatGradeIdList())
+                .forEach(seatGrade -> {
+                    SeatGradeStatus.checkDeleted(seatGrade.getStatus());
+                    seatGrade.deleteSeatGrade();
+                });
     }
 }
