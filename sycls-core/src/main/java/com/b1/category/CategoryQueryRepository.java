@@ -16,7 +16,11 @@ public class CategoryQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * (어드민) 카테고리 전체 조회
+     */
     public List<CategoryGetAdminResponseDto> getAllOrderByNameAscForAdmin() {
+
         QCategory category = QCategory.category;
 
         return queryFactory
@@ -32,7 +36,11 @@ public class CategoryQueryRepository {
                 .fetch();
     }
 
+    /**
+     * (유저) 카테고리 전체 조회
+     */
     public List<CategoryGetUserResponseDto> getAllOrderByNameAscForUser() {
+
         QCategory category = QCategory.category;
 
         return queryFactory

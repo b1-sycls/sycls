@@ -5,5 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ContentRepository extends JpaRepository<Content, Long> {
 
-    boolean existsByCategoryId(Long categoryId);
+    /**
+     * 카테고리가 있는지 확인
+     */
+    boolean existsByCategoryId(final Long categoryId);
 }

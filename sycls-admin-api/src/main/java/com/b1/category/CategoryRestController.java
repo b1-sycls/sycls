@@ -27,6 +27,9 @@ public class CategoryRestController {
 
     private final CategoryService categoryService;
 
+    /**
+     * 카테고리 추가
+     */
     @PostMapping("/categories")
 //    @PreAuthorize("hasRole('ADMIN')") // 시큐리티후 추가
     public ResponseEntity<RestApiResponseDto<String>> addCategory(
@@ -35,27 +38,40 @@ public class CategoryRestController {
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("등록 성공"));
     }
 
+    /**
+     * 카테고리 수정
+     */
     @PatchMapping("/categories/{categoryId}")
-    public ResponseEntity<RestApiResponseDto<String>> updateCategory(@PathVariable Long categoryId,
+    public ResponseEntity<RestApiResponseDto<String>> updateCategory(
+            @PathVariable final Long categoryId,
             @Valid @RequestBody final CategoryUpdateRequestDto requestDto) {
         categoryService.updateCategory(categoryId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("수정 성공"));
     }
 
+    /**
+     * 카테고리 비활성화
+     */
     @DeleteMapping("/categories/{categoryId}")
     public ResponseEntity<RestApiResponseDto<String>> disableCategoryStatus(
-            @PathVariable Long categoryId) {
+            @PathVariable final Long categoryId) {
         categoryService.disableCategoryStatus(categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("비활성화 성공"));
     }
 
+    /**
+     * 카테고리 활성화
+     */
     @PatchMapping("/categories/{categoryId}/reactivate")
     public ResponseEntity<RestApiResponseDto<String>> enableCategoryStatus(
-            @PathVariable Long categoryId) {
+            @PathVariable final Long categoryId) {
         categoryService.enableCategoryStatus(categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("활성화 성공"));
     }
 
+    /**
+     * 카테고리 전체조회
+     */
     @GetMapping("/v1/categories")
     public ResponseEntity<RestApiResponseDto<List<CategoryGetAdminResponseDto>>> getAllCategory() {
         List<CategoryGetAdminResponseDto> responseDtoList = categoryService.getAllCategory();

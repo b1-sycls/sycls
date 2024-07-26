@@ -1,6 +1,11 @@
 package com.b1.config;
 
-import com.b1.security.*;
+import com.b1.security.JwtAuthenticationFilter;
+import com.b1.security.JwtAuthorizationFilter;
+import com.b1.security.JwtLogoutHandler;
+import com.b1.security.JwtLogoutSuccessHandler;
+import com.b1.security.JwtProvider;
+import com.b1.security.UserDetailsServiceImpl;
 import com.b1.user.UserHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -65,6 +70,9 @@ public class WebSecurityConfig {
                         .requestMatchers("/v1/users/**").permitAll()
                         .requestMatchers("/v1/auth/**").permitAll()
 
+                        //test
+                        .requestMatchers("/v1/**").permitAll()
+
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
         );
@@ -74,7 +82,6 @@ public class WebSecurityConfig {
                         .addLogoutHandler(jwtLogoutHandler)
                         .logoutSuccessHandler(jwtLogoutSuccessHandler)
         );
-
 
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), LogoutFilter.class);

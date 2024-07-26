@@ -40,4 +40,8 @@ public class SeatHelper {
                 }
         );
     }
+
+    public Set<Seat> getAllSeatByPlaceId(Long placeId) {
+        return seatRepository.findByPlaceId(placeId);
+    }
 }

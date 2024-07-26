@@ -5,6 +5,8 @@ import com.b1.common.TimeStamp;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,6 +42,10 @@ public class Content extends TimeStamp {
     @Column(nullable = false, length = 300)
     private String mainImagePath;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ContentStatus status;
+
     @OneToMany(mappedBy = "content", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
 
@@ -48,12 +54,44 @@ public class Content extends TimeStamp {
     private Category category;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Content(String title, String description, String mainImagePath,
-             List<ContentDetailImage> contentDetailImageList, Category category) {
+    private Content(String title, String description, Category category, ContentStatus status,
+            String mainImagePath) {
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.status = status;
+        this.mainImagePath = mainImagePath;
+    }
+
+    public static Content addContent(String title, String description, Category category,
+            String mainImagePath) {
+        return Content.builder()
+                .title(title)
+                .description(description)
+                .category(category)
+                .status(ContentStatus.HIDDEN)
+                .mainImagePath(mainImagePath)
+                .build();
+    }
+
+    public void updateContent(Category category, String title, String description,
+            String mainImagePath, List<ContentDetailImage> detailImageList) {
+        this.category = category;
         this.title = title;
         this.description = description;
         this.mainImagePath = mainImagePath;
+        this.contentDetailImageList = detailImageList;
+    }
+
+    public void addMainImagePath(String mainImagePath) {
+        this.mainImagePath = mainImagePath;
+    }
+
+    public void addContentDetailImageList(List<ContentDetailImage> contentDetailImageList) {
         this.contentDetailImageList = contentDetailImageList;
-        this.category = category;
+    }
+
+    public void updateStatus(ContentStatus status) {
+        this.status = status;
     }
 }
