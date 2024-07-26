@@ -2,7 +2,8 @@ package com.b1.seatgrade;
 
 import com.b1.round.entity.QRound;
 import com.b1.seat.entity.QSeat;
-import com.b1.seatgrade.dto.SeatGradeGetResponseDto;
+import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
+import com.b1.seatgrade.dto.SeatGradeUserGetResponseDto;
 import com.b1.seatgrade.entity.QSeatGrade;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,7 +22,7 @@ public class SeatGradeQueryRepository {
     /**
      * seatGrade 전체 조회
      */
-    public List<SeatGradeGetResponseDto> getAllSeatGrades(
+    public List<SeatGradeAdminGetResponseDto> getAllSeatGrades(
             final Long roundId
     ) {
         QSeat seat = QSeat.seat;
@@ -29,7 +30,7 @@ public class SeatGradeQueryRepository {
 
         return jpaQueryFactory.select(
                         Projections.constructor(
-                                SeatGradeGetResponseDto.class,
+                                SeatGradeAdminGetResponseDto.class,
                                 seat.id,
                                 seat.code,
                                 seatGrade.id,
@@ -51,13 +52,37 @@ public class SeatGradeQueryRepository {
         QSeatGrade seatGrade = QSeatGrade.seatGrade;
         QRound round = QRound.round;
 
-        int intExact = Math.toIntExact(jpaQueryFactory
+        Integer count = Math.toIntExact(jpaQueryFactory
                 .select(seatGrade.count())
                 .from(seatGrade)
                 .leftJoin(round).on(seatGrade.round.id.eq(round.id))
                 .where(round.id.eq(roundId))
                 .fetchOne());
-        return intExact;
+
+        return count != null ? count : 0;
     }
 
+    /**
+     * 사용자 - 해당 회차의 좌석-등급 조회
+     */
+    public List<SeatGradeUserGetResponseDto> getAllSeatGradesUser(Long roundId) {
+        QSeatGrade seatGrade = QSeatGrade.seatGrade;
+        QSeat seat = QSeat.seat;
+
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                SeatGradeUserGetResponseDto.class,
+                                seat.id,
+                                seat.code,
+                                seatGrade.id,
+                                seatGrade.grade,
+                                seatGrade.price
+                        )
+                )
+                .from(seatGrade)
+                .leftJoin(seat).on(seatGrade.seat.id.eq(seat.id))
+                .where(seatGrade.round.id.eq(roundId))
+                .fetch();
+    }
 }

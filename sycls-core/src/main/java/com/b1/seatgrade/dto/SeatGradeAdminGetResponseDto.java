@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SeatGradeGetResponseDto {
+public class SeatGradeAdminGetResponseDto {
 
     private Long seatId;
     private String seatCode;

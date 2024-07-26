@@ -7,9 +7,9 @@ import com.b1.round.entity.Round;
 import com.b1.seat.SeatHelper;
 import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
+import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
 import com.b1.seatgrade.dto.SeatGradeDeleteRequestDto;
 import com.b1.seatgrade.dto.SeatGradeGetAllResponseDto;
-import com.b1.seatgrade.dto.SeatGradeGetResponseDto;
 import com.b1.seatgrade.dto.SeatGradeUpdateRequestDto;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeStatus;
@@ -59,6 +59,7 @@ public class SeatGradeService {
     /**
      * 전체 좌석에 대한 등급 설정 완료 확인
      */
+    @Transactional(readOnly = true)
     public Boolean confirmAllSeatSetting(final Long roundId) {
         // 회차의 공연장 총 좌석수와 등록된 SeatGrade 를 비교
         Integer maxSeat = placeHelper.getMaxSeatFromPlace(roundId);
@@ -72,7 +73,8 @@ public class SeatGradeService {
      */
     @Transactional(readOnly = true)
     public SeatGradeGetAllResponseDto getAllSeatGrades(final Long roundId) {
-        List<SeatGradeGetResponseDto> seatGradeList = seatGradeHelper.getAllSeatGrades(roundId);
+        List<SeatGradeAdminGetResponseDto> seatGradeList = seatGradeHelper.getAllSeatGrades(
+                roundId);
         return SeatGradeGetAllResponseDto.of(roundId, seatGradeList);
     }
 
