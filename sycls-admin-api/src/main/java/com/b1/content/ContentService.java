@@ -49,27 +49,23 @@ public class ContentService {
 
         Category category = categoryHelper.findById(requestDto.categoryId());
 
+        String mainImagePath = s3Uploader.saveMainImage(mainImage);
+
         Content content = Content.addContent(
                 requestDto.title(),
                 requestDto.description(),
-                category
+                category,
+                mainImagePath
         );
 
-        final String mainImagePath = s3Uploader.saveMainImage(mainImage);
+        if (detailImages != null) {
+            List<String> detailImageList = s3Uploader.saveDetailImage(detailImages);
 
-        content.addMainImagePath(mainImagePath);
+            List<ContentDetailImage> contentDetailImageList = getAndCreateContentDetailImages(
+                    detailImageList, content);
 
-        if (detailImages == null) {
-            contentHelper.saveContent(content);
-            return;
+            content.addContentDetailImageList(contentDetailImageList);
         }
-
-        final List<String> detailImageList = s3Uploader.saveDetailImage(detailImages);
-
-        final List<ContentDetailImage> contentDetailImageList = getAndCreateContentDetailImages(
-                detailImageList, content);
-
-        content.addContentDetailImageList(contentDetailImageList);
 
         contentHelper.saveContent(content);
     }
@@ -94,12 +90,11 @@ public class ContentService {
                 content.getId());
 
         if (detailImages != null) {
-
             for (ContentDetailImage detailImage : detailImageList) {
                 detailImage.disableStatus();
             }
 
-            final List<String> newDetailImageList = s3Uploader.saveDetailImage(detailImages);
+            List<String> newDetailImageList = s3Uploader.saveDetailImage(detailImages);
             detailImageList = getAndCreateContentDetailImages(newDetailImageList, content);
         }
 
@@ -117,7 +112,7 @@ public class ContentService {
 
         ContentStatus.checkStatusEquals(content.getStatus(), requestDto.status());
 
-        if (requestDto.status() == ContentStatus.VISIBLE) {
+        if (ContentStatus.isVisible(requestDto.status())) {
             contentHelper.checkRoundStatusByContentId(content.getId());
         }
 
@@ -140,7 +135,7 @@ public class ContentService {
                 contentHelper.getAllContentDetailImagesPathByContentId(contentId);
 
         for (ContentDetailImagePathGetAdminResponseDto dto : contentDetailImagePathList) {
-            final String detailImagePath = S3Util.makeResponseImageDir(dto.getDetailImagePath());
+            String detailImagePath = S3Util.makeResponseImageDir(dto.getDetailImagePath());
             dto.updateDetailImagePath(detailImagePath);
         }
 

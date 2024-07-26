@@ -33,7 +33,7 @@ public enum RoundStatus {
     }
 
     public static void checkEqualsStatus(RoundStatus firstStatus, RoundStatus secondStatus) {
-        if (firstStatus == secondStatus) {
+        if (firstStatus.equals(secondStatus)) {
             log.error("회차 스테이터스 동일 오류 | status {} : {}", firstStatus, secondStatus);
             throw new RoundStatusEqualsException(RoundErrorCode.ROUND_STATUS_EQUALS);
         }

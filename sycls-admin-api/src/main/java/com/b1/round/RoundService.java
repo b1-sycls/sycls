@@ -47,9 +47,9 @@ public class RoundService {
      */
     public void addRound(final RoundAddRequestDto requestDto) {
 
-        final LocalDate dtoStartDate = requestDto.startDate();
-        final LocalTime dtoStartTime = requestDto.startTime();
-        final LocalTime dtoEndTime = requestDto.endTime();
+        LocalDate dtoStartDate = requestDto.startDate();
+        LocalTime dtoStartTime = requestDto.startTime();
+        LocalTime dtoEndTime = requestDto.endTime();
 
         checkReservationTime(dtoStartDate, dtoStartTime, dtoEndTime);
 
@@ -92,9 +92,9 @@ public class RoundService {
      */
     public void updateRound(final Long roundId, final RoundUpdateRequestDto requestDto) {
 
-        final LocalDate dtoStartDate = requestDto.startDate();
-        final LocalTime dtoStartTime = requestDto.startTime();
-        final LocalTime dtoEndTime = requestDto.endTime();
+        LocalDate dtoStartDate = requestDto.startDate();
+        LocalTime dtoStartTime = requestDto.startTime();
+        LocalTime dtoEndTime = requestDto.endTime();
 
         checkReservationTime(dtoStartDate, dtoStartTime, dtoEndTime);
 
@@ -102,7 +102,7 @@ public class RoundService {
 
         RoundStatus.checkClosed(round.getStatus());
 
-        final Long placeId = round.getPlace().getId();
+        Long placeId = round.getPlace().getId();
 
         List<Round> roundList = roundHelper.getAllRoundsByPlaceId(placeId, dtoStartDate);
 
@@ -176,9 +176,8 @@ public class RoundService {
     private void checkRoundConflictingReservation(final List<Round> roundList,
             final LocalTime dtoStartTime, final LocalTime dtoEndTime) {
         for (Round roundInList : roundList) {
-
-            final LocalTime savedStartTime = roundInList.getStartTime();
-            final LocalTime savedEndTime = roundInList.getEndTime();
+            LocalTime savedStartTime = roundInList.getStartTime();
+            LocalTime savedEndTime = roundInList.getEndTime();
 
             // 바꿀 시간이 공연시간안에 걸리는 경우
             if ((dtoStartTime.isBefore(savedEndTime) && dtoEndTime.isAfter(savedStartTime))

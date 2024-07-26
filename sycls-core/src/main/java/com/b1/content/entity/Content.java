@@ -54,19 +54,23 @@ public class Content extends TimeStamp {
     private Category category;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Content(String title, String description, Category category, ContentStatus status) {
+    private Content(String title, String description, Category category, ContentStatus status,
+            String mainImagePath) {
         this.title = title;
         this.description = description;
         this.category = category;
         this.status = status;
+        this.mainImagePath = mainImagePath;
     }
 
-    public static Content addContent(String title, String description, Category category) {
+    public static Content addContent(String title, String description, Category category,
+            String mainImagePath) {
         return Content.builder()
                 .title(title)
                 .description(description)
                 .category(category)
                 .status(ContentStatus.HIDDEN)
+                .mainImagePath(mainImagePath)
                 .build();
     }
 

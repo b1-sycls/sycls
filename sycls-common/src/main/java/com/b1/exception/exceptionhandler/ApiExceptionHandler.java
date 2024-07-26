@@ -21,11 +21,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-    private static ResponseEntity<ErrorResponseDto> sendErrorResponse(ErrorCode e) {
-        return ResponseEntity.status(e.getHttpStatusCode())
-                .body(ErrorResponseDto.of(e));
-    }
-
     /**
      * Api 요청에 동작 중 예외가 발생한 경우
      */
@@ -79,5 +74,10 @@ public class ApiExceptionHandler {
             GlobalReservationException e) {
         log.error("GlobalReservationException 발생");
         return sendErrorResponse(e.getErrorCode());
+    }
+
+    private ResponseEntity<ErrorResponseDto> sendErrorResponse(ErrorCode e) {
+        return ResponseEntity.status(e.getHttpStatusCode())
+                .body(ErrorResponseDto.of(e));
     }
 }

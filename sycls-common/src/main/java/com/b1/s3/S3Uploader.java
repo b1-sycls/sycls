@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-@Slf4j(topic = "S3 Service")
+@Slf4j(topic = "S3 Uploader")
 @Service
 @RequiredArgsConstructor
 public class S3Uploader {
@@ -36,6 +36,7 @@ public class S3Uploader {
 
         String extension = S3Util.getCheckImageExtension(
                 Objects.requireNonNull(file.getOriginalFilename()));
+
         String imageDir = S3Util.createImageDir(S3Type.CONTENT_MAIN_IMAGE);
 
         String uploadFileName = imageDir + S3Util.createFileName(extension);
