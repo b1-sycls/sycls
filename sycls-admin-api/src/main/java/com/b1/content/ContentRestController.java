@@ -50,7 +50,7 @@ public class ContentRestController {
      */
     @PatchMapping("/contents/{contentId}")
     public ResponseEntity<RestApiResponseDto<String>> updateContent(
-            @PathVariable Long contentId,
+            @PathVariable final Long contentId,
             @Valid @RequestPart("dto") final ContentUpdateRequestDto requestDto,
             @RequestPart(value = "mainImage", required = false) final MultipartFile mainImage,
             @RequestPart(value = "detailImages", required = false) final MultipartFile[] detailImages

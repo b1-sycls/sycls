@@ -1,5 +1,7 @@
 package com.b1.content.entity;
 
+import com.b1.exception.customexception.ContentStatusEqualsException;
+import com.b1.exception.errorcode.ContentErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,4 +16,11 @@ public enum ContentStatus {
     ;
 
     private final String value;
+
+    public static void checkStatusEquals(ContentStatus firstStatus, ContentStatus secondStatus) {
+        if (firstStatus == secondStatus) {
+            log.error("공연의 상태가 동일 | status : {} | {}", firstStatus, secondStatus);
+            throw new ContentStatusEqualsException(ContentErrorCode.CONTENT_STATUS_EQUALS);
+        }
+    }
 }

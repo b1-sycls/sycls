@@ -16,12 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-            throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
     // 테스트용 설정 이거 없으면 admin api 막힘
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

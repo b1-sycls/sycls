@@ -13,9 +13,7 @@ import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
 import com.b1.content.entity.ContentStatus;
-import com.b1.exception.customexception.ContentStatusEqualsException;
 import com.b1.exception.customexception.InvalidPageNumberException;
-import com.b1.exception.errorcode.ContentErrorCode;
 import com.b1.exception.errorcode.PageErrorCode;
 import com.b1.round.RoundHelper;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
@@ -69,9 +67,8 @@ public class ContentService {
 
         final List<String> detailImageList = s3Uploader.saveDetailImage(detailImages);
 
-        final List<ContentDetailImage> contentDetailImageList = getContentDetailImages(
-                detailImageList,
-                content);
+        final List<ContentDetailImage> contentDetailImageList = getAndCreateContentDetailImages(
+                detailImageList, content);
 
         content.addContentDetailImageList(contentDetailImageList);
 
@@ -104,7 +101,7 @@ public class ContentService {
             }
 
             final List<String> newDetailImageList = s3Uploader.saveDetailImage(detailImages);
-            detailImageList = getContentDetailImages(newDetailImageList, content);
+            detailImageList = getAndCreateContentDetailImages(newDetailImageList, content);
         }
 
         content.updateContent(category, requestDto.title(), requestDto.description(),
@@ -119,10 +116,7 @@ public class ContentService {
 
         Content content = contentHelper.getContent(contentId);
 
-        if (content.getStatus() == requestDto.status()) {
-            log.error("공연의 상태가 동일 | contentId : {}", contentId);
-            throw new ContentStatusEqualsException(ContentErrorCode.CONTENT_STATUS_EQUALS);
-        }
+        ContentStatus.checkStatusEquals(content.getStatus(), requestDto.status());
 
         if (requestDto.status() == ContentStatus.VISIBLE) {
             contentHelper.checkRoundStatusByContentId(content.getId());
@@ -188,8 +182,9 @@ public class ContentService {
     /**
      * 공연 서브 이미지 생성로직
      */
-    private List<ContentDetailImage> getContentDetailImages(final List<String> detailImageList,
-            final Content content) {
+    private List<ContentDetailImage> getAndCreateContentDetailImages(
+            final List<String> detailImageList, final Content content) {
+
         List<ContentDetailImage> contentDetailImageList = new ArrayList<>();
 
         for (String detailImagePath : detailImageList) {
