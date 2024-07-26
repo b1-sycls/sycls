@@ -9,6 +9,7 @@ import com.b1.exception.customexception.UserNicknameDuplicatedException;
 import com.b1.exception.errorcode.TokenErrorCode;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.UserDetailsImpl;
+import com.b1.user.dto.UserProfileResponseDto;
 import com.b1.user.dto.UserResignRequestDto;
 import com.b1.user.dto.UserSignupRequestDto;
 import com.b1.user.entity.User;
@@ -46,7 +47,7 @@ public class UserService {
         if (!authService.verifyCode(requestDto.email(), requestDto.code())) {
             throw new TokenException(TokenErrorCode.CODE_MISMATCH);
         }
-        
+
         User user = User.addCustomer(
                 requestDto.email(),
                 requestDto.username(),
@@ -71,5 +72,14 @@ public class UserService {
         }
 
         getUser.deleteUser();
+    }
+
+    public UserProfileResponseDto getProfile(User user) {
+        return UserProfileResponseDto.builder()
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .build();
     }
 }

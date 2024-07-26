@@ -65,8 +65,8 @@ public class AuthRestController {
     /**
      * 인증 번호 메일 전송
      *
-     * @param requestDto : 인증 번호를 받을 User 이메일 인증 번호를 생성해서 Redis 에 저장 후 입력 받은 이메일로 인증번호 발송. 해당 API 는
-     *                   회원가입, 비밀번호 찾기에 사용되는 API
+     * @param requestDto : email
+     * @apiNote : 인증 번호를 생성해서 Redis 에 저장 후 입력 받은 이메일로 인증번호 발송. 해당 API 는 회원가입, 비밀번호 찾기에 사용되는 API
      */
     @PostMapping("/auth/send-verification-code")
     public ResponseEntity<RestApiResponseDto<String>> sendVerificationCode(
@@ -120,6 +120,9 @@ public class AuthRestController {
 
     /**
      * 이메일 찾기
+     *
+     * @param requestDto : username, phoneNumber
+     * @apiNote : 본인 이메일로 회원가입 할 때 입력했던 username 과 phoneNumber 로 이메일 조회
      */
     @PostMapping("/auth/forget-email")
     public ResponseEntity<RestApiResponseDto<String>> findEmail(
@@ -132,7 +135,9 @@ public class AuthRestController {
     }
 
     /**
-     * 토큰 재발급 API 새 엑세스, 리프레쉬 토크을 발급하고 기존의 엑세스, 리프레쉬 토큰을 Blacklist 에 적재함. 그 후 기존의 엑세스토큰을 삭제함.
+     * 토큰 재발급 API
+     *
+     * @apiNote : 새 엑세스, 리프레쉬 토크을 발급하고 기존의 엑세스, 리프레쉬 토큰을 Blacklist 에 적재함. 그 후 기존의 엑세스토큰을 삭제함.
      */
     @PostMapping("/auth/token")
     public ResponseEntity<RestApiResponseDto<String>> refreshToken(

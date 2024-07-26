@@ -2,14 +2,17 @@ package com.b1.user;
 
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.security.UserDetailsImpl;
+import com.b1.user.dto.UserProfileResponseDto;
 import com.b1.user.dto.UserResignRequestDto;
 import com.b1.user.dto.UserSignupRequestDto;
+import com.b1.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +54,19 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(
                         "유저가 삭제되었습니다. User Email : " + userDetails.getUser().getEmail()));
+    }
+
+    /**
+     * 유저 프로필 조회 기능
+     */
+    @GetMapping("/v1/users/me")
+    public ResponseEntity<RestApiResponseDto<UserProfileResponseDto>> getProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        UserProfileResponseDto responseDto = userService.getProfile(userDetails.getUser());
+        User user = userDetails.getUser();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("성공", responseDto));
     }
 
 }
