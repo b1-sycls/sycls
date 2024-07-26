@@ -20,8 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -108,7 +108,7 @@ public class AuthRestController {
      *
      * @param requestDto : email(비밀번호를 바꿀 이메일), newPassword(새로 바꿀 비밀번호), code(메일 인증코드)
      */
-    @PutMapping("/auth/forget-password")
+    @PatchMapping("/auth/forget-password")
     public ResponseEntity<RestApiResponseDto<String>> resetPassword(
             @Valid @RequestBody UserResetPasswordRequestDto requestDto
     ) {
@@ -128,7 +128,7 @@ public class AuthRestController {
     @GetMapping("/auth/forget-email")
     public ResponseEntity<RestApiResponseDto<String>> findEmail(
             @RequestParam("username") @NotEmpty String username,
-            @RequestParam("phone_number") @NotEmpty String phoneNumber) {
+            @RequestParam("phoneNumber") @NotEmpty String phoneNumber) {
         String findEmail = authService.findEmail(username, phoneNumber);
 
         return ResponseEntity.status(HttpStatus.OK)

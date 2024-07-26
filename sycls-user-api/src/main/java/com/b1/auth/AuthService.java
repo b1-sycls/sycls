@@ -3,7 +3,6 @@ package com.b1.auth;
 import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
 
 import com.b1.auth.entity.Code;
-import com.b1.auth.repository.CodeRepository;
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserNotFoundException;
 import com.b1.exception.errorcode.UserErrorCode;
@@ -31,7 +30,6 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final CodeHelper codeHelper;
     private final PasswordEncoder passwordEncoder;
-    private final CodeRepository codeRepository;
 
     @Transactional(readOnly = true)
     public boolean checkEmailExists(String email) {
@@ -63,7 +61,7 @@ public class AuthService {
                 .code(code)
                 .ttl(300)
                 .build();
-        codeRepository.save(emailVerificationCode);
+        codeHelper.addCode(emailVerificationCode);
     }
 
     public boolean verifyCode(String email, String code) {
