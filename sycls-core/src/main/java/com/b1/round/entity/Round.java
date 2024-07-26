@@ -1,5 +1,6 @@
-package com.b1.content.entity;
+package com.b1.round.entity;
 
+import com.b1.content.entity.Content;
 import com.b1.place.entity.Place;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,13 +57,37 @@ public class Round {
 
     @Builder(access = AccessLevel.PRIVATE)
     private Round(Integer sequence, LocalDate startDate, LocalTime startTime, LocalTime endTime,
-            RoundStatus status, Content content, Place place) {
+            Content content, Place place, RoundStatus status) {
         this.sequence = sequence;
         this.startDate = startDate;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.status = status;
         this.content = content;
         this.place = place;
+        this.status = status;
+    }
+
+    public static Round addRound(Integer sequence, LocalDate startDate, LocalTime startTime,
+            LocalTime endTime,
+            RoundStatus status, Content content, Place place) {
+        return Round.builder()
+                .sequence(sequence)
+                .startDate(startDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .status(status)
+                .content(content)
+                .place(place)
+                .build();
+    }
+
+    public void updateStatus(RoundStatus status) {
+        this.status = status;
+    }
+
+    public void updateDateAndTime(LocalDate startDate, LocalTime startTime, LocalTime endTime) {
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 }

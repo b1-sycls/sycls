@@ -1,4 +1,4 @@
-package com.b1.seat.entity;
+package com.b1.seatgrade.entity;
 
 import com.b1.exception.customexception.SeatGradeAlreadySoldOutException;
 import com.b1.exception.errorcode.SeatGradeErrorCode;

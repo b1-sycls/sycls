@@ -1,0 +1,7 @@
+@contentId = 1
+
+### 공연 단일 조회
+GET http://localhost:8080/v1/contents/{{contentId}}
+
+### 공연 전체 조회
+GET http://localhost:8080/v1/contents

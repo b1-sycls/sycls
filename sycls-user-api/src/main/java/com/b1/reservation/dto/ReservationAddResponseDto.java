@@ -1,6 +1,6 @@
 package com.b1.reservation.dto;
 
-import com.b1.seat.entity.SeatGrade;
+import com.b1.seatgrade.entity.SeatGrade;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

@@ -13,6 +13,9 @@ public class CategoryHelper {
 
     private final CategoryQueryRepository categoryQueryRepository;
 
+    /**
+     * 카테고리 전체 조회
+     */
     public List<CategoryGetUserResponseDto> getAllCategoryOrderByNameAsc() {
         return categoryQueryRepository.getAllOrderByNameAscForUser();
     }

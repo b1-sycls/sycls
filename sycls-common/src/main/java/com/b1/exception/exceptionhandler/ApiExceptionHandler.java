@@ -2,7 +2,11 @@ package com.b1.exception.exceptionhandler;
 
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
 import com.b1.exception.customexception.global.GlobalEntityInUseException;
+import com.b1.exception.customexception.global.GlobalInvalidException;
+import com.b1.exception.customexception.global.GlobalLoadingException;
+import com.b1.exception.customexception.global.GlobalMissingException;
 import com.b1.exception.customexception.global.GlobalNotFoundException;
+import com.b1.exception.customexception.global.GlobalReservationException;
 import com.b1.exception.customexception.global.GlobalStatusException;
 import com.b1.exception.errorcode.ErrorCode;
 import com.b1.globalresponse.ErrorResponseDto;
@@ -16,11 +20,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(1)
 @RestControllerAdvice
 public class ApiExceptionHandler {
-
-    private static ResponseEntity<ErrorResponseDto> sendErrorResponse(ErrorCode e) {
-        return ResponseEntity.status(e.getHttpStatusCode())
-                .body(ErrorResponseDto.of(e));
-    }
 
     /**
      * Api 요청에 동작 중 예외가 발생한 경우
@@ -50,5 +49,35 @@ public class ApiExceptionHandler {
             GlobalStatusException e) {
         log.error("GlobalStatusException 발생");
         return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalInvalidException.class)
+    protected ResponseEntity<ErrorResponseDto> globalInvalidException(GlobalInvalidException e) {
+        log.error("GlobalInvalidException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalMissingException.class)
+    protected ResponseEntity<ErrorResponseDto> globalMissingException(GlobalMissingException e) {
+        log.error("GlobalMissingException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalLoadingException.class)
+    protected ResponseEntity<ErrorResponseDto> globalLoadingException(GlobalLoadingException e) {
+        log.error("GlobalLoadingException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalReservationException.class)
+    protected ResponseEntity<ErrorResponseDto> globalReservationException(
+            GlobalReservationException e) {
+        log.error("GlobalReservationException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    private ResponseEntity<ErrorResponseDto> sendErrorResponse(ErrorCode e) {
+        return ResponseEntity.status(e.getHttpStatusCode())
+                .body(ErrorResponseDto.of(e));
     }
 }

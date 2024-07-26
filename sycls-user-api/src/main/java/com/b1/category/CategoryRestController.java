@@ -17,6 +17,9 @@ public class CategoryRestController {
 
     private final CategoryService categoryService;
 
+    /**
+     * 카테고리 전체 조회
+     */
     @GetMapping("/categories")
     public ResponseEntity<RestApiResponseDto<List<CategoryGetUserResponseDto>>> getAllCategory() {
         List<CategoryGetUserResponseDto> responseDtoList = categoryService.getAllCategory();

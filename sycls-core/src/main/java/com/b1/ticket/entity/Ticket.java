@@ -1,7 +1,7 @@
 package com.b1.ticket.entity;
 
 import com.b1.common.TimeStamp;
-import com.b1.content.entity.Round;
+import com.b1.round.entity.Round;
 import com.b1.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,7 +53,8 @@ public class Ticket extends TimeStamp {
     private Round round;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Ticket(String code, Integer price, TicketStatus status, LocalDateTime orderDate, User user, Round round) {
+    private Ticket(String code, Integer price, TicketStatus status, LocalDateTime orderDate,
+            User user, Round round) {
         this.code = code;
         this.price = price;
         this.status = status;

@@ -15,6 +15,9 @@ public class CategoryService {
 
     private final CategoryHelper categoryHelper;
 
+    /**
+     * 카테고리 전체 조회
+     */
     @Transactional(readOnly = true)
     public List<CategoryGetUserResponseDto> getAllCategory() {
         return categoryHelper.getAllCategoryOrderByNameAsc();
