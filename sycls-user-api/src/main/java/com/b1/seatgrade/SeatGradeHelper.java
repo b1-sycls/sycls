@@ -1,10 +1,9 @@
-package com.b1.seat;
+package com.b1.seatgrade;
 
 import com.b1.exception.customexception.SeatGradeAlreadySoldOutException;
 import com.b1.exception.customexception.SeatGradeNotFoundException;
 import com.b1.exception.errorcode.SeatGradeErrorCode;
 import com.b1.round.entity.Round;
-import com.b1.seatgrade.SeatGradeRepository;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeStatus;
 import java.util.Set;

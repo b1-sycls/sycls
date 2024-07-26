@@ -2,7 +2,6 @@ package com.b1.seatgrade.entity;
 
 import com.b1.round.entity.Round;
 import com.b1.seat.entity.Seat;
-import com.b1.content.entity.Content;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -53,8 +52,8 @@ public class SeatGrade {
     private Long ticketId;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private SeatGrade(SeatGradeType grade, Integer price, SeatGradeStatus status, Seat seat,
-            Round round, Long ticketId) {
+    private SeatGrade(final SeatGradeType grade, final Integer price, final SeatGradeStatus status,
+            final Seat seat, final Round round, final Long ticketId) {
         this.grade = grade;
         this.price = price;
         this.status = status;
@@ -63,8 +62,8 @@ public class SeatGrade {
         this.ticketId = ticketId;
     }
 
-    public static SeatGrade addSeatGrade(SeatGradeType grade, Integer price, Seat seat,
-            Round round) {
+    public static SeatGrade addSeatGrade(final SeatGradeType grade, final Integer price,
+            final Seat seat, final Round round) {
         return SeatGrade.builder()
                 .grade(grade)
                 .price(price)
@@ -74,7 +73,7 @@ public class SeatGrade {
                 .build();
     }
 
-    public void updateSeatGrade(SeatGradeType grade, Integer price) {
+    public void updateSeatGrade(final SeatGradeType grade, final Integer price) {
         this.grade = grade;
         this.price = price;
     }

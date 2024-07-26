@@ -145,7 +145,7 @@ public class RoundQueryRepository {
      * (유저) 회차 단일 상세 조회
      */
     public RoundDetailInfoUserResponseDto getRoundDetailInfoForUser(final Long roundId) {
-        
+
         QRound round = QRound.round;
         QContent content = QContent.content;
         QCategory category = QCategory.category;

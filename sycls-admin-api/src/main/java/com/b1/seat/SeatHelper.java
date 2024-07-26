@@ -30,7 +30,7 @@ public class SeatHelper {
     }
 
     /**
-     * 좌석 단건조회
+     * 좌석 단건조회 (좌석등급 조회할때도 사용)
      */
     public Seat getSeat(Long seatId) {
         return seatRepository.findById(seatId).orElseThrow(

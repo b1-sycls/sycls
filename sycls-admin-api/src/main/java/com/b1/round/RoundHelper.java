@@ -70,4 +70,16 @@ public class RoundHelper {
         return roundQueryRepository.getAllSimpleRoundsForAdmin(request.getContentId(),
                 request.getStatus(), pageable);
     }
+
+    /**
+     * 좌석-등급 등록을 위한 회차 조회
+     */
+    public Round findByIdAndContentId(final Long roundId, final Long contentId) {
+        return roundRepository.findByIdAndContentId(roundId, contentId).orElseThrow(
+                () -> {
+                    log.error("찾을 수 없는 회차 | {}, {}", roundId, contentId);
+                    return new RoundNotFoundException(RoundErrorCode.NOT_FOUND_ROUND);
+                }
+        );
+    }
 }

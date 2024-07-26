@@ -1,10 +1,11 @@
 package com.b1.ticket;
 
+
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
-import com.b1.seat.SeatGradeHelper;
 import com.b1.seat.SeatReservationLogHelper;
 import com.b1.seat.entity.SeatReservationLog;
+import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.ticket.dto.TicketAddRequestDto;
 import com.b1.ticket.dto.TicketAddResponseDto;
