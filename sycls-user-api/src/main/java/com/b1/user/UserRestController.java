@@ -5,7 +5,6 @@ import com.b1.security.UserDetailsImpl;
 import com.b1.user.dto.UserProfileResponseDto;
 import com.b1.user.dto.UserResignRequestDto;
 import com.b1.user.dto.UserSignupRequestDto;
-import com.b1.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -64,7 +63,6 @@ public class UserRestController {
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         UserProfileResponseDto responseDto = userService.getProfile(userDetails.getUser());
-        User user = userDetails.getUser();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("성공", responseDto));
     }

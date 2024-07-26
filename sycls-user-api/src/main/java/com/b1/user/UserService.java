@@ -1,12 +1,12 @@
 package com.b1.user;
 
 import com.b1.auth.AuthService;
-import com.b1.exception.customexception.TokenException;
+import com.b1.exception.customexception.EmailCodeException;
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserEmailDuplicatedException;
 import com.b1.exception.customexception.UserIncorrectPasswordException;
 import com.b1.exception.customexception.UserNicknameDuplicatedException;
-import com.b1.exception.errorcode.TokenErrorCode;
+import com.b1.exception.errorcode.EmailCodeErrorCode;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.UserDetailsImpl;
 import com.b1.user.dto.UserProfileResponseDto;
@@ -45,7 +45,8 @@ public class UserService {
         }
 
         if (!authService.verifyCode(requestDto.email(), requestDto.code())) {
-            throw new TokenException(TokenErrorCode.CODE_MISMATCH);
+            log.error("Email 에 Code 가 일치하지 않습니다. : {} , {}", requestDto.email(), requestDto.code());
+            throw new EmailCodeException(EmailCodeErrorCode.CODE_MISMATCH);
         }
 
         User user = User.addCustomer(
@@ -75,11 +76,11 @@ public class UserService {
     }
 
     public UserProfileResponseDto getProfile(User user) {
-        return UserProfileResponseDto.builder()
-                .username(user.getUsername())
-                .nickname(user.getNickname())
-                .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
-                .build();
+        return UserProfileResponseDto.of(
+                user.getUsername(),
+                user.getNickname(),
+                user.getEmail(),
+                user.getPhoneNumber()
+        );
     }
 }

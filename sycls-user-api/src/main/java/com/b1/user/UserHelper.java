@@ -37,7 +37,7 @@ public class UserHelper {
     public List<User> findAllByUsername(String username) {
         List<User> userList = userRepository.findAllByUsername(username);
         if (userList == null || userList.isEmpty()) {
-            log.info("유저를 찾지 못함");
+            log.error("유저를 찾지 못함 : {}", username);
             throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
         }
         return userList;

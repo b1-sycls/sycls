@@ -6,7 +6,6 @@ import static com.b1.constant.EmailConstants.AUTH_FAILURE_MESSAGE;
 import static com.b1.constant.EmailConstants.AUTH_SUCCESS_MESSAGE;
 
 import com.b1.auth.dto.EmailVerificationRequestDto;
-import com.b1.auth.dto.FindEmailRequestDto;
 import com.b1.auth.dto.UserVerificationCodeRequestDto;
 import com.b1.email.EmailService;
 import com.b1.globalresponse.RestApiResponseDto;
@@ -14,6 +13,7 @@ import com.b1.security.UserDetailsImpl;
 import com.b1.user.dto.UserResetPasswordRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -121,14 +121,15 @@ public class AuthRestController {
     /**
      * 이메일 찾기
      *
-     * @param requestDto : username, phoneNumber
+     * @param username    : 회원가입 한 유저 이름
+     * @param phoneNumber : 회원가입 한 전화번호
      * @apiNote : 본인 이메일로 회원가입 할 때 입력했던 username 과 phoneNumber 로 이메일 조회
      */
-    @PostMapping("/auth/forget-email")
+    @GetMapping("/auth/forget-email")
     public ResponseEntity<RestApiResponseDto<String>> findEmail(
-            @Valid @RequestBody FindEmailRequestDto requestDto
-    ) {
-        String findEmail = authService.findEmail(requestDto);
+            @RequestParam("username") @NotEmpty String username,
+            @RequestParam("phone_number") @NotEmpty String phoneNumber) {
+        String findEmail = authService.findEmail(username, phoneNumber);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("이메일을 찾았습니다.", findEmail));

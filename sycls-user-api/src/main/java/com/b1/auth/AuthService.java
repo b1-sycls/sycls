@@ -2,13 +2,10 @@ package com.b1.auth;
 
 import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
 
-import com.b1.auth.dto.FindEmailRequestDto;
 import com.b1.auth.entity.Code;
 import com.b1.auth.repository.CodeRepository;
-import com.b1.exception.customexception.TokenException;
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserNotFoundException;
-import com.b1.exception.errorcode.TokenErrorCode;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.JwtProvider;
 import com.b1.user.UserHelper;
@@ -32,6 +29,7 @@ public class AuthService {
 
     private final UserHelper userHelper;
     private final JwtProvider jwtProvider;
+    private final CodeHelper codeHelper;
     private final PasswordEncoder passwordEncoder;
     private final CodeRepository codeRepository;
 
@@ -69,9 +67,7 @@ public class AuthService {
     }
 
     public boolean verifyCode(String email, String code) {
-        String storedCode = codeRepository.findById(email).orElseThrow(
-                () -> new TokenException(TokenErrorCode.USER_NOT_FOUND)
-        ).getCode();
+        String storedCode = codeHelper.findCodeByEmail(email);
         return storedCode != null && storedCode.equals(code);
     }
 
@@ -95,16 +91,14 @@ public class AuthService {
         jwtProvider.deleteToken(accessToken);
     }
 
-    public String findEmail(FindEmailRequestDto requestDto) {
-        String username = requestDto.username();
-        String phoneNumber = requestDto.phoneNumber();
+    public String findEmail(String username, String phoneNumber) {
         List<User> userList = userHelper.findAllByUsername(username);
         for (User user : userList) {
             if (user.getPhoneNumber().equals(phoneNumber)) {
                 return user.getEmail();
             }
         }
-        log.info("유저를 찾지 못함");
+        log.error("유저를 찾지 못함 : {}", username);
         throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
     }
 }
