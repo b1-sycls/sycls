@@ -1,11 +1,15 @@
 package com.b1.user;
 
+import com.b1.auth.AuthService;
+import com.b1.exception.customexception.EmailCodeException;
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserEmailDuplicatedException;
 import com.b1.exception.customexception.UserIncorrectPasswordException;
 import com.b1.exception.customexception.UserNicknameDuplicatedException;
+import com.b1.exception.errorcode.EmailAuthErrorCode;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.UserDetailsImpl;
+import com.b1.user.dto.UserProfileResponseDto;
 import com.b1.user.dto.UserResignRequestDto;
 import com.b1.user.dto.UserSignupRequestDto;
 import com.b1.user.entity.User;
@@ -23,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserHelper userHelper;
+    private final AuthService authService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -37,6 +42,11 @@ public class UserService {
         if (userHelper.checkNicknameExists(requestDto.nickname())) {
             log.error("닉네임 중복 | nickname : {}", requestDto.nickname());
             throw new UserNicknameDuplicatedException(UserErrorCode.USER_NICKNAME_ALREADY_EXISTS);
+        }
+
+        if (!authService.verifyCode(requestDto.email(), requestDto.code())) {
+            log.error("Email 에 Code 가 일치하지 않습니다. : {} , {}", requestDto.email(), requestDto.code());
+            throw new EmailCodeException(EmailAuthErrorCode.CODE_MISMATCH);
         }
 
         User user = User.addCustomer(
@@ -63,5 +73,14 @@ public class UserService {
         }
 
         getUser.deleteUser();
+    }
+
+    public UserProfileResponseDto getProfile(User user) {
+        return UserProfileResponseDto.of(
+                user.getUsername(),
+                user.getNickname(),
+                user.getEmail(),
+                user.getPhoneNumber()
+        );
     }
 }
