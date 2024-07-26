@@ -56,8 +56,9 @@ public class Round {
     private Place place;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Round(Integer sequence, LocalDate startDate, LocalTime startTime, LocalTime endTime,
-            Content content, Place place, RoundStatus status) {
+    private Round(final Integer sequence, final LocalDate startDate, final LocalTime startTime,
+            final LocalTime endTime, final Content content, final Place place,
+            final RoundStatus status) {
         this.sequence = sequence;
         this.startDate = startDate;
         this.startTime = startTime;
@@ -67,9 +68,9 @@ public class Round {
         this.status = status;
     }
 
-    public static Round addRound(Integer sequence, LocalDate startDate, LocalTime startTime,
-            LocalTime endTime,
-            RoundStatus status, Content content, Place place) {
+    public static Round addRound(final Integer sequence, final LocalDate startDate,
+            final LocalTime startTime, final LocalTime endTime, final RoundStatus status,
+            final Content content, final Place place) {
         return Round.builder()
                 .sequence(sequence)
                 .startDate(startDate)
@@ -81,11 +82,12 @@ public class Round {
                 .build();
     }
 
-    public void updateStatus(RoundStatus status) {
+    public void updateStatus(final RoundStatus status) {
         this.status = status;
     }
 
-    public void updateDateAndTime(LocalDate startDate, LocalTime startTime, LocalTime endTime) {
+    public void updateDateAndTime(final LocalDate startDate, final LocalTime startTime,
+            final LocalTime endTime) {
         this.startDate = startDate;
         this.startTime = startTime;
         this.endTime = endTime;
