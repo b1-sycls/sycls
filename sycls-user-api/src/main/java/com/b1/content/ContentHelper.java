@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ContentHelper {
 
-    private final ContentQueryRepository queryRepository;
+    private final ContentQueryRepository contentQueryRepository;
 
     /**
      * 단일 조회시 필요한 공연의 정보 조회
      */
     public ContentGetUserResponseDto getContentByContentId(final Long contentId) {
-        return queryRepository.getByContentByContentIdForUser(contentId);
+        return contentQueryRepository.getByContentByContentIdForUser(contentId);
     }
 
     /**
@@ -29,7 +29,7 @@ public class ContentHelper {
      */
     public List<ContentDetailImagePathGetUserResponseDto> getAllContentDetailImagesPathByContentId(
             final Long contentId) {
-        return queryRepository.getAllContentDetailImagesPathByContentIdForUser(contentId);
+        return contentQueryRepository.getAllContentDetailImagesPathByContentIdForUser(contentId);
     }
 
     /**
@@ -38,7 +38,7 @@ public class ContentHelper {
     public Page<ContentGetUserResponseDto> getAllContentForAdmin(
             final ContentSearchCondRequest request,
             final Pageable pageable) {
-        return queryRepository.getAllContentForUser(request.getCategoryId(),
+        return contentQueryRepository.getAllContentForUser(request.getCategoryId(),
                 request.getTitleKeyword(), pageable);
     }
 }

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class ContentHelper {
 
     private final ContentRepository contentRepository;
-    private final ContentQueryRepository queryRepository;
+    private final ContentQueryRepository contentQueryRepository;
 
     /**
      * 카테고리가 있는지 확인
@@ -52,14 +52,14 @@ public class ContentHelper {
      * 서브이미지 리스트 반환
      */
     public List<ContentDetailImage> getByContentDetailImagesByContentId(final Long contentId) {
-        return queryRepository.getByContentDetailImagesByContentId(contentId);
+        return contentQueryRepository.getByContentDetailImagesByContentId(contentId);
     }
 
     /**
      * 단일 조회시 필요한 공연의 정보 조회
      */
     public ContentGetAdminResponseDto getContentByContentId(final Long contentId) {
-        return queryRepository.getByContentByContentIdForAdmin(contentId);
+        return contentQueryRepository.getByContentByContentIdForAdmin(contentId);
     }
 
     /**
@@ -67,7 +67,7 @@ public class ContentHelper {
      */
     public List<ContentDetailImagePathGetAdminResponseDto> getAllContentDetailImagesPathByContentId(
             final Long contentId) {
-        return queryRepository.getAllContentDetailImagesPathByContentIdForAdmin(contentId);
+        return contentQueryRepository.getAllContentDetailImagesPathByContentIdForAdmin(contentId);
     }
 
     /**
@@ -76,7 +76,7 @@ public class ContentHelper {
     public Page<ContentGetAdminResponseDto> getAllContentForAdmin(
             final ContentSearchCondRequest request,
             final Pageable pageable) {
-        return queryRepository.getAllContentForAdmin(request.getCategoryId(),
+        return contentQueryRepository.getAllContentForAdmin(request.getCategoryId(),
                 request.getTitleKeyword(), request.getStatus(), pageable);
     }
 
@@ -84,7 +84,7 @@ public class ContentHelper {
      * 공연이 활성화 상태로 변환 가능인지 회차 확인
      */
     public void checkRoundStatusByContentId(final Long contentId) {
-        Long count = queryRepository.checkRoundStatusByContentId(contentId);
+        Long count = contentQueryRepository.checkRoundStatusByContentId(contentId);
 
         if (count == null || count == 0) {
             log.error("활성화된 회차 없음 | contentId : {}", contentId);

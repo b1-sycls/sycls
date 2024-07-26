@@ -21,10 +21,10 @@ import org.springframework.stereotype.Component;
 public class RoundHelper {
 
     private final RoundRepository roundRepository;
-    private final RoundQueryRepository queryRepository;
+    private final RoundQueryRepository roundQueryRepository;
 
     public List<RoundInfoGetUserResponseDto> getAllRoundsInfoByContentId(final Long contentId) {
-        return queryRepository.getAllRoundsInfoByContentIdForUser(contentId);
+        return roundQueryRepository.getAllRoundsInfoByContentIdForUser(contentId);
     }
 
     /**
@@ -46,7 +46,7 @@ public class RoundHelper {
      * 회차 단일 상세 조회
      */
     public RoundDetailInfoUserResponseDto getRoundDetail(final Long roundId) {
-        return queryRepository.getRoundDetailInfoForUser(roundId);
+        return roundQueryRepository.getRoundDetailInfoForUser(roundId);
     }
 
     /**
@@ -54,6 +54,6 @@ public class RoundHelper {
      */
     public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(
             final RoundSearchCondRequest request, final Pageable pageable) {
-        return queryRepository.getAllSimpleRoundsForUser(request.getContentId(), pageable);
+        return roundQueryRepository.getAllSimpleRoundsForUser(request.getContentId(), pageable);
     }
 }
