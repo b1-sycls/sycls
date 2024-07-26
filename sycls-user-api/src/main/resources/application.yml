@@ -14,6 +14,8 @@ spring:
           static: ${AWS_STATIC}
         stack:
           auto: false
+        base:
+          url: ${AWS_BASE_URL}
 
 server:
   port: 8080
