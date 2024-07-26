@@ -3,6 +3,7 @@ package com.b1.user;
 import com.b1.exception.customexception.UserNotFoundException;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.user.entity.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,4 +34,12 @@ public class UserHelper {
         return userRepository.existsByNickname(nickname);
     }
 
+    public List<User> findAllByUsername(String username) {
+        List<User> userList = userRepository.findAllByUsername(username);
+        if (userList == null || userList.isEmpty()) {
+            log.info("유저를 찾지 못함");
+            throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
+        }
+        return userList;
+    }
 }

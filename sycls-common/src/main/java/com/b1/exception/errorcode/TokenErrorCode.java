@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum TokenErrorCode implements ErrorCode {
 
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "토큰을 찾을 수 없습니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 사용자의 토큰을 찾을 수 없습니다."),
     CODE_MISMATCH(HttpStatus.BAD_REQUEST.value(), "코드가 일치하지 않습니다."),
     IS_BLACKLIST_TOKEN(HttpStatus.BAD_REQUEST.value(), "블랙리스트 토큰입니다."),
     ;

@@ -2,10 +2,13 @@ package com.b1.auth;
 
 import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
 
+import com.b1.auth.dto.FindEmailRequestDto;
 import com.b1.auth.entity.Code;
 import com.b1.auth.repository.CodeRepository;
+import com.b1.exception.customexception.TokenException;
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserNotFoundException;
+import com.b1.exception.errorcode.TokenErrorCode;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.JwtProvider;
 import com.b1.user.UserHelper;
@@ -13,6 +16,7 @@ import com.b1.user.dto.UserResetPasswordRequestDto;
 import com.b1.user.entity.User;
 import com.b1.user.entity.UserStatus;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +70,7 @@ public class AuthService {
 
     public boolean verifyCode(String email, String code) {
         String storedCode = codeRepository.findById(email).orElseThrow(
-                () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND)
+                () -> new TokenException(TokenErrorCode.USER_NOT_FOUND)
         ).getCode();
         return storedCode != null && storedCode.equals(code);
     }
@@ -89,5 +93,18 @@ public class AuthService {
         jwtProvider.addBlacklistToken(accessToken, blacklistTokenTtl);
         jwtProvider.addBlacklistToken(refreshToken, blacklistTokenTtl);
         jwtProvider.deleteToken(accessToken);
+    }
+
+    public String findEmail(FindEmailRequestDto requestDto) {
+        String username = requestDto.username();
+        String phoneNumber = requestDto.phoneNumber();
+        List<User> userList = userHelper.findAllByUsername(username);
+        for (User user : userList) {
+            if (user.getPhoneNumber().equals(phoneNumber)) {
+                return user.getEmail();
+            }
+        }
+        log.info("유저를 찾지 못함");
+        throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
     }
 }
