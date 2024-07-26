@@ -4,11 +4,8 @@ import com.b1.common.PageResponseDto;
 import com.b1.content.ContentHelper;
 import com.b1.content.entity.Content;
 import com.b1.exception.customexception.InvalidDateException;
-import com.b1.exception.customexception.InvalidPageNumberException;
 import com.b1.exception.customexception.InvalidTimeException;
 import com.b1.exception.customexception.RoundConflictingReservationException;
-import com.b1.exception.customexception.RoundStatusEqualsException;
-import com.b1.exception.errorcode.PageErrorCode;
 import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.place.PlaceHelper;
 import com.b1.place.entity.Place;
@@ -22,6 +19,7 @@ import com.b1.round.dto.RoundUpdateStatusRequestDto;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
 import com.b1.s3.S3Util;
+import com.b1.util.PageUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -84,10 +82,7 @@ public class RoundService {
 
         Round round = roundHelper.findById(roundId);
 
-        if (round.getStatus() == requestDto.status()) {
-            log.error("회차 스테이터스 동일 오류 | roundId : {}", roundId);
-            throw new RoundStatusEqualsException(RoundErrorCode.ROUND_STATUS_EQUALS);
-        }
+        RoundStatus.checkEqualsStatus(round.getStatus(), requestDto.status());
 
         round.updateStatus(requestDto.status());
     }
@@ -146,10 +141,7 @@ public class RoundService {
         Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
                 request.getSortProperty());
 
-        if (request.getPage() <= 0) {
-            log.error("페이지 값이 0이하 request : {}", request.getPage());
-            throw new InvalidPageNumberException(PageErrorCode.INVALID_PAGE_NUMBER);
-        }
+        PageUtil.checkPageNumber(request.getPage());
 
         Pageable pageable = PageRequest.of(request.getPage() - 1, 10, sort);
 

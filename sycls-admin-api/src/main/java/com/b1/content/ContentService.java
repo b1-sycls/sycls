@@ -13,12 +13,11 @@ import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
 import com.b1.content.entity.ContentStatus;
-import com.b1.exception.customexception.InvalidPageNumberException;
-import com.b1.exception.errorcode.PageErrorCode;
 import com.b1.round.RoundHelper;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import com.b1.s3.S3Uploader;
 import com.b1.s3.S3Util;
+import com.b1.util.PageUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -162,10 +161,7 @@ public class ContentService {
         Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
                 request.getSortProperty());
 
-        if (request.getPage() <= 0) {
-            log.error("페이지 값이 0이하 request : {}", request.getPage());
-            throw new InvalidPageNumberException(PageErrorCode.INVALID_PAGE_NUMBER);
-        }
+        PageUtil.checkPageNumber(request.getPage());
 
         Pageable pageable = PageRequest.of(request.getPage() - 1, 4, sort);
 

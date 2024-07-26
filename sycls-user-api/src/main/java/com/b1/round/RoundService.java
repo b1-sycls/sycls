@@ -1,13 +1,12 @@
 package com.b1.round;
 
 import com.b1.common.PageResponseDto;
-import com.b1.exception.customexception.InvalidPageNumberException;
-import com.b1.exception.errorcode.PageErrorCode;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
 import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleUserResponseDto;
 import com.b1.s3.S3Util;
+import com.b1.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -53,10 +52,7 @@ public class RoundService {
         Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
                 request.getSortProperty());
 
-        if (request.getPage() <= 0) {
-            log.error("페이지 값이 0이하 request : {}", request.getPage());
-            throw new InvalidPageNumberException(PageErrorCode.INVALID_PAGE_NUMBER);
-        }
+        PageUtil.checkPageNumber(request.getPage());
 
         Pageable pageable = PageRequest.of(request.getPage() - 1, 10, sort);
 

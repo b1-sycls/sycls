@@ -31,4 +31,11 @@ public enum RoundStatus {
             throw new BookingNotAvailableException(RoundErrorCode.BOOKING_NOT_AVAILABLE);
         }
     }
+
+    public static void checkEqualsStatus(RoundStatus firstStatus, RoundStatus secondStatus) {
+        if (firstStatus == secondStatus) {
+            log.error("회차 스테이터스 동일 오류 | status {} : {}", firstStatus, secondStatus);
+            throw new RoundStatusEqualsException(RoundErrorCode.ROUND_STATUS_EQUALS);
+        }
+    }
 }

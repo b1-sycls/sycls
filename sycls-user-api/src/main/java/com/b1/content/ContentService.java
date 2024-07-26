@@ -5,11 +5,10 @@ import com.b1.content.dto.ContentDetailImagePathGetUserResponseDto;
 import com.b1.content.dto.ContentDetailResponseDto;
 import com.b1.content.dto.ContentGetUserResponseDto;
 import com.b1.content.dto.ContentSearchCondRequest;
-import com.b1.exception.customexception.InvalidPageNumberException;
-import com.b1.exception.errorcode.PageErrorCode;
 import com.b1.round.RoundHelper;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
 import com.b1.s3.S3Util;
+import com.b1.util.PageUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,10 +64,7 @@ public class ContentService {
         Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
                 request.getSortProperty());
 
-        if (request.getPage() <= 0) {
-            log.error("페이지 값이 0이하 request : {}", request.getPage());
-            throw new InvalidPageNumberException(PageErrorCode.INVALID_PAGE_NUMBER);
-        }
+        PageUtil.checkPageNumber(request.getPage());
 
         Pageable pageable = PageRequest.of(request.getPage() - 1, 4, sort);
 
