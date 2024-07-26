@@ -1,9 +1,12 @@
 package com.b1.user;
 
+import com.b1.auth.AuthService;
+import com.b1.exception.customexception.TokenException;
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserEmailDuplicatedException;
 import com.b1.exception.customexception.UserIncorrectPasswordException;
 import com.b1.exception.customexception.UserNicknameDuplicatedException;
+import com.b1.exception.errorcode.TokenErrorCode;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.UserDetailsImpl;
 import com.b1.user.dto.UserResignRequestDto;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserHelper userHelper;
+    private final AuthService authService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -39,6 +43,10 @@ public class UserService {
             throw new UserNicknameDuplicatedException(UserErrorCode.USER_NICKNAME_ALREADY_EXISTS);
         }
 
+        if (!authService.verifyCode(requestDto.email(), requestDto.code())) {
+            throw new TokenException(TokenErrorCode.CODE_MISMATCH);
+        }
+        
         User user = User.addCustomer(
                 requestDto.email(),
                 requestDto.username(),

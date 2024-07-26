@@ -9,7 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,10 +24,11 @@ public class UserRestController {
 
     /**
      * 회원가입 기능
+     *
      * @param requestDto : email, username, nickname, phone_number, password
-     * */
+     */
     @PostMapping("/users/signup")
-    public ResponseEntity<RestApiResponseDto<String>> signup (
+    public ResponseEntity<RestApiResponseDto<String>> signup(
             @Valid @RequestBody UserSignupRequestDto requestDto
     ) {
         userService.signup(requestDto);
@@ -33,17 +38,19 @@ public class UserRestController {
 
     /**
      * 회원탈퇴 기능
+     *
      * @param requestDto : password
-     * */
+     */
     @DeleteMapping("/users/resign")
-    public ResponseEntity<RestApiResponseDto<String>> signup (
+    public ResponseEntity<RestApiResponseDto<String>> signup(
             @Valid @RequestBody UserResignRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         userService.resign(requestDto, userDetails);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("유저가 삭제되었습니다. User Email : " + userDetails.getUser().getEmail()));
+                .body(RestApiResponseDto.of(
+                        "유저가 삭제되었습니다. User Email : " + userDetails.getUser().getEmail()));
     }
 
 }
