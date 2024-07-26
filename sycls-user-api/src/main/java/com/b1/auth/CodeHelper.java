@@ -18,7 +18,7 @@ public class CodeHelper {
     public String findCodeByEmail(String email) {
         return codeRepository.findById(email).orElseThrow(() -> {
             log.error("Code가 없는 email입니다: {}", email);
-            return new EmailCodeException(EmailAuthErrorCode.USER_TOKEN_NOT_FOUND);
+            return new EmailCodeException(EmailAuthErrorCode.USER_CODE_NOT_FOUND);
         }).getCode();
     }
 
