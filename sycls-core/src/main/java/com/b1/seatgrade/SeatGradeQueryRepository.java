@@ -5,6 +5,7 @@ import com.b1.seat.entity.QSeat;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
 import com.b1.seatgrade.dto.SeatGradeUserGetResponseDto;
 import com.b1.seatgrade.entity.QSeatGrade;
+import com.b1.seatgrade.entity.SeatGrade;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -52,14 +53,13 @@ public class SeatGradeQueryRepository {
         QSeatGrade seatGrade = QSeatGrade.seatGrade;
         QRound round = QRound.round;
 
-        Integer count = Math.toIntExact(jpaQueryFactory
-                .select(seatGrade.count())
-                .from(seatGrade)
+        List<SeatGrade> count = jpaQueryFactory
+                .selectFrom(seatGrade)
                 .leftJoin(round).on(seatGrade.round.id.eq(round.id))
                 .where(round.id.eq(roundId))
-                .fetchOne());
+                .fetch();
 
-        return count != null ? count : 0;
+        return count.size();
     }
 
     /**
