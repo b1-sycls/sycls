@@ -28,4 +28,11 @@ public class SeatGradeHelper {
     public List<SeatGradeGetResponseDto> getAllSeatGrades(final Long roundId) {
         return seatGradeQueryRepository.getAllSeatGrades(roundId);
     }
+
+    /**
+     * 좌석-등급 ID In절 조회
+     */
+    public List<SeatGrade> findAllByIdIn(final List<Long> seatIdList) {
+        return seatGradeRepository.findAllByIdIn(seatIdList);
+    }
 }

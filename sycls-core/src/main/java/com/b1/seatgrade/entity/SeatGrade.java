@@ -62,6 +62,9 @@ public class SeatGrade {
         this.ticketId = ticketId;
     }
 
+    /**
+     * 좌석-등급 등록
+     */
     public static SeatGrade addSeatGrade(final SeatGradeType grade, final Integer price,
             final Seat seat, final Round round) {
         return SeatGrade.builder()
@@ -73,6 +76,9 @@ public class SeatGrade {
                 .build();
     }
 
+    /**
+     * 좌석-등급 수정
+     */
     public void updateSeatGrade(final SeatGradeType grade, final Integer price) {
         this.grade = grade;
         this.price = price;

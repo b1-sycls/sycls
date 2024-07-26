@@ -8,6 +8,7 @@ import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
 import com.b1.seatgrade.dto.SeatGradeGetAllResponseDto;
 import com.b1.seatgrade.dto.SeatGradeGetResponseDto;
+import com.b1.seatgrade.dto.SeatGradeUpdateRequestDto;
 import com.b1.seatgrade.entity.SeatGrade;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +58,16 @@ public class SeatGradeService {
     public SeatGradeGetAllResponseDto getAllSeatGrades(final Long roundId) {
         List<SeatGradeGetResponseDto> seatGradeList = seatGradeHelper.getAllSeatGrades(roundId);
         return SeatGradeGetAllResponseDto.of(roundId, seatGradeList);
+    }
+
+    /**
+     * 좌석 등급 수정
+     */
+    public void updateSeatGrades(final SeatGradeUpdateRequestDto requestDto) {
+        seatGradeHelper.findAllByIdIn(requestDto.seatGradeIdList())
+                .forEach(seatGrade -> seatGrade.updateSeatGrade(
+                        requestDto.seatGradeType(),
+                        requestDto.price())
+                );
     }
 }

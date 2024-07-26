@@ -3,11 +3,13 @@ package com.b1.seatgrade;
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
 import com.b1.seatgrade.dto.SeatGradeGetAllResponseDto;
+import com.b1.seatgrade.dto.SeatGradeUpdateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +45,18 @@ public class SeatGradeRestController {
         SeatGradeGetAllResponseDto response = seatGradeService.getAllSeatGrades(roundId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("조회되었습니다.", response));
+    }
+
+    /**
+     * 좌석 등급 수정
+     */
+    @PatchMapping("/seat-grades")
+    public ResponseEntity<RestApiResponseDto<String>> updateSeatGrades(
+            @Valid @RequestBody final SeatGradeUpdateRequestDto requestDto
+    ) {
+        seatGradeService.updateSeatGrades(requestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("수정되었습니다."));
     }
 
 }
