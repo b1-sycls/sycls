@@ -23,6 +23,13 @@ public class SeatGradeHelper {
     }
 
     /**
+     * 등록된 좌석-등급의 총 갯수 조회
+     */
+    public Integer getTotalCount(Long roundId) {
+        return seatGradeQueryRepository.getTotalCount(roundId);
+    }
+
+    /**
      * 좌석 등급 전체 조회
      */
     public List<SeatGradeGetResponseDto> getAllSeatGrades(final Long roundId) {

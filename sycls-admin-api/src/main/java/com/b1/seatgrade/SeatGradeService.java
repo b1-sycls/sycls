@@ -1,5 +1,6 @@
 package com.b1.seatgrade;
 
+import com.b1.place.PlaceHelper;
 import com.b1.place.entity.PlaceStatus;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
@@ -13,6 +14,7 @@ import com.b1.seatgrade.dto.SeatGradeUpdateRequestDto;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeStatus;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class SeatGradeService {
     private final SeatGradeHelper seatGradeHelper;
     private final RoundHelper roundHelper;
     private final SeatHelper seatHelper;
+    private final PlaceHelper placeHelper;
 
     /**
      * 좌석 등급 등록
@@ -51,6 +54,17 @@ public class SeatGradeService {
                 )).toList();
 
         seatGradeHelper.saveSeatGrades(seatGradeList);
+    }
+
+    /**
+     * 전체 좌석에 대한 등급 설정 완료 확인
+     */
+    public Boolean confirmAllSeatSetting(final Long roundId) {
+        // 회차의 공연장 총 좌석수와 등록된 SeatGrade 를 비교
+        Integer maxSeat = placeHelper.getMaxSeatFromPlace(roundId);
+        Integer totalCount = seatGradeHelper.getTotalCount(roundId);
+
+        return Objects.equals(totalCount, maxSeat);
     }
 
     /**

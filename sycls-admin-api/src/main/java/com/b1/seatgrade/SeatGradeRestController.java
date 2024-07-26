@@ -38,6 +38,18 @@ public class SeatGradeRestController {
     }
 
     /**
+     * 전체 좌석에 대한 등급 설정 완료 확인
+     */
+    @GetMapping("/seat-grades/confirm")
+    public ResponseEntity<RestApiResponseDto<Boolean>> confirmAllSeatSetting(
+            @RequestParam(value = "roundId") final Long roundId
+    ) {
+        Boolean response = seatGradeService.confirmAllSeatSetting(roundId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("확인되었습니다.", response));
+    }
+
+    /**
      * 좌석 등급 전체 조회 (RequestParam으로 받는게 맞는가???)
      */
     @GetMapping("/seat-grades")
