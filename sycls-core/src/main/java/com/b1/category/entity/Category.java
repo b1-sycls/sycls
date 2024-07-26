@@ -33,7 +33,7 @@ public class Category extends TimeStamp {
     private CategoryStatus status;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Category(String name, CategoryStatus status) {
+    private Category(final String name, final CategoryStatus status) {
         this.name = name;
         this.status = status;
     }
@@ -45,7 +45,7 @@ public class Category extends TimeStamp {
                 .build();
     }
 
-    public void update(String name) {
+    public void update(final String name) {
         this.name = name;
     }
 

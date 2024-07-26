@@ -54,8 +54,8 @@ public class Content extends TimeStamp {
     private Category category;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Content(String title, String description, Category category, ContentStatus status,
-            String mainImagePath) {
+    private Content(final String title, final String description, final Category category,
+            final ContentStatus status, final String mainImagePath) {
         this.title = title;
         this.description = description;
         this.category = category;
@@ -63,8 +63,8 @@ public class Content extends TimeStamp {
         this.mainImagePath = mainImagePath;
     }
 
-    public static Content addContent(String title, String description, Category category,
-            String mainImagePath) {
+    public static Content addContent(final String title, final String description,
+            final Category category, final String mainImagePath) {
         return Content.builder()
                 .title(title)
                 .description(description)
@@ -74,8 +74,8 @@ public class Content extends TimeStamp {
                 .build();
     }
 
-    public void updateContent(Category category, String title, String description,
-            String mainImagePath, List<ContentDetailImage> detailImageList) {
+    public void updateContent(final Category category, final String title, final String description,
+            final String mainImagePath, final List<ContentDetailImage> detailImageList) {
         this.category = category;
         this.title = title;
         this.description = description;
@@ -83,15 +83,11 @@ public class Content extends TimeStamp {
         this.contentDetailImageList = detailImageList;
     }
 
-    public void addMainImagePath(String mainImagePath) {
-        this.mainImagePath = mainImagePath;
-    }
-
-    public void addContentDetailImageList(List<ContentDetailImage> contentDetailImageList) {
+    public void addContentDetailImageList(final List<ContentDetailImage> contentDetailImageList) {
         this.contentDetailImageList = contentDetailImageList;
     }
 
-    public void updateStatus(ContentStatus status) {
+    public void updateStatus(final ContentStatus status) {
         this.status = status;
     }
 }
