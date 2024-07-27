@@ -19,7 +19,7 @@ public enum SeatGradeStatus {
 
     private final String value;
 
-    public static void checkEnable(Set<SeatGrade> seatGrades) {
+    public static void checkEnable(final Set<SeatGrade> seatGrades) {
         seatGrades.forEach(
                 sg -> {
                     if (!sg.getStatus().equals(ENABLE)) {

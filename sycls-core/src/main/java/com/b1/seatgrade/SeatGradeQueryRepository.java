@@ -50,7 +50,7 @@ public class SeatGradeQueryRepository {
     /**
      * 등록된 좌석-등급의 총 갯수 조회
      */
-    public Integer getTotalCount(Long roundId) {
+    public Integer getTotalCount(final Long roundId) {
         QSeatGrade seatGrade = QSeatGrade.seatGrade;
         QRound round = QRound.round;
 
@@ -69,7 +69,7 @@ public class SeatGradeQueryRepository {
     /**
      * 사용자 - 해당 회차의 좌석-등급 조회
      */
-    public List<SeatGradeUserGetDto> getAllSeatGradesUser(Long roundId) {
+    public List<SeatGradeUserGetDto> getAllSeatGradesUser(final Long roundId) {
         QSeatGrade seatGrade = QSeatGrade.seatGrade;
         QSeat seat = QSeat.seat;
 

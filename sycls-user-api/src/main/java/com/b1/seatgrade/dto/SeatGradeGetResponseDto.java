@@ -18,7 +18,7 @@ public class SeatGradeGetResponseDto {
     private Integer seatGradePrice;
     private Boolean seatStatusYn;
 
-    public static List<SeatGradeGetResponseDto> of(List<SeatGradeUserGetDto> dtoList) {
+    public static List<SeatGradeGetResponseDto> of(final List<SeatGradeUserGetDto> dtoList) {
 
         return dtoList.stream().map(
                 dto -> SeatGradeGetResponseDto.builder()

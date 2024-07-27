@@ -18,6 +18,7 @@ public class SeatGradeService {
     /**
      * 해당 회차의 좌석-등급 전체 조회
      */
+    @Transactional(readOnly = true)
     public SeatGradeGetAllResponseDto getAllSeatGradesUser(final Long roundId) {
         List<SeatGradeUserGetDto> seatGradeList = seatGradeHelper.getAllSeatGradesUser(roundId);
         List<SeatGradeGetResponseDto> responseDto = SeatGradeGetResponseDto.of(seatGradeList);
