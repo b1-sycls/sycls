@@ -82,4 +82,16 @@ public class CastService {
 
         return responseDto;
     }
+
+    /**
+     * 출연진 삭제 기능
+     */
+    public void deleteCast(final Long castId) {
+
+        Cast cast = castHelper.getCast(castId);
+
+        CastStatus.checkCanceled(cast.getStatus());
+
+        cast.deleteCast();
+    }
 }

@@ -72,7 +72,7 @@ public class Cast extends TimeStamp {
         this.round = round;
     }
 
-    public void deleteCast(final CastStatus status) {
-        this.status = status;
+    public void deleteCast() {
+        this.status = CastStatus.CANCELED;
     }
 }
