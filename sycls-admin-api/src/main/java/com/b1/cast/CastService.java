@@ -43,7 +43,7 @@ public class CastService {
                 CastStatus.SCHEDULED,
                 round);
 
-        castHelper.save(cast);
+        castHelper.saveCast(cast);
     }
 
     /**

@@ -21,7 +21,7 @@ public class CastHelper {
     /**
      * 출연진 저장
      */
-    public void save(final Cast cast) {
+    public void saveCast(final Cast cast) {
         castRepository.save(cast);
     }
 
