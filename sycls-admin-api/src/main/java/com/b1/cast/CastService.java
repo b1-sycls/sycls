@@ -4,10 +4,13 @@ import com.b1.cast.dto.CastAddRequestDto;
 import com.b1.cast.dto.CastUpdateRequestDto;
 import com.b1.cast.entity.Cast;
 import com.b1.cast.entity.CastStatus;
+import com.b1.cast.entity.dto.CastGetAdminResponseDto;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
 import com.b1.s3.S3Uploader;
 import com.b1.s3.S3UrlPathType;
+import com.b1.s3.S3Util;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,5 +66,19 @@ public class CastService {
         }
 
         cast.updateCast(requestDto.name(), imagePath, requestDto.status());
+    }
+
+    /**
+     * 출연진 조회 기능
+     */
+    public List<CastGetAdminResponseDto> getAllCastsByRoundId(Long roundId) {
+
+        List<CastGetAdminResponseDto> responseDto = castHelper.getAllCastsByRoundId(roundId);
+
+        for (CastGetAdminResponseDto dto : responseDto) {
+            dto.updateImagePath(S3Util.makeResponseImageDir(dto.getImagePath()));
+        }
+
+        return responseDto;
     }
 }
