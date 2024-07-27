@@ -10,11 +10,11 @@ public class SeatGradeGetAllResponseDto {
 
     private Long roundId;
     private Integer totalCount;
-    private List<SeatGradeUserGetResponseDto> seatGradeList;
+    private List<SeatGradeGetResponseDto> seatGradeList;
 
     public static SeatGradeGetAllResponseDto of(
-            Long roundId,
-            List<SeatGradeUserGetResponseDto> seatGradeList
+            final Long roundId,
+            final List<SeatGradeGetResponseDto> seatGradeList
     ) {
         return SeatGradeGetAllResponseDto.builder()
                 .roundId(roundId)

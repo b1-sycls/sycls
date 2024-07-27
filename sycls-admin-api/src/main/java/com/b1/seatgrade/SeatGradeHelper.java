@@ -25,7 +25,7 @@ public class SeatGradeHelper {
     /**
      * 등록된 좌석-등급의 총 갯수 조회
      */
-    public Integer getTotalCount(Long roundId) {
+    public Integer getTotalCount(final Long roundId) {
         return seatGradeQueryRepository.getTotalCount(roundId);
     }
 

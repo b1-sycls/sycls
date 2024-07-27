@@ -1,7 +1,8 @@
 package com.b1.seatgrade;
 
 import com.b1.seatgrade.dto.SeatGradeGetAllResponseDto;
-import com.b1.seatgrade.dto.SeatGradeUserGetResponseDto;
+import com.b1.seatgrade.dto.SeatGradeGetResponseDto;
+import com.b1.seatgrade.dto.SeatGradeUserGetDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,8 @@ public class SeatGradeService {
      * 해당 회차의 좌석-등급 전체 조회
      */
     public SeatGradeGetAllResponseDto getAllSeatGradesUser(final Long roundId) {
-        List<SeatGradeUserGetResponseDto> seatGradeList = seatGradeHelper
-                .getAllSeatGradesUser(roundId);
-        return SeatGradeGetAllResponseDto.of(roundId, seatGradeList);
+        List<SeatGradeUserGetDto> seatGradeList = seatGradeHelper.getAllSeatGradesUser(roundId);
+        List<SeatGradeGetResponseDto> responseDto = SeatGradeGetResponseDto.of(seatGradeList);
+        return SeatGradeGetAllResponseDto.of(roundId, responseDto);
     }
 }

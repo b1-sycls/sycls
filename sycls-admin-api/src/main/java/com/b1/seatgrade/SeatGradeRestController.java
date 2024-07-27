@@ -38,7 +38,7 @@ public class SeatGradeRestController {
     }
 
     /**
-     * 전체 좌석에 대한 등급 설정 완료 확인
+     * 전체 좌석등급이 설정 완료 확인
      */
     @GetMapping("/seat-grades/confirm")
     public ResponseEntity<RestApiResponseDto<Boolean>> confirmAllSeatSetting(
@@ -78,7 +78,7 @@ public class SeatGradeRestController {
      */
     @DeleteMapping("/seat-grades")
     public ResponseEntity<RestApiResponseDto<String>> deleteSeatGrade(
-            @Valid @RequestBody SeatGradeDeleteRequestDto requestDto
+            @Valid @RequestBody final SeatGradeDeleteRequestDto requestDto
     ) {
         seatGradeService.deleteSeatGrades(requestDto);
         return ResponseEntity.status(HttpStatus.OK)

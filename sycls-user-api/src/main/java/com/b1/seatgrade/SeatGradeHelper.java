@@ -4,7 +4,7 @@ import com.b1.exception.customexception.SeatGradeAlreadySoldOutException;
 import com.b1.exception.customexception.SeatGradeNotFoundException;
 import com.b1.exception.errorcode.SeatGradeErrorCode;
 import com.b1.round.entity.Round;
-import com.b1.seatgrade.dto.SeatGradeUserGetResponseDto;
+import com.b1.seatgrade.dto.SeatGradeUserGetDto;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeStatus;
 import java.util.List;
@@ -24,7 +24,7 @@ public class SeatGradeHelper {
     /**
      * 해당 회차의 좌석-등급 전체 조회
      */
-    public List<SeatGradeUserGetResponseDto> getAllSeatGradesUser(final Long roundId) {
+    public List<SeatGradeUserGetDto> getAllSeatGradesUser(final Long roundId) {
         return seatGradeQueryRepository.getAllSeatGradesUser(roundId);
     }
 

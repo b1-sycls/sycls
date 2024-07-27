@@ -3,9 +3,10 @@ package com.b1.seatgrade;
 import com.b1.round.entity.QRound;
 import com.b1.seat.entity.QSeat;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
-import com.b1.seatgrade.dto.SeatGradeUserGetResponseDto;
+import com.b1.seatgrade.dto.SeatGradeUserGetDto;
 import com.b1.seatgrade.entity.QSeatGrade;
 import com.b1.seatgrade.entity.SeatGrade;
+import com.b1.seatgrade.entity.SeatGradeStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -56,7 +57,10 @@ public class SeatGradeQueryRepository {
         List<SeatGrade> count = jpaQueryFactory
                 .selectFrom(seatGrade)
                 .leftJoin(round).on(seatGrade.round.id.eq(round.id))
-                .where(round.id.eq(roundId))
+                .where(
+                        round.id.eq(roundId),
+                        seatGrade.status.eq(SeatGradeStatus.ENABLE)
+                )
                 .fetch();
 
         return count.size();
@@ -65,24 +69,28 @@ public class SeatGradeQueryRepository {
     /**
      * 사용자 - 해당 회차의 좌석-등급 조회
      */
-    public List<SeatGradeUserGetResponseDto> getAllSeatGradesUser(Long roundId) {
+    public List<SeatGradeUserGetDto> getAllSeatGradesUser(Long roundId) {
         QSeatGrade seatGrade = QSeatGrade.seatGrade;
         QSeat seat = QSeat.seat;
 
         return jpaQueryFactory
                 .select(
                         Projections.constructor(
-                                SeatGradeUserGetResponseDto.class,
+                                SeatGradeUserGetDto.class,
                                 seat.id,
                                 seat.code,
                                 seatGrade.id,
                                 seatGrade.grade,
-                                seatGrade.price
+                                seatGrade.price,
+                                seatGrade.status
                         )
                 )
                 .from(seatGrade)
                 .leftJoin(seat).on(seatGrade.seat.id.eq(seat.id))
-                .where(seatGrade.round.id.eq(roundId))
+                .where(
+                        seatGrade.round.id.eq(roundId),
+                        seatGrade.status.eq(SeatGradeStatus.DISABLE).not()
+                )
                 .fetch();
     }
 }

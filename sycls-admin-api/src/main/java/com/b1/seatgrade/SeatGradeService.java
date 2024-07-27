@@ -36,15 +36,15 @@ public class SeatGradeService {
      */
     public void addSeatGrades(final SeatGradeAddRequestDto requestDto) {
         // 좌석-등급 등록을 위한 예외 처리
-        Round round = roundHelper.findByIdAndContentId(requestDto.roundId(),
-                requestDto.contentId());
+        Round round = roundHelper.findById(requestDto.roundId());
         PlaceStatus.checkDeleted(round.getPlace().getStatus());
 
-        // 좌석-등급 등록
+        // 좌석-등급 등록 TODO 리팩토링 ex) IN절로 해보고 테스트
         List<Seat> seatList = requestDto.seatIdList().stream()
                 .map(seatHelper::getSeat)
                 .toList();
 
+        // 이미 설정된 좌석에 대한 접근을 막아야한다.
         List<SeatGrade> seatGradeList = seatList.stream()
                 .map(seat -> SeatGrade.addSeatGrade(
                         requestDto.seatGradeType(),

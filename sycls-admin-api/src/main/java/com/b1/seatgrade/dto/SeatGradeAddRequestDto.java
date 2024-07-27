@@ -6,9 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record SeatGradeAddRequestDto(
-        @NotNull(message = "공연 정보가 누락되었습니다.")
-        Long contentId,
-
         @NotNull(message = "회차 정보가 누락되었습니다.")
         Long roundId,
 
