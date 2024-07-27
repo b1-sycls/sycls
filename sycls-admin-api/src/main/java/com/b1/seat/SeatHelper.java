@@ -3,6 +3,7 @@ package com.b1.seat;
 import com.b1.exception.customexception.SeatNotFoundException;
 import com.b1.exception.errorcode.SeatErrorCode;
 import com.b1.seat.entity.Seat;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +31,9 @@ public class SeatHelper {
     }
 
     /**
-     * 좌석 단건조회
+     * 좌석 단건조회 (좌석등급 조회할때도 사용)
      */
-    public Seat getSeat(Long seatId) {
+    public Seat getSeat(final Long seatId) {
         return seatRepository.findById(seatId).orElseThrow(
                 () -> {
                     log.error("찾을 수 없는 좌석 | {}", seatId);
@@ -41,7 +42,10 @@ public class SeatHelper {
         );
     }
 
-    public Set<Seat> getAllSeatByPlaceId(Long placeId) {
-        return seatRepository.findByPlaceId(placeId);
+    /**
+     * 좌석 리스트 조회(좌석-등급 들록을 위한)
+     */
+    public Set<Seat> getSeatsForSeatGrade(final List<Long> seatList) {
+        return seatRepository.findAllByIdIn(seatList);
     }
 }

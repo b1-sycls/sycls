@@ -56,4 +56,11 @@ public class PlaceHelper {
             throw new PlaceNotFoundException(PlaceErrorCode.NOT_FOUND_PLACE);
         }
     }
+
+    /**
+     * 공연장 최대 좌석 수 불러오기
+     */
+    public Integer getMaxSeatFromPlace(final Long roundId) {
+        return placeQueryRepository.getMaxSeatFromPlace(roundId);
+    }
 }

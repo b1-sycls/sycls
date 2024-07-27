@@ -3,7 +3,6 @@ package com.b1.auth;
 import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
 
 import com.b1.auth.entity.Code;
-import com.b1.auth.repository.CodeRepository;
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserNotFoundException;
 import com.b1.exception.errorcode.UserErrorCode;
@@ -13,6 +12,7 @@ import com.b1.user.dto.UserResetPasswordRequestDto;
 import com.b1.user.entity.User;
 import com.b1.user.entity.UserStatus;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +28,8 @@ public class AuthService {
 
     private final UserHelper userHelper;
     private final JwtProvider jwtProvider;
+    private final CodeHelper codeHelper;
     private final PasswordEncoder passwordEncoder;
-    private final CodeRepository codeRepository;
 
     @Transactional(readOnly = true)
     public boolean checkEmailExists(String email) {
@@ -61,13 +61,11 @@ public class AuthService {
                 .code(code)
                 .ttl(300)
                 .build();
-        codeRepository.save(emailVerificationCode);
+        codeHelper.addCode(emailVerificationCode);
     }
 
     public boolean verifyCode(String email, String code) {
-        String storedCode = codeRepository.findById(email).orElseThrow(
-                () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND)
-        ).getCode();
+        String storedCode = codeHelper.findCodeByEmail(email);
         return storedCode != null && storedCode.equals(code);
     }
 
@@ -89,5 +87,16 @@ public class AuthService {
         jwtProvider.addBlacklistToken(accessToken, blacklistTokenTtl);
         jwtProvider.addBlacklistToken(refreshToken, blacklistTokenTtl);
         jwtProvider.deleteToken(accessToken);
+    }
+
+    public String findEmail(String username, String phoneNumber) {
+        List<User> userList = userHelper.findAllByUsername(username);
+        for (User user : userList) {
+            if (user.getPhoneNumber().equals(phoneNumber)) {
+                return user.getEmail();
+            }
+        }
+        log.error("유저를 찾지 못함 : {}", username);
+        throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
     }
 }

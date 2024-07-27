@@ -10,6 +10,7 @@ public enum SeatGradeErrorCode implements ErrorCode {
 
     NOT_FOUND_SEAT_GRADE(HttpStatus.NOT_FOUND.value(), "찾을 수 없는 등급 좌석입니다."),
     SEAT_GRADE_ALREADY_SOLD_OUT(HttpStatus.BAD_REQUEST.value(), "이미 매진된 좌석입니다."),
+    SEAT_GRADE_ALREADY_DELETED(HttpStatus.BAD_REQUEST.value(), "이미 삭제된 등급 좌석입니다."),
     ;
 
     private final Integer httpStatusCode;
