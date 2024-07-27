@@ -43,7 +43,7 @@ public class ReservationService {
                         selectedRound, reservationRequest.seatGradeIds());
 
         Set<SeatReservationLog> existingSeatReservationLogs = seatReservationLogHelper
-                .getSeatReservationLogsBySeatGrade(seatGradesForRound, user);
+                .getSeatReservationLogsBySeatGrade(seatGradesForRound);
 
         boolean processReservation = seatReservationLogHelper.isProcessReservation(
                 existingSeatReservationLogs, user,

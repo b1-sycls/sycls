@@ -3,6 +3,7 @@ package com.b1.seat;
 import static com.b1.constant.DomainConstant.SEAT_RESERVATION_TIME;
 
 import com.b1.exception.customexception.SeatReservationLogNotAvailableException;
+import com.b1.exception.customexception.SeatReservationLogNotFoundException;
 import com.b1.exception.errorcode.SeatReservationLogErrorCode;
 import com.b1.seat.entity.SeatReservationLog;
 import com.b1.seat.entity.SeatReservationLogStatus;
@@ -17,7 +18,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j(topic = "Seat Reservation Log Helper")
 @Component
@@ -32,8 +32,8 @@ public class SeatReservationLogHelper {
      * @throws SeatReservationLogNotAvailableException 이미 매진 된 좌석 또는 점유 중인 좌석
      */
     public Set<SeatReservationLog> getSeatReservationLogsBySeatGrade(
-            final Set<SeatGrade> seatGrades,
-            User user) {
+            final Set<SeatGrade> seatGrades
+    ) {
         LocalDateTime currentTime = LocalDateTime.now();
 
         List<SeatReservationLog> reservationLogs = seatReservationLogRepository
@@ -100,7 +100,7 @@ public class SeatReservationLogHelper {
                             && !srl.getUser().getId().equals(user.getId()))) {
                 log.error("점유 중 좌석 등급 | request {}", user.getId());
                 throw new SeatReservationLogNotAvailableException(
-                        SeatReservationLogErrorCode.SEAT_RESERVATION_NOT_AVAILABLE);
+                        SeatReservationLogErrorCode.SEAT_RESERVATION_ALREADY_DISABLE);
             }
 
             if (!isReservedByUser) {
@@ -118,7 +118,13 @@ public class SeatReservationLogHelper {
             final Set<Long> reservationIds,
             final User user
     ) {
-        return seatReservationLogRepository.findAllByIdInAndUser(reservationIds, user);
+        Set<SeatReservationLog> seatReservationLogs = seatReservationLogRepository
+                .findAllByIdInAndUser(reservationIds, user);
+        if ((seatReservationLogs.isEmpty())) {
+            throw new SeatReservationLogNotFoundException(SeatReservationLogErrorCode.SEAT_RESERVATION_NOT_FOUND);
+        }
+        SeatReservationLogStatus.checkDisables(seatReservationLogs);
+        return seatReservationLogs;
     }
 
     /**
@@ -133,14 +139,17 @@ public class SeatReservationLogHelper {
     /**
      * 예매 취소
      */
-    public void deleteReservationLog(Set<SeatReservationLog> seatReservationLogByUser) {
+    public void deleteReservationLog(
+            final Set<SeatReservationLog> seatReservationLogByUser
+    ) {
         for (SeatReservationLog seatReservationLog : seatReservationLogByUser) {
             seatReservationLog.deleteReservationStatus();
         }
     }
 
     private Map<Long, SeatReservationLog> getLongSeatReservationLogMap(
-            List<SeatReservationLog> reservationLogs) {
+            final List<SeatReservationLog> reservationLogs
+    ) {
         return reservationLogs.stream()
                 .collect(Collectors.toMap(
                         log -> log.getSeatGrade().getId(),
