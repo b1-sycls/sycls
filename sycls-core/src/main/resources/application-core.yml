@@ -10,7 +10,7 @@ spring:
   sql:
     init:
       encoding: UTF-8
-      mode: never
+      mode: always
   #      mode: always
 
   mail:
@@ -35,7 +35,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
