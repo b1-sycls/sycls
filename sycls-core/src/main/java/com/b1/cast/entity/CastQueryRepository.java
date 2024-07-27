@@ -12,16 +12,16 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CastQueryRepository {
 
-    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     /**
      * 출연진 조회 (어드민)
      */
-    public List<CastGetAdminResponseDto> getAllCastsByRoundIdForAdmin(Long roundId) {
+    public List<CastGetAdminResponseDto> getAllCastsByRoundIdForAdmin(final Long roundId) {
         QRound round = QRound.round;
         QCast cast = QCast.cast;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         CastGetAdminResponseDto.class,
                         cast.id,

@@ -71,7 +71,7 @@ public class CastService {
     /**
      * 출연진 조회 기능
      */
-    public List<CastGetAdminResponseDto> getAllCastsByRoundId(Long roundId) {
+    public List<CastGetAdminResponseDto> getAllCastsByRoundId(final Long roundId) {
 
         List<CastGetAdminResponseDto> responseDto = castHelper.getAllCastsByRoundId(roundId);
 

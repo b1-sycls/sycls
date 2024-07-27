@@ -39,7 +39,7 @@ public class CastHelper {
     /**
      * 출연진 조회
      */
-    public List<CastGetAdminResponseDto> getAllCastsByRoundId(Long roundId) {
+    public List<CastGetAdminResponseDto> getAllCastsByRoundId(final Long roundId) {
         return castQueryRepository.getAllCastsByRoundIdForAdmin(roundId);
     }
 }

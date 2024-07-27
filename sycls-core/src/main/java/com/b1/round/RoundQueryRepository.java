@@ -30,7 +30,7 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class RoundQueryRepository {
 
-    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     /**
      * 회차 Entity List 반환
@@ -40,7 +40,7 @@ public class RoundQueryRepository {
         QRound round = QRound.round;
         QPlace place = QPlace.place;
 
-        return queryFactory
+        return jpaQueryFactory
                 .selectFrom(round)
                 .leftJoin(round.place, place)
                 .where(round.place.id.eq(placeId)
@@ -58,7 +58,7 @@ public class RoundQueryRepository {
         QRound round = QRound.round;
         QContent content = QContent.content;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         RoundInfoGetAdminResponseDto.class,
                         round.id,
@@ -84,7 +84,7 @@ public class RoundQueryRepository {
         QRound round = QRound.round;
         QContent content = QContent.content;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         RoundInfoGetUserResponseDto.class,
                         round.id,
@@ -111,7 +111,7 @@ public class RoundQueryRepository {
         QCategory category = QCategory.category;
         QPlace place = QPlace.place;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         RoundDetailInfoAdminResponseDto.class,
                         round.id,
@@ -145,13 +145,13 @@ public class RoundQueryRepository {
      * (유저) 회차 단일 상세 조회
      */
     public RoundDetailInfoUserResponseDto getRoundDetailInfoForUser(final Long roundId) {
-        
+
         QRound round = QRound.round;
         QContent content = QContent.content;
         QCategory category = QCategory.category;
         QPlace place = QPlace.place;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         RoundDetailInfoUserResponseDto.class,
                         round.id,
@@ -191,7 +191,7 @@ public class RoundQueryRepository {
         QRound round = QRound.round;
         QContent content = QContent.content;
 
-        List<RoundSimpleAdminResponseDto> roundList = queryFactory
+        List<RoundSimpleAdminResponseDto> roundList = jpaQueryFactory
                 .select(Projections.constructor(
                         RoundSimpleAdminResponseDto.class,
                         round.id,
@@ -213,7 +213,7 @@ public class RoundQueryRepository {
                 .orderBy(round.sequence.asc())
                 .fetch();
 
-        JPAQuery<Long> total = queryFactory
+        JPAQuery<Long> total = jpaQueryFactory
                 .select(round.count())
                 .from(round)
                 .where(
@@ -233,7 +233,7 @@ public class RoundQueryRepository {
         QRound round = QRound.round;
         QContent content = QContent.content;
 
-        List<RoundSimpleUserResponseDto> roundList = queryFactory
+        List<RoundSimpleUserResponseDto> roundList = jpaQueryFactory
                 .select(Projections.constructor(
                         RoundSimpleUserResponseDto.class,
                         round.id,
@@ -255,7 +255,7 @@ public class RoundQueryRepository {
                 .orderBy(round.sequence.asc())
                 .fetch();
 
-        JPAQuery<Long> total = queryFactory
+        JPAQuery<Long> total = jpaQueryFactory
                 .select(round.count())
                 .from(round)
                 .where(
