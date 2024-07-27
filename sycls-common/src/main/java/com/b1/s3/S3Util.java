@@ -54,9 +54,9 @@ public class S3Util {
     /**
      * 이미지 경로 생성
      */
-    public static String createImageDir(final S3Type type) {
+    public static String createImageDir(final S3UrlPathType path) {
         return S3Constant.URL_PREFIX + "/"
-                + type.getValue() + "/";
+                + path.getValue() + "/";
     }
 
     /**

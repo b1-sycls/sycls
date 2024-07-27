@@ -16,6 +16,7 @@ import com.b1.content.entity.ContentStatus;
 import com.b1.round.RoundHelper;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import com.b1.s3.S3Uploader;
+import com.b1.s3.S3UrlPathType;
 import com.b1.s3.S3Util;
 import com.b1.util.PageUtil;
 import java.util.ArrayList;
@@ -49,7 +50,8 @@ public class ContentService {
 
         Category category = categoryHelper.findById(requestDto.categoryId());
 
-        String mainImagePath = s3Uploader.saveMainImage(mainImage);
+        String mainImagePath = s3Uploader.saveMainImage(mainImage,
+                S3UrlPathType.CONTENT_MAIN_IMAGE_PATH);
 
         Content content = Content.addContent(
                 requestDto.title(),
@@ -59,7 +61,8 @@ public class ContentService {
         );
 
         if (detailImages != null) {
-            List<String> detailImageList = s3Uploader.saveDetailImage(detailImages);
+            List<String> detailImageList = s3Uploader.saveDetailImage(detailImages,
+                    S3UrlPathType.CONTENT_DETAIL_IMAGE_PATH);
 
             List<ContentDetailImage> contentDetailImageList = getAndCreateContentDetailImages(
                     detailImageList, content);
@@ -83,7 +86,8 @@ public class ContentService {
         String contentMainImagePath = content.getMainImagePath();
 
         if (mainImage != null) {
-            contentMainImagePath = s3Uploader.saveMainImage(mainImage);
+            contentMainImagePath = s3Uploader.saveMainImage(mainImage,
+                    S3UrlPathType.CONTENT_MAIN_IMAGE_PATH);
         }
 
         List<ContentDetailImage> detailImageList = contentHelper.getByContentDetailImagesByContentId(
@@ -94,7 +98,8 @@ public class ContentService {
                 detailImage.disableStatus();
             }
 
-            List<String> newDetailImageList = s3Uploader.saveDetailImage(detailImages);
+            List<String> newDetailImageList = s3Uploader.saveDetailImage(detailImages,
+                    S3UrlPathType.CONTENT_DETAIL_IMAGE_PATH);
             detailImageList = getAndCreateContentDetailImages(newDetailImageList, content);
         }
 
