@@ -10,13 +10,13 @@ spring:
   sql:
     init:
       encoding: UTF-8
-      mode: never
+      mode: always
   #      mode: always
 
   mail:
     host: smtp.naver.com
     port: 587
-    username: ${NAVER_EMAIL}@naver.com
+    username: ${NAVER_EMAIL}
     password: ${NAVER_EMAIL_PASSWORD}
     properties:
       mail:
@@ -35,7 +35,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true

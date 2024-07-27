@@ -1,0 +1,2 @@
+### GET 좌석-등급 전체 조회
+GET http://localhost:8080/v1/seat-grades?roundId=1
