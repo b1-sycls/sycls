@@ -1,5 +1,7 @@
 package com.b1.seat.entity;
 
+import static com.b1.seat.entity.SeatReservationLogStatus.*;
+
 import com.b1.common.TimeStamp;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.user.entity.User;
@@ -61,8 +63,12 @@ public class SeatReservationLog extends TimeStamp {
         return SeatReservationLog.builder()
                 .seatGrade(seatGrade)
                 .user(user)
-                .status(SeatReservationLogStatus.ENABLE)
+                .status(ENABLE)
                 .build();
+    }
+
+    public void deleteReservationStatus() {
+        this.status = DISABLE;
     }
 
 }

@@ -3,6 +3,7 @@ package com.b1.reservation;
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.reservation.dto.ReservationGetRequestDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
+import com.b1.reservation.dto.ReservationReleaseRequestDto;
 import com.b1.reservation.dto.ReservationReserveRequestDto;
 import com.b1.reservation.dto.ReservationReserveResponseDto;
 import com.b1.security.UserDetailsImpl;
@@ -52,6 +53,19 @@ public class ReservationRestController {
                 userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
+    }
+
+    /**
+     * 예매 취소
+     */
+    @PostMapping("/reservations/release")
+    public ResponseEntity<RestApiResponseDto<String>> releaseReservation(
+            @Valid @RequestBody final ReservationReleaseRequestDto requestDto,
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
+    ) {
+        reservationService.releaseReservation(requestDto, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("해당 좌석은 취소되었습니다."));
     }
 
 }

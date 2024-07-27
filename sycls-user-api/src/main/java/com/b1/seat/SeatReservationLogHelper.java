@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j(topic = "Seat Reservation Log Helper")
 @Component
@@ -26,13 +27,13 @@ public class SeatReservationLogHelper {
     private final SeatReservationLogRepository seatReservationLogRepository;
 
     /**
-     * 좌석 등급의 점유 상태를 확인하고 필요 시 점유를 생성합니다.
+     * 좌석 등급의 예매 상태를 확인하고 필요 시 예매 생성
      *
      * @throws SeatReservationLogNotAvailableException 이미 매진 된 좌석 또는 점유 중인 좌석
      */
     public Set<SeatReservationLog> getSeatReservationLogsBySeatGrade(
-            final Set<SeatGrade> seatGrades
-    ) {
+            final Set<SeatGrade> seatGrades,
+            User user) {
         LocalDateTime currentTime = LocalDateTime.now();
 
         List<SeatReservationLog> reservationLogs = seatReservationLogRepository
@@ -48,7 +49,7 @@ public class SeatReservationLogHelper {
     }
 
     /**
-     * 좌석 등급의 점유 상태를 확인하고 필요 시 점유를 생성합니다.
+     * 좌석 등급의 예매 상태를 확인하고 필요 시 예매 생성
      *
      * @throws SeatReservationLogNotAvailableException 이미 매진 된 좌석 또는 점유 중인 좌석
      */
@@ -69,7 +70,9 @@ public class SeatReservationLogHelper {
         return new HashSet<>(latestLogsBySeatGradeId.values());
     }
 
-
+    /**
+     * 중복 예매에 대한 검증
+     */
     public boolean isProcessReservation(
             final Set<SeatReservationLog> allSeatReservationLogs,
             final User user,
@@ -108,10 +111,32 @@ public class SeatReservationLogHelper {
         return newReservationRequired;
     }
 
+    /**
+     * 예매 정보 조회
+     */
+    public Set<SeatReservationLog> getSeatReservationLogByUser(
+            final Set<Long> reservationIds,
+            final User user
+    ) {
+        return seatReservationLogRepository.findAllByIdInAndUser(reservationIds, user);
+    }
+
+    /**
+     * 예매 등록
+     */
     public void addAllSeatReservationLogs(
             final Set<SeatReservationLog> createSeatReservationLogs
     ) {
         seatReservationLogRepository.saveAll(createSeatReservationLogs);
+    }
+
+    /**
+     * 예매 취소
+     */
+    public void deleteReservationLog(Set<SeatReservationLog> seatReservationLogByUser) {
+        for (SeatReservationLog seatReservationLog : seatReservationLogByUser) {
+            seatReservationLog.deleteReservationStatus();
+        }
     }
 
     private Map<Long, SeatReservationLog> getLongSeatReservationLogMap(
@@ -124,4 +149,5 @@ public class SeatReservationLogHelper {
                                 existingLog.getCreatedAt().isAfter(newLog.getCreatedAt())
                                         ? existingLog : newLog));
     }
+
 }

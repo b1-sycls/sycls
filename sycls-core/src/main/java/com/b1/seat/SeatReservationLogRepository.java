@@ -20,4 +20,6 @@ public interface SeatReservationLogRepository extends JpaRepository<SeatReservat
             User user,
             LocalDateTime createdAt,
             SeatReservationLogStatus status);
+
+    Set<SeatReservationLog> findAllByIdInAndUser(Set<Long> reservationIds, User user);
 }

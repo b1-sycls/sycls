@@ -2,6 +2,7 @@ package com.b1.reservation;
 
 import com.b1.reservation.dto.ReservationGetRequestDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
+import com.b1.reservation.dto.ReservationReleaseRequestDto;
 import com.b1.reservation.dto.ReservationReserveRequestDto;
 import com.b1.reservation.dto.ReservationReserveResponseDto;
 import com.b1.round.RoundHelper;
@@ -42,7 +43,7 @@ public class ReservationService {
                         selectedRound, reservationRequest.seatGradeIds());
 
         Set<SeatReservationLog> existingSeatReservationLogs = seatReservationLogHelper
-                .getSeatReservationLogsBySeatGrade(seatGradesForRound);
+                .getSeatReservationLogsBySeatGrade(seatGradesForRound, user);
 
         boolean processReservation = seatReservationLogHelper.isProcessReservation(
                 existingSeatReservationLogs, user,
@@ -59,6 +60,10 @@ public class ReservationService {
         return ReservationReserveResponseDto.of(selectedRound.getId(), seatGradesForRound);
     }
 
+    /**
+     * 예매 조회
+     */
+    @Transactional(readOnly = true)
     public ReservationGetResponseDto getReservation(
             final ReservationGetRequestDto requestDto,
             final User user
@@ -69,6 +74,19 @@ public class ReservationService {
                 .getSeatReservationLogsByUser(user);
 
         return ReservationGetResponseDto.of(selectedRound, findSeatReservationLogs);
+    }
+
+    /**
+     * 예매 취소
+     */
+    public void releaseReservation(
+            final ReservationReleaseRequestDto requestDto,
+            final User user
+    ) {
+        Set<SeatReservationLog> seatReservationLogByUser = seatReservationLogHelper
+                .getSeatReservationLogByUser(requestDto.reservationIds(), user);
+
+        seatReservationLogHelper.deleteReservationLog(seatReservationLogByUser);
     }
 
 }
