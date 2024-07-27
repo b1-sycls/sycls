@@ -29,7 +29,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class ContentQueryRepository {
 
-    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     /**
      * 서브이미지 리스트 반환
@@ -39,7 +39,7 @@ public class ContentQueryRepository {
         QContent content = QContent.content;
         QContentDetailImage contentDetailImage = QContentDetailImage.contentDetailImage;
 
-        return queryFactory
+        return jpaQueryFactory
                 .selectFrom(contentDetailImage)
                 .leftJoin(contentDetailImage.content, content)
                 .where(content.id.eq(contentId))
@@ -55,7 +55,7 @@ public class ContentQueryRepository {
         QContentDetailImage contentDetailImage = QContentDetailImage.contentDetailImage;
         QContent content = QContent.content;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         ContentDetailImagePathGetAdminResponseDto.class,
                         contentDetailImage.id,
@@ -78,7 +78,7 @@ public class ContentQueryRepository {
         QContentDetailImage contentDetailImage = QContentDetailImage.contentDetailImage;
         QContent content = QContent.content;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         ContentDetailImagePathGetUserResponseDto.class,
                         contentDetailImage.id,
@@ -101,7 +101,7 @@ public class ContentQueryRepository {
         QContent content = QContent.content;
         QCategory category = QCategory.category;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         ContentGetAdminResponseDto.class,
                         content.id,
@@ -125,7 +125,7 @@ public class ContentQueryRepository {
         QContent content = QContent.content;
         QCategory category = QCategory.category;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         ContentGetUserResponseDto.class,
                         content.id,
@@ -151,7 +151,7 @@ public class ContentQueryRepository {
         QContent content = QContent.content;
         QCategory category = QCategory.category;
 
-        List<ContentGetAdminResponseDto> contentList = queryFactory
+        List<ContentGetAdminResponseDto> contentList = jpaQueryFactory
                 .select(Projections.constructor(
                         ContentGetAdminResponseDto.class,
                         content.id,
@@ -173,7 +173,7 @@ public class ContentQueryRepository {
                 .orderBy(content.createdAt.desc())
                 .fetch();
 
-        JPAQuery<Long> total = queryFactory
+        JPAQuery<Long> total = jpaQueryFactory
                 .select(content.count())
                 .from(content)
                 .where(
@@ -194,7 +194,7 @@ public class ContentQueryRepository {
         QContent content = QContent.content;
         QCategory category = QCategory.category;
 
-        List<ContentGetUserResponseDto> contentList = queryFactory
+        List<ContentGetUserResponseDto> contentList = jpaQueryFactory
                 .select(Projections.constructor(
                         ContentGetUserResponseDto.class,
                         content.id,
@@ -216,7 +216,7 @@ public class ContentQueryRepository {
                 .orderBy(content.createdAt.desc())
                 .fetch();
 
-        JPAQuery<Long> total = queryFactory
+        JPAQuery<Long> total = jpaQueryFactory
                 .select(content.count())
                 .from(content)
                 .where(
@@ -236,7 +236,7 @@ public class ContentQueryRepository {
         QContent content = QContent.content;
         QRound round = QRound.round;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(round.count())
                 .from(round)
                 .leftJoin(round.content, content)

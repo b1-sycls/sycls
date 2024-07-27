@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CategoryQueryRepository {
 
-    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     /**
      * (어드민) 카테고리 전체 조회
@@ -23,7 +23,7 @@ public class CategoryQueryRepository {
 
         QCategory category = QCategory.category;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                                 CategoryGetAdminResponseDto.class,
                                 category.id,
@@ -43,7 +43,7 @@ public class CategoryQueryRepository {
 
         QCategory category = QCategory.category;
 
-        return queryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                                 CategoryGetUserResponseDto.class,
                                 category.id,

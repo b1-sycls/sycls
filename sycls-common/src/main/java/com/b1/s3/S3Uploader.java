@@ -31,13 +31,13 @@ public class S3Uploader {
     /**
      * S3 에 파일 저장 후 저장경로 반환
      */
-    public String saveMainImage(final MultipartFile file) {
+    public String saveMainImage(final MultipartFile file, final S3UrlPathType path) {
         checkImageIsPresent(file);
 
         String extension = S3Util.getCheckImageExtension(
                 Objects.requireNonNull(file.getOriginalFilename()));
 
-        String imageDir = S3Util.createImageDir(S3Type.CONTENT_MAIN_IMAGE);
+        String imageDir = S3Util.createImageDir(path);
 
         String uploadFileName = imageDir + S3Util.createFileName(extension);
 
@@ -47,7 +47,7 @@ public class S3Uploader {
     /**
      * S3 에 파일들 저장 후 저장경로 반환
      */
-    public List<String> saveDetailImage(final MultipartFile[] fileList) {
+    public List<String> saveDetailImage(final MultipartFile[] fileList, final S3UrlPathType path) {
         List<String> subImageList = new ArrayList<>();
 
         for (MultipartFile file : fileList) {
@@ -57,7 +57,7 @@ public class S3Uploader {
                     Objects.requireNonNull(file.getOriginalFilename())
             );
 
-            String imageDir = S3Util.createImageDir(S3Type.CONTENT_DETAIL_IMAGE);
+            String imageDir = S3Util.createImageDir(path);
 
             String uploadFileName = imageDir + S3Util.createFileName(extension);
 
