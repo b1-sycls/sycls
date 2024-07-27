@@ -3,6 +3,7 @@ package com.b1.seat;
 import com.b1.seat.entity.SeatReservationLog;
 import com.b1.seat.entity.SeatReservationLogStatus;
 import com.b1.seatgrade.entity.SeatGrade;
+import com.b1.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -15,4 +16,8 @@ public interface SeatReservationLogRepository extends JpaRepository<SeatReservat
             LocalDateTime createdAt,
             SeatReservationLogStatus status);
 
+    List<SeatReservationLog> findAllByUserAndCreatedAtAfterAndStatus(
+            User user,
+            LocalDateTime createdAt,
+            SeatReservationLogStatus status);
 }

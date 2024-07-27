@@ -30,7 +30,7 @@ public class SeatReservationLogHelper {
      *
      * @throws SeatReservationLogNotAvailableException 이미 매진 된 좌석 또는 점유 중인 좌석
      */
-    public Set<SeatReservationLog> getSeatReservationLogs(
+    public Set<SeatReservationLog> getSeatReservationLogsBySeatGrade(
             final Set<SeatGrade> seatGrades
     ) {
         LocalDateTime currentTime = LocalDateTime.now();
@@ -41,13 +41,30 @@ public class SeatReservationLogHelper {
                         currentTime.minusMinutes(SEAT_RESERVATION_TIME),
                         SeatReservationLogStatus.ENABLE);
 
-        Map<Long, SeatReservationLog> latestLogsBySeatGradeId = reservationLogs.stream()
-                .collect(Collectors.toMap(
-                        log -> log.getSeatGrade().getId(),
-                        log -> log,
-                        (existingLog, newLog) ->
-                                existingLog.getCreatedAt().isAfter(newLog.getCreatedAt())
-                                        ? existingLog : newLog));
+        Map<Long, SeatReservationLog> latestLogsBySeatGradeId = getLongSeatReservationLogMap(
+                reservationLogs);
+
+        return new HashSet<>(latestLogsBySeatGradeId.values());
+    }
+
+    /**
+     * 좌석 등급의 점유 상태를 확인하고 필요 시 점유를 생성합니다.
+     *
+     * @throws SeatReservationLogNotAvailableException 이미 매진 된 좌석 또는 점유 중인 좌석
+     */
+    public Set<SeatReservationLog> getSeatReservationLogsByUser(
+            final User user
+    ) {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        List<SeatReservationLog> reservationLogs = seatReservationLogRepository
+                .findAllByUserAndCreatedAtAfterAndStatus(
+                        user,
+                        currentTime.minusMinutes(SEAT_RESERVATION_TIME),
+                        SeatReservationLogStatus.ENABLE);
+
+        Map<Long, SeatReservationLog> latestLogsBySeatGradeId = getLongSeatReservationLogMap(
+                reservationLogs);
 
         return new HashSet<>(latestLogsBySeatGradeId.values());
     }
@@ -97,4 +114,14 @@ public class SeatReservationLogHelper {
         seatReservationLogRepository.saveAll(createSeatReservationLogs);
     }
 
+    private Map<Long, SeatReservationLog> getLongSeatReservationLogMap(
+            List<SeatReservationLog> reservationLogs) {
+        return reservationLogs.stream()
+                .collect(Collectors.toMap(
+                        log -> log.getSeatGrade().getId(),
+                        log -> log,
+                        (existingLog, newLog) ->
+                                existingLog.getCreatedAt().isAfter(newLog.getCreatedAt())
+                                        ? existingLog : newLog));
+    }
 }
