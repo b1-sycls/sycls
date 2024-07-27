@@ -61,4 +61,18 @@ public class Cast extends TimeStamp {
                 .round(round)
                 .build();
     }
+
+    public void updateCast(final String name, final String imagePath, final CastStatus status) {
+        this.name = name;
+        this.imagePath = imagePath;
+        this.status = status;
+    }
+
+    public void updateRoundForCast(final Round round) {
+        this.round = round;
+    }
+
+    public void deleteCast(final CastStatus status) {
+        this.status = status;
+    }
 }
