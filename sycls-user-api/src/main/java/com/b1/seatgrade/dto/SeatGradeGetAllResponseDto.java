@@ -1,11 +1,12 @@
 package com.b1.seatgrade.dto;
 
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 public class SeatGradeGetAllResponseDto {
 
     private Long roundId;
