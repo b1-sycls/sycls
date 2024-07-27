@@ -13,17 +13,17 @@ import lombok.Getter;
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ReservationAddResponseDto {
+public class ReservationReserveResponseDto {
 
     private final Long roundId;
     private final Set<Long> seatGradeIds;
     private final Set<String> seatCodes;
 
-    public static ReservationAddResponseDto of(Long roundId, Set<SeatGrade> seatGrades) {
+    public static ReservationReserveResponseDto of(Long roundId, Set<SeatGrade> seatGrades) {
         Map<Long, String> seatGradeMap = seatGrades.stream()
                 .collect(Collectors.toMap(SeatGrade::getId, sg -> sg.getSeat().getCode()));
 
-        return ReservationAddResponseDto.builder()
+        return ReservationReserveResponseDto.builder()
                 .roundId(roundId)
                 .seatGradeIds(seatGradeMap.keySet())
                 .seatCodes(new HashSet<>(seatGradeMap.values()))

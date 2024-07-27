@@ -25,7 +25,9 @@ public class SeatGradeHelper {
      * @throws SeatGradeAlreadySoldOutException 이미 매진된 등급 좌석의 경우
      */
     public Set<SeatGrade> getAllSeatGradeByContentAndSeatGradeIds(
-            Round round, Set<Long> seatGradeIds) {
+            final Round round,
+            final Set<Long> seatGradeIds
+    ) {
         Set<SeatGrade> seatGrades = seatGradeRepository
                 .findAllByRoundAndIdIn(round, seatGradeIds);
         if (seatGrades.size() != seatGradeIds.size()) {

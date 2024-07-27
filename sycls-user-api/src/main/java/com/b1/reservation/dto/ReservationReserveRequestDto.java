@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.Set;
 
-public record ReservationAddRequestDto(
+public record ReservationReserveRequestDto(
         @NotNull(message = "공얀 회차 정보를 입력해 주세요")
         Long roundId,
         @NotNull(message = "좌석 정보가 누락되었습니다.")
