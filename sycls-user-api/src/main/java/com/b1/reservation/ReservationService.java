@@ -39,7 +39,7 @@ public class ReservationService {
         Round selectedRound = roundHelper.getRound(reservationRequest.roundId());
 
         Set<SeatGrade> seatGradesForRound = seatGradeHelper
-                .getAllSeatGradeByContentAndSeatGradeIds(
+                .getAllSeatGradeByRoundAndSeatGradeIds(
                         selectedRound, reservationRequest.seatGradeIds());
 
         Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatGradeReservationLogHelper

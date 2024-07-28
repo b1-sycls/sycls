@@ -122,7 +122,9 @@ public class SeatGradeReservationLogHelper {
         Set<SeatGradeReservationLog> seatGradeReservationLogs = seatReservationLogRepository
                 .findAllByIdInAndUser(reservationIds, user);
         if ((seatGradeReservationLogs.isEmpty())) {
-            throw new SeatReservationLogNotFoundException(SeatReservationLogErrorCode.SEAT_RESERVATION_NOT_FOUND);
+            log.error("찾을 수 없는 예매 좌석 정보 입니다. | request {}", reservationIds);
+            throw new SeatReservationLogNotFoundException(
+                    SeatReservationLogErrorCode.SEAT_RESERVATION_NOT_FOUND);
         }
         SeatGradeReservationLogStatus.checkDisables(seatGradeReservationLogs);
         return seatGradeReservationLogs;

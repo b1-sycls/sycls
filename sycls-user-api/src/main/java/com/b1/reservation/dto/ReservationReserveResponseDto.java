@@ -19,7 +19,10 @@ public class ReservationReserveResponseDto {
     private final Set<Long> seatGradeIds;
     private final Set<String> seatCodes;
 
-    public static ReservationReserveResponseDto of(Long roundId, Set<SeatGrade> seatGrades) {
+    public static ReservationReserveResponseDto of(
+            final Long roundId,
+            final Set<SeatGrade> seatGrades
+    ) {
         Map<Long, String> seatGradeMap = seatGrades.stream()
                 .collect(Collectors.toMap(SeatGrade::getId, sg -> sg.getSeat().getCode()));
 

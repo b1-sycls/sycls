@@ -33,7 +33,7 @@ public class SeatGradeHelper {
      *
      * @throws SeatGradeAlreadySoldOutException 이미 매진된 등급 좌석의 경우
      */
-    public Set<SeatGrade> getAllSeatGradeByContentAndSeatGradeIds(
+    public Set<SeatGrade> getAllSeatGradeByRoundAndSeatGradeIds(
             final Round round,
             final Set<Long> seatGradeIds
     ) {
