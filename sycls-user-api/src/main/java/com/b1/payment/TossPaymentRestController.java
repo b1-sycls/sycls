@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
-public class PaymentRestController {
+public class TossPaymentRestController {
 
-    private final PaymentService paymentService;
+    private final TossPaymentService tossPaymentService;
 
     @PostMapping("/payment/client-key")
     public ResponseEntity<RestApiResponseDto<ClientResponseDto>> getClientKey(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        ClientResponseDto responseDto = paymentService.getClientKey();
+        ClientResponseDto responseDto = tossPaymentService.getClientKey();
         return ResponseEntity.status(200)
                 .body(RestApiResponseDto.of(responseDto));
     }

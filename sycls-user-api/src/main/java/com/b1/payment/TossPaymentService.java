@@ -11,11 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class PaymentService {
+public class TossPaymentService {
 
     @Value("${toss.clientKey}")
     private String paymentClientKey;
 
+    /**
+     * 토스페이먼츠 Client 전송
+     */
     public ClientResponseDto getClientKey() {
         return ClientResponseDto.of(paymentClientKey);
     }
