@@ -1,4 +1,4 @@
-package com.b1.seat;
+package com.b1.seatgrade;
 
 import static com.b1.constant.DomainConstant.SEAT_RESERVATION_TIME;
 
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Slf4j(topic = "Seat Reservation Log Helper")
 @Component
 @RequiredArgsConstructor
-public class SeatReservationLogHelper {
+public class SeatGradeReservationLogHelper {
 
     private final SeatReservationLogRepository seatReservationLogRepository;
 
@@ -135,17 +135,6 @@ public class SeatReservationLogHelper {
             final Set<SeatGradeReservationLog> createSeatGradeReservationLogs
     ) {
         seatReservationLogRepository.saveAll(createSeatGradeReservationLogs);
-    }
-
-    /**
-     * 예매 취소
-     */
-    public void deleteReservationLog(
-            final Set<SeatGradeReservationLog> seatGradeReservationLogByUser
-    ) {
-        for (SeatGradeReservationLog seatGradeReservationLog : seatGradeReservationLogByUser) {
-            seatGradeReservationLog.deleteReservationStatus();
-        }
     }
 
     /**
