@@ -5,7 +5,6 @@ import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import com.b1.round.dto.RoundSearchCondRequest;
-import com.b1.round.dto.RoundSeatGradeStatusDto;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.entity.Round;
 import java.time.LocalDate;
@@ -70,12 +69,5 @@ public class RoundHelper {
             final RoundSearchCondRequest request, final Pageable pageable) {
         return roundQueryRepository.getAllSimpleRoundsForAdmin(request.getContentId(),
                 request.getStatus(), pageable);
-    }
-
-    /**
-     * 해당 회차의 공연장의 최대좌석수와 enable 된 seatGrade 의 수를 반환
-     */
-    public RoundSeatGradeStatusDto getPlaceMaxSeatAndEnableSeatGradeByRoundId(final Long roundId) {
-        return roundQueryRepository.getPlaceMaxSeatAndEnableSeatGradeByRoundId(roundId);
     }
 }

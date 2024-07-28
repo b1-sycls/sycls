@@ -39,13 +39,6 @@ public enum RoundStatus {
         }
     }
 
-    public static void checkAvailable(RoundStatus status) {
-        if (status.equals(AVAILABLE)) {
-            log.error("이미 예매 가능 상태입니다 | request {}", status);
-            throw new RoundStatusEqualsException(RoundErrorCode.STATUS_ALREADY_AVAILABLE);
-        }
-    }
-
     public static boolean isAvailable(RoundStatus status) {
         return status.equals(AVAILABLE);
     }

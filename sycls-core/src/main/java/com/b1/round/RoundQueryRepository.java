@@ -7,14 +7,11 @@ import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
-import com.b1.round.dto.RoundSeatGradeStatusDto;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.dto.RoundSimpleUserResponseDto;
 import com.b1.round.entity.QRound;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
-import com.b1.seatgrade.entity.QSeatGrade;
-import com.b1.seatgrade.entity.SeatGradeStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -267,32 +264,6 @@ public class RoundQueryRepository {
                 );
 
         return PageableExecutionUtils.getPage(roundList, pageable, total::fetchOne);
-    }
-
-    /**
-     * 해당 회차의 공연장의 최대좌석수와 enable 된 seatGrade 의 수를 반환
-     * TODO SeatGradeQueryRepository 의 getTotalCount 와 PlaceQueryRepository 의 getMaxSeatFromPlace 와 겹치는 쿼리
-     */
-    public RoundSeatGradeStatusDto getPlaceMaxSeatAndEnableSeatGradeByRoundId(
-            final Long roundId
-    ) {
-        QRound round = QRound.round;
-        QPlace place = QPlace.place;
-        QSeatGrade seatGrade = QSeatGrade.seatGrade;
-
-        return jpaQueryFactory
-                .select(Projections.constructor(
-                        RoundSeatGradeStatusDto.class,
-                        place.maxSeat,
-                        seatGrade.count()
-                ))
-                .from(seatGrade)
-                .leftJoin(seatGrade.round, round)
-                .leftJoin(round.place, place)
-                .where(round.id.eq(roundId)
-                        .and(seatGrade.status.eq(SeatGradeStatus.ENABLE)))
-                .groupBy(place)
-                .fetchOne();
     }
 
     /**

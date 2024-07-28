@@ -21,6 +21,7 @@ import com.b1.round.dto.RoundUpdateStatusRequestDto;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
 import com.b1.s3.S3Util;
+import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.util.PageUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -44,6 +45,7 @@ public class RoundService {
     private final RoundHelper roundHelper;
     private final ContentHelper contentHelper;
     private final PlaceHelper placeHelper;
+    private final SeatGradeHelper seatGradeHelper;
 
     /**
      * 회차 등록
@@ -88,9 +90,8 @@ public class RoundService {
         RoundStatus.checkEqualsStatus(round.getStatus(), requestDto.status());
 
         if (RoundStatus.isAvailable(requestDto.status())) {
-            RoundStatus.checkAvailable(round.getStatus());
 
-            RoundSeatGradeStatusDto statusDto = roundHelper
+            RoundSeatGradeStatusDto statusDto = seatGradeHelper
                     .getPlaceMaxSeatAndEnableSeatGradeByRoundId(round.getId());
 
             Integer placeMaxSeat = statusDto.getPlaceMaxSeat();
