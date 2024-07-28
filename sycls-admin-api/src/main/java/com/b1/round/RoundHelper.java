@@ -1,12 +1,15 @@
 package com.b1.round;
 
+import com.b1.exception.customexception.PlaceCannotUpdateException;
 import com.b1.exception.customexception.RoundNotFoundException;
+import com.b1.exception.errorcode.PlaceErrorCode;
 import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
 import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.entity.Round;
+import com.b1.round.entity.RoundStatus;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -69,5 +72,14 @@ public class RoundHelper {
             final RoundSearchCondRequest request, final Pageable pageable) {
         return roundQueryRepository.getAllSimpleRoundsForAdmin(request.getContentId(),
                 request.getStatus(), pageable);
+    }
+
+    /**
+     * 해당 공연장을 사용하고 회차상태가 AVAILABLE인 공연장 존재 여부 확인
+     */
+    public void existsRoundByPlaceIdAndStatus(final Long placeId) {
+        if (roundRepository.existsByPlaceIdAndStatus(placeId, RoundStatus.AVAILABLE)) {
+            throw new PlaceCannotUpdateException(PlaceErrorCode.CANNOT_UPDATE_PLACE);
+        }
     }
 }
