@@ -15,6 +15,8 @@ public enum RoundErrorCode implements ErrorCode {
     BOOKING_NOT_AVAILABLE(HttpStatus.BAD_REQUEST.value(), "예매 할 수 없는 공연입니다."),
     ROUND_STATUS_EQUALS(HttpStatus.BAD_REQUEST.value(), "회차의 상태가 동일합니다"),
     STATUS_ALREADY_CLOSED(HttpStatus.BAD_REQUEST.value(), "이미 끝난 회차 입니다."),
+    STATUS_ALREADY_AVAILABLE(HttpStatus.BAD_REQUEST.value(), "이미 예약가능한 회차입니다."),
+    ROUND_NOT_FULL_SEAT_GRADE(HttpStatus.BAD_REQUEST.value(), "해당 회차에 좌석이 전부 설정되지 않았습니다."),
     ;
 
     private final Integer httpStatusCode;

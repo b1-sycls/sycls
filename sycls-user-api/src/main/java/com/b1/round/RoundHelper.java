@@ -38,7 +38,7 @@ public class RoundHelper {
                     log.error("찾을 수 없는 공연 | request : {}", roundId);
                     return new RoundNotFoundException(RoundErrorCode.NOT_FOUND_ROUND);
                 });
-        RoundStatus.checkAvailable(round.getStatus());
+        RoundStatus.unCheckAvailable(round.getStatus());
         return round;
     }
 

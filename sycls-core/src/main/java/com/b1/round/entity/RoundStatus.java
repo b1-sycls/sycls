@@ -25,7 +25,7 @@ public enum RoundStatus {
         }
     }
 
-    public static void checkAvailable(RoundStatus status) {
+    public static void unCheckAvailable(RoundStatus status) {
         if (!status.equals(AVAILABLE)) {
             log.error("예매 불가 상태 | request {}", status);
             throw new BookingNotAvailableException(RoundErrorCode.BOOKING_NOT_AVAILABLE);
@@ -37,5 +37,16 @@ public enum RoundStatus {
             log.error("회차 스테이터스 동일 오류 | status {} : {}", firstStatus, secondStatus);
             throw new RoundStatusEqualsException(RoundErrorCode.ROUND_STATUS_EQUALS);
         }
+    }
+
+    public static void checkAvailable(RoundStatus status) {
+        if (status.equals(AVAILABLE)) {
+            log.error("이미 예매 가능 상태입니다 | request {}", status);
+            throw new RoundStatusEqualsException(RoundErrorCode.STATUS_ALREADY_AVAILABLE);
+        }
+    }
+
+    public static boolean isAvailable(RoundStatus status) {
+        return status.equals(AVAILABLE);
     }
 }
