@@ -25,7 +25,7 @@ public enum RoundStatus {
         }
     }
 
-    public static void checkAvailable(RoundStatus status) {
+    public static void unCheckAvailable(RoundStatus status) {
         if (!status.equals(AVAILABLE)) {
             log.error("예매 불가 상태 | request {}", status);
             throw new BookingNotAvailableException(RoundErrorCode.BOOKING_NOT_AVAILABLE);
