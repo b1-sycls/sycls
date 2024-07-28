@@ -8,7 +8,7 @@ import com.b1.reservation.dto.ReservationReserveResponseDto;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
 import com.b1.seat.SeatReservationLogHelper;
-import com.b1.seat.entity.SeatReservationLog;
+import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.user.entity.User;
@@ -42,17 +42,17 @@ public class ReservationService {
                 .getAllSeatGradeByContentAndSeatGradeIds(
                         selectedRound, reservationRequest.seatGradeIds());
 
-        Set<SeatReservationLog> existingSeatReservationLogs = seatReservationLogHelper
+        Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatReservationLogHelper
                 .getSeatReservationLogsBySeatGrade(seatGradesForRound);
 
         boolean processReservation = seatReservationLogHelper.isProcessReservation(
-                existingSeatReservationLogs, user,
+                existingSeatGradeReservationLogs, user,
                 reservationRequest.seatGradeIds());
 
         if (processReservation) {
-            Set<SeatReservationLog> newReservationLogs = new HashSet<>();
+            Set<SeatGradeReservationLog> newReservationLogs = new HashSet<>();
             for (SeatGrade seatGrade : seatGradesForRound) {
-                newReservationLogs.add(SeatReservationLog.addSeatReservationLog(seatGrade, user));
+                newReservationLogs.add(SeatGradeReservationLog.addSeatReservationLog(seatGrade, user));
             }
 
             seatReservationLogHelper.addAllSeatReservationLogs(newReservationLogs);
@@ -70,10 +70,10 @@ public class ReservationService {
     ) {
         Round selectedRound = roundHelper.getRound(requestDto.roundId());
 
-        Set<SeatReservationLog> findSeatReservationLogs = seatReservationLogHelper
+        Set<SeatGradeReservationLog> findSeatGradeReservationLogs = seatReservationLogHelper
                 .getSeatReservationLogsByUser(user);
 
-        return ReservationGetResponseDto.of(selectedRound, findSeatReservationLogs);
+        return ReservationGetResponseDto.of(selectedRound, findSeatGradeReservationLogs);
     }
 
     /**
@@ -83,10 +83,10 @@ public class ReservationService {
             final ReservationReleaseRequestDto requestDto,
             final User user
     ) {
-        Set<SeatReservationLog> seatReservationLogByUser = seatReservationLogHelper
+        Set<SeatGradeReservationLog> seatGradeReservationLogByUser = seatReservationLogHelper
                 .getSeatReservationLogByUser(requestDto.reservationIds(), user);
 
-        seatReservationLogHelper.deleteReservationLog(seatReservationLogByUser);
+        seatReservationLogHelper.deleteReservationLog(seatGradeReservationLogByUser);
     }
 
 }

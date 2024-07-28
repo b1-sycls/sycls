@@ -5,8 +5,9 @@ import static com.b1.constant.DomainConstant.SEAT_RESERVATION_TIME;
 import com.b1.exception.customexception.SeatReservationLogNotAvailableException;
 import com.b1.exception.customexception.SeatReservationLogNotFoundException;
 import com.b1.exception.errorcode.SeatReservationLogErrorCode;
-import com.b1.seat.entity.SeatReservationLog;
-import com.b1.seat.entity.SeatReservationLogStatus;
+import com.b1.seatgrade.entity.SeatGradeReservationLog;
+import com.b1.seatgrade.SeatReservationLogRepository;
+import com.b1.seatgrade.entity.SeatGradeReservationLogStatus;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.user.entity.User;
 import java.time.LocalDateTime;
@@ -31,18 +32,18 @@ public class SeatReservationLogHelper {
      *
      * @throws SeatReservationLogNotAvailableException 이미 매진 된 좌석 또는 점유 중인 좌석
      */
-    public Set<SeatReservationLog> getSeatReservationLogsBySeatGrade(
+    public Set<SeatGradeReservationLog> getSeatReservationLogsBySeatGrade(
             final Set<SeatGrade> seatGrades
     ) {
         LocalDateTime currentTime = LocalDateTime.now();
 
-        List<SeatReservationLog> reservationLogs = seatReservationLogRepository
+        List<SeatGradeReservationLog> reservationLogs = seatReservationLogRepository
                 .findAllBySeatGradeInAndCreatedAtAfterAndStatus(
                         seatGrades,
                         currentTime.minusMinutes(SEAT_RESERVATION_TIME),
-                        SeatReservationLogStatus.ENABLE);
+                        SeatGradeReservationLogStatus.ENABLE);
 
-        Map<Long, SeatReservationLog> latestLogsBySeatGradeId = getLongSeatReservationLogMap(
+        Map<Long, SeatGradeReservationLog> latestLogsBySeatGradeId = getLongSeatReservationLogMap(
                 reservationLogs);
 
         return new HashSet<>(latestLogsBySeatGradeId.values());
@@ -53,18 +54,18 @@ public class SeatReservationLogHelper {
      *
      * @throws SeatReservationLogNotAvailableException 이미 매진 된 좌석 또는 점유 중인 좌석
      */
-    public Set<SeatReservationLog> getSeatReservationLogsByUser(
+    public Set<SeatGradeReservationLog> getSeatReservationLogsByUser(
             final User user
     ) {
         LocalDateTime currentTime = LocalDateTime.now();
 
-        List<SeatReservationLog> reservationLogs = seatReservationLogRepository
+        List<SeatGradeReservationLog> reservationLogs = seatReservationLogRepository
                 .findAllByUserAndCreatedAtAfterAndStatus(
                         user,
                         currentTime.minusMinutes(SEAT_RESERVATION_TIME),
-                        SeatReservationLogStatus.ENABLE);
+                        SeatGradeReservationLogStatus.ENABLE);
 
-        Map<Long, SeatReservationLog> latestLogsBySeatGradeId = getLongSeatReservationLogMap(
+        Map<Long, SeatGradeReservationLog> latestLogsBySeatGradeId = getLongSeatReservationLogMap(
                 reservationLogs);
 
         return new HashSet<>(latestLogsBySeatGradeId.values());
@@ -74,20 +75,20 @@ public class SeatReservationLogHelper {
      * 중복 예매에 대한 검증
      */
     public boolean isProcessReservation(
-            final Set<SeatReservationLog> allSeatReservationLogs,
+            final Set<SeatGradeReservationLog> allSeatGradeReservationLogs,
             final User user,
             final Set<Long> seatIds
     ) {
         LocalDateTime currentTime = LocalDateTime.now();
 
-        Map<Long, Set<SeatReservationLog>> logsBySeatId = allSeatReservationLogs.stream()
+        Map<Long, Set<SeatGradeReservationLog>> logsBySeatId = allSeatGradeReservationLogs.stream()
                 .collect(Collectors.groupingBy(srl -> srl.getSeatGrade().getId(),
                         Collectors.toSet()));
 
         boolean newReservationRequired = false;
 
         for (Long seatId : seatIds) {
-            Set<SeatReservationLog> seatLogs = logsBySeatId.getOrDefault(seatId, Set.of());
+            Set<SeatGradeReservationLog> seatLogs = logsBySeatId.getOrDefault(seatId, Set.of());
 
             boolean isReservedByUser = seatLogs.stream()
                     .anyMatch(srl -> srl.getCreatedAt().plusMinutes(SEAT_RESERVATION_TIME)
@@ -114,41 +115,44 @@ public class SeatReservationLogHelper {
     /**
      * 예매 정보 조회
      */
-    public Set<SeatReservationLog> getSeatReservationLogByUser(
+    public Set<SeatGradeReservationLog> getSeatReservationLogByUser(
             final Set<Long> reservationIds,
             final User user
     ) {
-        Set<SeatReservationLog> seatReservationLogs = seatReservationLogRepository
+        Set<SeatGradeReservationLog> seatGradeReservationLogs = seatReservationLogRepository
                 .findAllByIdInAndUser(reservationIds, user);
-        if ((seatReservationLogs.isEmpty())) {
+        if ((seatGradeReservationLogs.isEmpty())) {
             throw new SeatReservationLogNotFoundException(SeatReservationLogErrorCode.SEAT_RESERVATION_NOT_FOUND);
         }
-        SeatReservationLogStatus.checkDisables(seatReservationLogs);
-        return seatReservationLogs;
+        SeatGradeReservationLogStatus.checkDisables(seatGradeReservationLogs);
+        return seatGradeReservationLogs;
     }
 
     /**
      * 예매 등록
      */
     public void addAllSeatReservationLogs(
-            final Set<SeatReservationLog> createSeatReservationLogs
+            final Set<SeatGradeReservationLog> createSeatGradeReservationLogs
     ) {
-        seatReservationLogRepository.saveAll(createSeatReservationLogs);
+        seatReservationLogRepository.saveAll(createSeatGradeReservationLogs);
     }
 
     /**
      * 예매 취소
      */
     public void deleteReservationLog(
-            final Set<SeatReservationLog> seatReservationLogByUser
+            final Set<SeatGradeReservationLog> seatGradeReservationLogByUser
     ) {
-        for (SeatReservationLog seatReservationLog : seatReservationLogByUser) {
-            seatReservationLog.deleteReservationStatus();
+        for (SeatGradeReservationLog seatGradeReservationLog : seatGradeReservationLogByUser) {
+            seatGradeReservationLog.deleteReservationStatus();
         }
     }
 
-    private Map<Long, SeatReservationLog> getLongSeatReservationLogMap(
-            final List<SeatReservationLog> reservationLogs
+    /**
+     * 중복 제거 및 최신 데이터 추출
+     */
+    private Map<Long, SeatGradeReservationLog> getLongSeatReservationLogMap(
+            final List<SeatGradeReservationLog> reservationLogs
     ) {
         return reservationLogs.stream()
                 .collect(Collectors.toMap(

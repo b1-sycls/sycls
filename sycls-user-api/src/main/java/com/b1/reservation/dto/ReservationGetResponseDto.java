@@ -1,7 +1,7 @@
 package com.b1.reservation.dto;
 
 import com.b1.round.entity.Round;
-import com.b1.seat.entity.SeatReservationLog;
+import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -23,15 +23,15 @@ public class ReservationGetResponseDto {
 
     public static ReservationGetResponseDto of(
             final Round selectedRound,
-            final Set<SeatReservationLog> findSeatReservationLogs) {
+            final Set<SeatGradeReservationLog> findSeatGradeReservationLogs) {
 
-        Map<Long, String> seatGradeMap = findSeatReservationLogs.stream()
+        Map<Long, String> seatGradeMap = findSeatGradeReservationLogs.stream()
                 .collect(Collectors.toMap(
                         srl -> srl.getSeatGrade().getId(),
                         srl -> srl.getSeatGrade().getSeat().getCode()));
 
-        Set<Long> reservationIds = findSeatReservationLogs.stream()
-                .map(SeatReservationLog::getId)
+        Set<Long> reservationIds = findSeatGradeReservationLogs.stream()
+                .map(SeatGradeReservationLog::getId)
                 .collect(Collectors.toSet());
 
         return ReservationGetResponseDto.builder()

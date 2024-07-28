@@ -1,9 +1,8 @@
-package com.b1.seat.entity;
+package com.b1.seatgrade.entity;
 
-import static com.b1.seat.entity.SeatReservationLogStatus.*;
+import static com.b1.seatgrade.entity.SeatGradeReservationLogStatus.*;
 
 import com.b1.common.TimeStamp;
-import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,13 +22,13 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "seats_reservation_logs")
+@Table(name = "seats_grade_reservation_logs")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SeatReservationLog extends TimeStamp {
+public class SeatGradeReservationLog extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "seats_reservation_logs_id")
+    @Column(name = "seat_grade_reservation_log_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,13 +41,13 @@ public class SeatReservationLog extends TimeStamp {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private SeatReservationLogStatus status;
+    private SeatGradeReservationLogStatus status;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private SeatReservationLog(
+    private SeatGradeReservationLog(
             final SeatGrade seatGrade,
             final User user,
-            final SeatReservationLogStatus status
+            final SeatGradeReservationLogStatus status
     ) {
         this.seatGrade = seatGrade;
         this.user = user;
@@ -56,11 +55,11 @@ public class SeatReservationLog extends TimeStamp {
     }
 
 
-    public static SeatReservationLog addSeatReservationLog(
+    public static SeatGradeReservationLog addSeatReservationLog(
             final SeatGrade seatGrade,
             final User user
     ) {
-        return SeatReservationLog.builder()
+        return SeatGradeReservationLog.builder()
                 .seatGrade(seatGrade)
                 .user(user)
                 .status(ENABLE)
