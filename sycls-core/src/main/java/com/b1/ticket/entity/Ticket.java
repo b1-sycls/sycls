@@ -53,8 +53,14 @@ public class Ticket extends TimeStamp {
     private Round round;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Ticket(String code, Integer price, TicketStatus status, LocalDateTime orderDate,
-            User user, Round round) {
+    private Ticket(
+            final String code,
+            final Integer price,
+            final TicketStatus status,
+            final LocalDateTime orderDate,
+            final User user,
+            final Round round
+    ) {
         this.code = code;
         this.price = price;
         this.status = status;
