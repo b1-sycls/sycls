@@ -89,6 +89,10 @@ public class PlaceService {
     public void deletePlace(Long placeId) {
         Place place = placeHelper.getPlace(placeId);
         PlaceStatus.checkDeleted(place.getStatus());
+
+        // 해당 공연장을 사용하고 회차상태가 AVAILABLE인 공연장 존재 여부 확인
+        roundHelper.existsRoundByPlaceIdAndStatus(placeId);
+
         place.deletePlace();
     }
 }
