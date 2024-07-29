@@ -1,11 +1,11 @@
 package com.b1.seat;
 
 import com.b1.place.PlaceHelper;
-import com.b1.place.dto.SeatUpdateRequestDto;
 import com.b1.place.entity.Place;
 import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
 import com.b1.seat.dto.SeatGetResponseDto;
+import com.b1.seat.dto.SeatUpdateRequestDto;
 import com.b1.seat.entity.Seat;
 import com.b1.seat.entity.SeatStatus;
 import java.util.Set;

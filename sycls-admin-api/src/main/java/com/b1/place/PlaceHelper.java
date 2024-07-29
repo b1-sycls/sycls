@@ -1,10 +1,13 @@
 package com.b1.place;
 
+import com.b1.exception.customexception.PlaceCannotUpdateException;
 import com.b1.exception.customexception.PlaceNotFoundException;
 import com.b1.exception.errorcode.PlaceErrorCode;
+import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondRequestDto;
 import com.b1.place.entity.Place;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -62,5 +65,16 @@ public class PlaceHelper {
      */
     public Integer getMaxSeatFromPlace(final Long roundId) {
         return placeQueryRepository.getMaxSeatFromPlace(roundId);
+    }
+
+    /**
+     * 공연장 최대 좌석 수 및 총 좌석수 불러오기
+     */
+    public void getMaxSeatAndSeatCount(final Long placeId) {
+        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(placeId);
+        if (!Objects.equals(dto.getMaxSeat().longValue(), dto.getSeatCount())) {
+            log.error("공연장을 활성화할 수 없습니다.| {}", placeId);
+            throw new PlaceCannotUpdateException(PlaceErrorCode.CANNOT_UPDATE_PLACE);
+        }
     }
 }

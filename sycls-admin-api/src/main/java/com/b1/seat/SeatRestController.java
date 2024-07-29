@@ -1,10 +1,10 @@
 package com.b1.seat;
 
 import com.b1.globalresponse.RestApiResponseDto;
-import com.b1.place.dto.SeatUpdateRequestDto;
 import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
 import com.b1.seat.dto.SeatGetResponseDto;
+import com.b1.seat.dto.SeatUpdateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
