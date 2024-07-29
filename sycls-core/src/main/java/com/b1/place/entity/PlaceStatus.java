@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public enum PlaceStatus {
     ENABLE("ENABLE"),
+    INACTIVATED("INACTIVATED"),
     DISABLE("DISABLE"),
     ;
 
