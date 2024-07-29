@@ -2,6 +2,7 @@ package com.b1.seat;
 
 import com.b1.place.PlaceHelper;
 import com.b1.place.entity.Place;
+import com.b1.place.entity.PlaceStatus;
 import com.b1.round.RoundHelper;
 import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
@@ -95,7 +96,9 @@ public class SeatService {
 
         seat.deleteSeat();
 
-        // 좌석을 삭제한 후 최대 좌석수와 총 좌석수를 비교하고 공연장 상태 수정
-        placeHelper.checkMaxSeatAndSeatCountForSeatDelete(place);
+        // 최대 좌석수와 총 좌석수를 비교하고 공연장 상태 수정
+        if (placeHelper.checkMaxSeatAndSeatCountForSeatDelete(place)) {
+            place.updatePlaceStatus(PlaceStatus.INACTIVATED);
+        }
     }
 }
