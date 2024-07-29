@@ -17,7 +17,7 @@ public enum PlaceStatus {
 
     private final String value;
 
-    public static void checkDeleted(PlaceStatus status) {
+    public static void checkDeleted(final PlaceStatus status) {
         if (status.equals(DISABLE)) {
             log.error("삭제된 상태 | {}", status.value);
             throw new PlaceAlreadyDeletedException(PlaceErrorCode.ALREADY_DELETED);

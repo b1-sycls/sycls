@@ -41,7 +41,7 @@ public class Seat extends TimeStamp {
     private Place place;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Seat(String code, SeatStatus status, Place place) {
+    private Seat(final String code, final SeatStatus status, final Place place) {
         this.code = code;
         this.status = status;
         this.place = place;
@@ -50,7 +50,7 @@ public class Seat extends TimeStamp {
     /**
      * 좌석 생성
      */
-    public static Seat addSeat(String code, Place place) {
+    public static Seat addSeat(final String code, final Place place) {
         return Seat.builder()
                 .code(code)
                 .status(SeatStatus.ENABLE)
@@ -61,7 +61,7 @@ public class Seat extends TimeStamp {
     /**
      * 좌석 수정
      */
-    public void updateSeat(String code, SeatStatus status) {
+    public void updateSeat(final String code, final SeatStatus status) {
         this.code = code;
         this.status = status;
     }

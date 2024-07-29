@@ -39,15 +39,15 @@ public class ContentDetailImage {
     private Content content;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ContentDetailImage(String detailImagePath, ContentDetailImageStatus status,
-            Content content) {
+    private ContentDetailImage(final String detailImagePath, final ContentDetailImageStatus status,
+            final Content content) {
         this.detailImagePath = detailImagePath;
         this.status = status;
         this.content = content;
     }
 
-    public static ContentDetailImage addContentDetailImage(String detailImagePath,
-            Content content) {
+    public static ContentDetailImage addContentDetailImage(final String detailImagePath,
+            final Content content) {
         return ContentDetailImage.builder()
                 .detailImagePath(detailImagePath)
                 .status(ContentDetailImageStatus.ENABLE)
