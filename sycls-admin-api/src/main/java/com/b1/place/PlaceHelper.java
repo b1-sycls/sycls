@@ -89,4 +89,14 @@ public class PlaceHelper {
                     return new PlaceNotFoundException(PlaceErrorCode.NOT_FOUND_PLACE);
                 });
     }
+
+    /**
+     * 총좌석수, 최대 좌석수 비교 후 공연장 상태 수정
+     */
+    public void checkMaxSeatAndSeatCountForSeatDelete(Place place) {
+        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(place.getId());
+        if (dto.getMaxSeat().longValue() != dto.getSeatCount()) {
+            place.updatePlaceStatus(PlaceStatus.INACTIVATED);
+        }
+    }
 }

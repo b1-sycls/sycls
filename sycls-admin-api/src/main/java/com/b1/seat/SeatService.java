@@ -33,7 +33,7 @@ public class SeatService {
         Place place = placeHelper.getPlace(placeId);
 
         // 공연장 최대 좌석수와 총좌석수 비교 예외처리
-        seatHelper.getMaxSeatAndSeatCount(placeId);
+        seatHelper.checkMaxSeatAndSeatCount(placeId);
 
         // 좌석 등록 시 중복되는 좌석코드가 있는지 확인(해당 공연장에)
         seatHelper.checkForAddSeat(placeId, requestDto.codeList());
@@ -96,6 +96,6 @@ public class SeatService {
         seat.deleteSeat();
 
         // 좌석을 삭제한 후 최대 좌석수와 총 좌석수를 비교하고 공연장 상태 수정
-        seatHelper.getMaxSeatAndSeatCountForDelete(place);
+        placeHelper.checkMaxSeatAndSeatCountForSeatDelete(place);
     }
 }

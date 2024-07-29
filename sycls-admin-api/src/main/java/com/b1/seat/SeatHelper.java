@@ -6,8 +6,6 @@ import com.b1.exception.customexception.SeatNotFoundException;
 import com.b1.exception.errorcode.SeatErrorCode;
 import com.b1.place.PlaceQueryRepository;
 import com.b1.place.dto.PlaceCheckSeatDto;
-import com.b1.place.entity.Place;
-import com.b1.place.entity.PlaceStatus;
 import com.b1.seat.entity.Seat;
 import com.b1.seat.entity.SeatStatus;
 import java.util.List;
@@ -53,7 +51,7 @@ public class SeatHelper {
     /**
      * 총 좌석수와 공연장 최대 좌석수가 같은지 확인
      */
-    public void getMaxSeatAndSeatCount(final Long placeId) {
+    public void checkMaxSeatAndSeatCount(final Long placeId) {
         PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(placeId);
         if (dto.getMaxSeat().longValue() <= dto.getSeatCount()) {
             log.error("좌석 최대 등록 완료 | {}", placeId);
@@ -62,19 +60,9 @@ public class SeatHelper {
     }
 
     /**
-     * 총좌석수, 최대 좌석수 비교 후 공연장 상태 수정
-     */
-    public void getMaxSeatAndSeatCountForDelete(Place place) {
-        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(place.getId());
-        if (dto.getMaxSeat().longValue() != dto.getSeatCount()) {
-            place.updatePlaceStatus(PlaceStatus.INACTIVATED);
-        }
-    }
-
-    /**
      * 좌석 등록을 위한 예외처리
      */
-    public void checkForAddSeat(final Long placeId, List<String> codeList) {
+    public void checkForAddSeat(final Long placeId, final List<String> codeList) {
         seatRepository.findAllByPlaceIdAndStatus(placeId, SeatStatus.ENABLE)
                 .stream()
                 .map(Seat::getCode)

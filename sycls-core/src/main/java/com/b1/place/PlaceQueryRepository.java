@@ -6,6 +6,7 @@ import static com.b1.seat.entity.QSeat.seat;
 
 import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.place.dto.PlaceGetResponseDto;
+import com.b1.seat.entity.SeatStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -86,7 +87,8 @@ public class PlaceQueryRepository {
                 .from(place)
                 .leftJoin(seat).on(seat.place.id.eq(place.id))
                 .where(
-                        place.id.eq(placeId)
+                        place.id.eq(placeId),
+                        seat.status.eq(SeatStatus.ENABLE)
                 )
                 .fetchOne();
     }
