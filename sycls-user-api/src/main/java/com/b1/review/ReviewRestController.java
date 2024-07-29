@@ -51,11 +51,12 @@ public class ReviewRestController {
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") final Integer pageNum,
             @RequestParam(value = "pageSize", required = false, defaultValue = "4") final Integer pageSize
     ) {
-        PageResponseDto<ReviewGetResponseDto> response = reviewService.getAllReviews(
-                contentId,
-                pageNum,
-                pageSize
-        );
+        PageResponseDto<ReviewGetResponseDto> response =
+                reviewService.getAllReviews(
+                        contentId,
+                        pageNum,
+                        pageSize
+                );
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("조회되었습니다.", response));
     }

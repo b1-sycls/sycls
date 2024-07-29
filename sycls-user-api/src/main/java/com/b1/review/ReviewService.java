@@ -9,6 +9,7 @@ import com.b1.review.dto.ReviewUpdateRequestDto;
 import com.b1.review.entity.Review;
 import com.b1.review.entity.ReviewStatus;
 import com.b1.user.entity.User;
+import com.b1.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,7 +42,7 @@ public class ReviewService {
     }
 
     /**
-     * 리뷰 조회 TODO user&content 완성 후 리팩토링
+     * 리뷰 조회
      */
     @Transactional(readOnly = true)
     public PageResponseDto<ReviewGetResponseDto> getAllReviews(
@@ -49,6 +50,7 @@ public class ReviewService {
             final Integer pageNum,
             final Integer pageSize
     ) {
+        PageUtil.checkPageNumber(pageNum);
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize, Direction.DESC, "createdAt");
         Page<ReviewGetResponseDto> reviewList = reviewHelper.getAllReviews(contentId, pageable);
         return PageResponseDto.of(reviewList);

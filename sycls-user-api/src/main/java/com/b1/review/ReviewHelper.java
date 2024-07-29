@@ -28,14 +28,17 @@ public class ReviewHelper {
     /**
      * 리뷰 조회
      */
-    public Page<ReviewGetResponseDto> getAllReviews(final Long contentId, final Pageable pageable) {
+    public Page<ReviewGetResponseDto> getAllReviews(
+            final Long contentId,
+            final Pageable pageable
+    ) {
         return reviewQueryRepository.getAllReviews(contentId, pageable);
     }
 
     /**
      * 리뷰 단건 조회
      */
-    public Review getReview(Long reviewId) {
+    public Review getReview(final Long reviewId) {
         return reviewRepository.findById(reviewId).orElseThrow(
                 () -> {
                     log.error("찾을 수 없는 리뷰 | {}", reviewId);

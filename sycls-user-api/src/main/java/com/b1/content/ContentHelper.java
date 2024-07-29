@@ -54,9 +54,13 @@ public class ContentHelper {
      */
     public Content getContentForReview(final Long contentId) {
         Content content = contentRepository.findById(contentId).orElseThrow(
-                () -> new ContentNotFoundException(ContentErrorCode.CONTENT_NOT_FOUND)
+                () -> {
+                    log.error("찾을 수 없는 공연 | {}", contentId);
+                    return new ContentNotFoundException(ContentErrorCode.CONTENT_NOT_FOUND);
+                }
         );
         if (ContentStatus.VISIBLE.equals(content.getStatus())) {
+            log.error("리뷰 등록 불가능한 공연 | {}, {}", contentId, content.getStatus());
             throw new ReviewCannotAddException(ReviewErrorCode.CANNOT_ADD_REVIEW);
         }
         return content;
