@@ -8,6 +8,7 @@ import com.b1.place.dto.PlaceUpdateRequestDto;
 import com.b1.place.entity.Place;
 import com.b1.place.entity.PlaceStatus;
 import com.b1.round.RoundHelper;
+import com.b1.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -47,7 +48,7 @@ public class PlaceService {
     public PageResponseDto<PlaceGetResponseDto> getAllPlaces(
             final PlaceSearchCondRequestDto requestDto) {
         Sort.Direction direction = requestDto.getIsDesc() ? Direction.DESC : Direction.ASC;
-        //TODO 음수 검증
+        PageUtil.checkPageNumber(requestDto.getPageNum());
         Pageable pageable = PageRequest.of(requestDto.getPageNum() - 1, requestDto.getPageSize(),
                 direction, requestDto.getOrderBy());
 
