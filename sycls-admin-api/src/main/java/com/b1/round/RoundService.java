@@ -6,6 +6,7 @@ import com.b1.content.entity.Content;
 import com.b1.exception.customexception.InvalidDateException;
 import com.b1.exception.customexception.InvalidTimeException;
 import com.b1.exception.customexception.RoundConflictingReservationException;
+import com.b1.exception.customexception.RoundNotFullSeatGradeException;
 import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.place.PlaceHelper;
 import com.b1.place.entity.Place;
@@ -13,16 +14,19 @@ import com.b1.round.dto.RoundAddRequestDto;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
 import com.b1.round.dto.RoundSearchCondRequest;
+import com.b1.round.dto.RoundSeatGradeStatusDto;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.dto.RoundUpdateRequestDto;
 import com.b1.round.dto.RoundUpdateStatusRequestDto;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
 import com.b1.s3.S3Util;
+import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.util.PageUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,6 +45,7 @@ public class RoundService {
     private final RoundHelper roundHelper;
     private final ContentHelper contentHelper;
     private final PlaceHelper placeHelper;
+    private final SeatGradeHelper seatGradeHelper;
 
     /**
      * 회차 등록
@@ -83,6 +88,20 @@ public class RoundService {
         Round round = roundHelper.findById(roundId);
 
         RoundStatus.checkEqualsStatus(round.getStatus(), requestDto.status());
+
+        if (RoundStatus.isAvailable(requestDto.status())) {
+
+            RoundSeatGradeStatusDto statusDto = seatGradeHelper
+                    .getPlaceMaxSeatAndEnableSeatGradeByRoundId(round.getId());
+
+            Integer placeMaxSeat = statusDto.getPlaceMaxSeat();
+            Long enableSeatGrade = statusDto.getEnableSeatGrade();
+
+            if (!Objects.equals(placeMaxSeat.longValue(), enableSeatGrade)) {
+                log.error("해당 회차에 좌석이 다 등록되지 않음 | roundId : {}", round.getId());
+                throw new RoundNotFullSeatGradeException(RoundErrorCode.ROUND_NOT_FULL_SEAT_GRADE);
+            }
+        }
 
         round.updateStatus(requestDto.status());
     }
