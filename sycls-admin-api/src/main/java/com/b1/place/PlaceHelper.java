@@ -93,8 +93,8 @@ public class PlaceHelper {
     /**
      * 총좌석수, 최대 좌석수 비교
      */
-    public Boolean checkMaxSeatAndSeatCountForSeatDelete(Place place) {
-        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(place.getId());
+    public Boolean checkMaxSeatAndSeatCountForSeatDelete(final Long placeId) {
+        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(placeId);
         return dto.getMaxSeat().longValue() != dto.getSeatCount();
     }
 }
