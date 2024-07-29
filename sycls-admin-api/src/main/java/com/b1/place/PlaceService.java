@@ -74,13 +74,16 @@ public class PlaceService {
         // 해당 공연장을 사용하고 회차상태가 AVAILABLE인 공연장 존재 여부 확인
         roundHelper.existsRoundByPlaceIdAndStatus(placeId);
 
-        // maxSeat가 변경된 경우 공연장 disable 처리
-        if (requestDto.maxSeat().equals(place.getMaxSeat())) {
-            place.updatePlace(requestDto.location(), requestDto.name(),
-                    requestDto.maxSeat(), PlaceStatus.DISABLE);
+        if (!requestDto.maxSeat().equals(place.getMaxSeat())) {
+            place.updatePlaceMaxSeat(requestDto.maxSeat());
+        } else if (!requestDto.status().equals(place.getStatus())) {
+            if (PlaceStatus.ENABLE.equals(requestDto.status())) {
+                placeHelper.getMaxSeatAndSeatCount(placeId);
+            }
+            place.updatePlaceStatus(requestDto.status());
         }
-        place.updatePlace(requestDto.location(), requestDto.name(),
-                requestDto.maxSeat(), requestDto.status());
+        place.updatePlaceElse(requestDto.location(), requestDto.name());
+
         return place.getId();
     }
 

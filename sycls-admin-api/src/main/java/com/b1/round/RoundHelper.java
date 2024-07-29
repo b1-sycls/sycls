@@ -79,6 +79,7 @@ public class RoundHelper {
      */
     public void existsRoundByPlaceIdAndStatus(final Long placeId) {
         if (roundRepository.existsByPlaceIdAndStatus(placeId, RoundStatus.AVAILABLE)) {
+            log.error("예매 중인 공연이 존재해 공연장을 수정할 수 없습니다. | {}", placeId);
             throw new PlaceCannotUpdateException(PlaceErrorCode.CANNOT_UPDATE_PLACE);
         }
     }

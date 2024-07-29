@@ -1,4 +1,4 @@
-package com.b1.place.dto;
+package com.b1.seat.dto;
 
 import com.b1.seat.entity.SeatStatus;
 import jakarta.validation.constraints.NotBlank;
