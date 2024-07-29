@@ -4,8 +4,8 @@ import com.b1.place.PlaceHelper;
 import com.b1.place.entity.PlaceStatus;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
+import com.b1.round.entity.RoundStatus;
 import com.b1.seat.SeatHelper;
-import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
 import com.b1.seatgrade.dto.SeatGradeDeleteRequestDto;
@@ -14,7 +14,6 @@ import com.b1.seatgrade.dto.SeatGradeUpdateRequestDto;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeStatus;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,19 +38,22 @@ public class SeatGradeService {
         Round round = roundHelper.findById(requestDto.roundId());
         PlaceStatus.checkDeleted(round.getPlace().getStatus());
 
-        // 좌석-등급 등록 TODO 리팩토링 ex) IN절로 해보고 테스트
-        List<Seat> seatList = requestDto.seatIdList().stream()
-                .map(seatHelper::getSeat)
-                .toList();
+        // 중복되는 좌석에 대한 등록이 있는지 확인
+        seatGradeHelper.checkAllSeatGradesByRoundIdAndSeatIdIn(
+                round.getId(),
+                requestDto.seatIdList()
+        );
 
-        // 이미 설정된 좌석에 대한 접근을 막아야한다.
-        List<SeatGrade> seatGradeList = seatList.stream()
-                .map(seat -> SeatGrade.addSeatGrade(
-                        requestDto.seatGradeType(),
-                        requestDto.price(),
-                        seat,
-                        round
-                )).toList();
+        // 좌석-등급 등록
+        List<SeatGrade> seatGradeList =
+                seatGradeHelper.getSeatForAddSeatGrade(requestDto.seatIdList())
+                        .stream()
+                        .map(seat -> SeatGrade.addSeatGrade(
+                                requestDto.seatGradeType(),
+                                requestDto.price(),
+                                seat,
+                                round
+                        )).toList();
 
         seatGradeHelper.saveSeatGrades(seatGradeList);
     }
@@ -61,11 +63,9 @@ public class SeatGradeService {
      */
     @Transactional(readOnly = true)
     public Boolean confirmAllSeatSetting(final Long roundId) {
+        Round round = roundHelper.findById(roundId);
         // 회차의 공연장 총 좌석수와 등록된 SeatGrade 를 비교
-        Integer maxSeat = placeHelper.getMaxSeatFromPlace(roundId);
-        Integer totalCount = seatGradeHelper.getTotalCount(roundId);
-
-        return Objects.equals(totalCount, maxSeat);
+        return seatGradeHelper.checkMaxSeatsAndSeatCount(round.getPlace().getId());
     }
 
     /**
@@ -82,17 +82,20 @@ public class SeatGradeService {
      * 좌석-등급 수정
      */
     public void updateSeatGrades(final SeatGradeUpdateRequestDto requestDto) {
+        Round round = roundHelper.findById(requestDto.roundId());
+        RoundStatus.checkAvailable(round.getStatus());
         seatGradeHelper.findAllByIdIn(requestDto.seatGradeIdList())
                 .forEach(seatGrade -> seatGrade.updateSeatGrade(
                         requestDto.seatGradeType(),
-                        requestDto.price())
-                );
+                        requestDto.price()));
     }
 
     /**
      * 좌석-등급 삭제
      */
     public void deleteSeatGrades(final SeatGradeDeleteRequestDto requestDto) {
+        Round round = roundHelper.findById(requestDto.roundId());
+        RoundStatus.checkAvailable(round.getStatus());
         seatGradeHelper.findAllByIdIn(requestDto.seatGradeIdList())
                 .forEach(seatGrade -> {
                     SeatGradeStatus.checkDeleted(seatGrade.getStatus());

@@ -1,6 +1,12 @@
 package com.b1.seatgrade;
 
+import com.b1.exception.customexception.SeatGradeDuplicatedException;
+import com.b1.exception.errorcode.SeatGradeErrorCode;
+import com.b1.place.PlaceQueryRepository;
+import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.round.dto.RoundSeatGradeStatusDto;
+import com.b1.seat.SeatRepository;
+import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
 import com.b1.seatgrade.entity.SeatGrade;
 import java.util.List;
@@ -13,8 +19,30 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SeatGradeHelper {
 
+    private final PlaceQueryRepository placeQueryRepository;
+    private final SeatRepository seatRepository;
     private final SeatGradeRepository seatGradeRepository;
     private final SeatGradeQueryRepository seatGradeQueryRepository;
+
+    /**
+     * 중복확인을 위한 SeatGrade roundId로 조회
+     */
+    public void checkAllSeatGradesByRoundIdAndSeatIdIn(
+            final Long roundId,
+            final List<Long> seatIdList
+    ) {
+        if (seatGradeRepository.existsByRoundIdAndSeatIdIn(roundId, seatIdList)) {
+            throw new SeatGradeDuplicatedException(SeatGradeErrorCode.DUPLICATED_SEAT_GRADE);
+        }
+
+    }
+
+    /**
+     * 좌석 등급 등록을 위한 좌석 조회
+     */
+    public List<Seat> getSeatForAddSeatGrade(final List<Long> seatIdList) {
+        return seatRepository.findAllByIdIn(seatIdList);
+    }
 
     /**
      * 좌석-등급 등록
@@ -24,10 +52,11 @@ public class SeatGradeHelper {
     }
 
     /**
-     * 등록된 좌석-등급의 총 갯수 조회
+     * 최대좌석수와 총 좌석수 비교
      */
-    public Integer getTotalCount(final Long roundId) {
-        return seatGradeQueryRepository.getTotalCount(roundId);
+    public Boolean checkMaxSeatsAndSeatCount(final Long placeId) {
+        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(placeId);
+        return dto.getSeatCount() != dto.getMaxSeat().longValue();
     }
 
     /**
@@ -50,5 +79,14 @@ public class SeatGradeHelper {
      */
     public RoundSeatGradeStatusDto getPlaceMaxSeatAndEnableSeatGradeByRoundId(final Long roundId) {
         return seatGradeQueryRepository.getPlaceMaxSeatAndEnableSeatGradeByRoundId(roundId);
+    }
+
+    /**
+     * 공연장 최대 좌석수와 총 seatGrade 수를 비교
+     */
+    public boolean checkMaxSeatAndSeatCountForSeatGradeDelete(final Long roundId) {
+        RoundSeatGradeStatusDto dto =
+                seatGradeQueryRepository.getPlaceMaxSeatAndEnableSeatGradeByRoundId(roundId);
+        return dto.getEnableSeatGrade() != dto.getPlaceMaxSeat().longValue();
     }
 }
