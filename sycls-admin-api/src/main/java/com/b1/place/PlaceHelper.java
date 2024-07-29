@@ -7,6 +7,7 @@ import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondRequestDto;
 import com.b1.place.entity.Place;
+import com.b1.place.entity.PlaceStatus;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,5 +77,16 @@ public class PlaceHelper {
             log.error("공연장을 활성화할 수 없습니다.| {}", placeId);
             throw new PlaceCannotUpdateException(PlaceErrorCode.CANNOT_UPDATE_PLACE);
         }
+    }
+
+    /**
+     * 활성화 상태인 공연장만 조회
+     */
+    public Place getPlaceByEnable(final Long placeId) {
+        return placeRepository.findByIdAndStatus(placeId, PlaceStatus.ENABLE)
+                .orElseThrow(() -> {
+                    log.error("활성화된 공연장이 없음 | {}", placeId);
+                    return new PlaceNotFoundException(PlaceErrorCode.NOT_FOUND_PLACE);
+                });
     }
 }
