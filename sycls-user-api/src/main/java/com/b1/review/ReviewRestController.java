@@ -67,10 +67,10 @@ public class ReviewRestController {
     @PatchMapping("/reviews/{reviewId}")
     public ResponseEntity<RestApiResponseDto<Long>> updateReview(
             @PathVariable final Long reviewId,
-            @RequestBody final ReviewUpdateRequestDto requestDto
-            //, @AuthenticationPrincipal UserDetailsImpl userDetails
+            @RequestBody final ReviewUpdateRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        Long response = reviewService.updateReview(reviewId, requestDto/*, userDetails.getUser()*/);
+        Long response = reviewService.updateReview(reviewId, requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("수정되었습니다.", response));
     }

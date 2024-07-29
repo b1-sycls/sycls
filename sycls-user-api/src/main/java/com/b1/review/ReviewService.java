@@ -59,20 +59,22 @@ public class ReviewService {
     /**
      * 리뷰 수정
      */
-    public Long updateReview(final Long reviewId,
-            final ReviewUpdateRequestDto requestDto/*, User user*/) {
-        Review review = reviewHelper.getReview(reviewId);
-        // TODO User 비교 로직 추가
-        // content도 확인해야하나?
+    public Long updateReview(
+            final Long reviewId,
+            final ReviewUpdateRequestDto requestDto,
+            final User user
+    ) {
+        Review review = reviewHelper.getReview(reviewId, user);
         review.updateReview(requestDto.comment(), requestDto.rating());
-
         return review.getId();
     }
 
     /**
      * 리뷰 삭제
      */
-    public void deleteReview(final Long reviewId) {
+    public void deleteReview(
+            final Long reviewId
+    ) {
         Review review = reviewHelper.getReview(reviewId);
         ReviewStatus.checkDeleted(review.getStatus());
         review.deleteReview();
