@@ -58,7 +58,7 @@ public class RoundService {
 
         checkReservationTime(dtoStartDate, dtoStartTime, dtoEndTime);
 
-        Place place = placeHelper.getPlace(requestDto.placeId());
+        Place place = placeHelper.getPlaceByEnable(requestDto.placeId());
 
         List<Round> roundList = roundHelper.getAllRoundsByPlaceId(place.getId(), dtoStartDate);
 
