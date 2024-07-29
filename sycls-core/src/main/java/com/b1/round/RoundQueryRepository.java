@@ -178,7 +178,7 @@ public class RoundQueryRepository {
                 .leftJoin(round.place, place)
                 .leftJoin(content.category, category)
                 .where(round.id.eq(roundId)
-                        .and(round.status.notIn(RoundStatus.CLOSED)))
+                        .and(round.status.eq(RoundStatus.CLOSED).not()))
                 .fetchOne();
     }
 

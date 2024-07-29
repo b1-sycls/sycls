@@ -241,7 +241,7 @@ public class ContentQueryRepository {
                 .from(round)
                 .leftJoin(round.content, content)
                 .where(content.id.eq(contentId)
-                        .and(round.status.notIn(RoundStatus.CLOSED)))
+                        .and(round.status.eq(RoundStatus.CLOSED).not()))
                 .fetchOne();
     }
 
