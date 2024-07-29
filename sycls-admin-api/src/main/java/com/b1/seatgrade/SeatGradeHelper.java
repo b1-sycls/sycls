@@ -1,5 +1,6 @@
 package com.b1.seatgrade;
 
+import com.b1.round.dto.RoundSeatGradeStatusDto;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
 import com.b1.seatgrade.entity.SeatGrade;
 import java.util.List;
@@ -41,5 +42,13 @@ public class SeatGradeHelper {
      */
     public List<SeatGrade> findAllByIdIn(final List<Long> seatIdList) {
         return seatGradeRepository.findAllByIdIn(seatIdList);
+    }
+
+
+    /**
+     * 해당 회차의 공연장의 최대좌석수와 enable 된 seatGrade 의 수를 반환
+     */
+    public RoundSeatGradeStatusDto getPlaceMaxSeatAndEnableSeatGradeByRoundId(final Long roundId) {
+        return seatGradeQueryRepository.getPlaceMaxSeatAndEnableSeatGradeByRoundId(roundId);
     }
 }
