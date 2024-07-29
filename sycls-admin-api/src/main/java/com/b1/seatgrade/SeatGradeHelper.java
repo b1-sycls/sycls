@@ -27,19 +27,14 @@ public class SeatGradeHelper {
     /**
      * 중복확인을 위한 SeatGrade roundId로 조회
      */
-    public void checkAllSeatGradesByRoundId(final Long roundId, final List<Long> seatIdList) {
-        seatGradeRepository.findAllByRoundId(roundId)
-                .stream()
-                .flatMap(seatgrade ->
-                        seatIdList.stream()
-                                .filter(seatId -> seatId.equals(seatgrade.getSeat().getId()))
-                )
-                .findAny()
-                .ifPresent(seatId -> {
-                    throw new SeatGradeDuplicatedException(
-                            SeatGradeErrorCode.DUPLICATED_SEAT_GRADE
-                    );
-                });
+    public void checkAllSeatGradesByRoundIdAndSeatIdIn(
+            final Long roundId,
+            final List<Long> seatIdList
+    ) {
+        if (seatGradeRepository.existsByRoundIdAndSeatIdIn(roundId, seatIdList)) {
+            throw new SeatGradeDuplicatedException(SeatGradeErrorCode.DUPLICATED_SEAT_GRADE);
+        }
+
     }
 
     /**
@@ -84,5 +79,14 @@ public class SeatGradeHelper {
      */
     public RoundSeatGradeStatusDto getPlaceMaxSeatAndEnableSeatGradeByRoundId(final Long roundId) {
         return seatGradeQueryRepository.getPlaceMaxSeatAndEnableSeatGradeByRoundId(roundId);
+    }
+
+    /**
+     * 공연장 최대 좌석수와 총 seatGrade 수를 비교
+     */
+    public boolean checkMaxSeatAndSeatCountForSeatGradeDelete(final Long roundId) {
+        RoundSeatGradeStatusDto dto =
+                seatGradeQueryRepository.getPlaceMaxSeatAndEnableSeatGradeByRoundId(roundId);
+        return dto.getEnableSeatGrade() != dto.getPlaceMaxSeat().longValue();
     }
 }

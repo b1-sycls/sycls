@@ -4,6 +4,7 @@ import com.b1.place.PlaceHelper;
 import com.b1.place.entity.PlaceStatus;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
+import com.b1.round.entity.RoundStatus;
 import com.b1.seat.SeatHelper;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
@@ -38,7 +39,10 @@ public class SeatGradeService {
         PlaceStatus.checkDeleted(round.getPlace().getStatus());
 
         // 중복되는 좌석에 대한 등록이 있는지 확인
-        seatGradeHelper.checkAllSeatGradesByRoundId(round.getId(), requestDto.seatIdList());
+        seatGradeHelper.checkAllSeatGradesByRoundIdAndSeatIdIn(
+                round.getId(),
+                requestDto.seatIdList()
+        );
 
         // 좌석-등급 등록
         List<SeatGrade> seatGradeList =
@@ -78,17 +82,20 @@ public class SeatGradeService {
      * 좌석-등급 수정
      */
     public void updateSeatGrades(final SeatGradeUpdateRequestDto requestDto) {
+        Round round = roundHelper.findById(requestDto.roundId());
+        RoundStatus.checkAvailable(round.getStatus());
         seatGradeHelper.findAllByIdIn(requestDto.seatGradeIdList())
                 .forEach(seatGrade -> seatGrade.updateSeatGrade(
                         requestDto.seatGradeType(),
-                        requestDto.price())
-                );
+                        requestDto.price()));
     }
 
     /**
      * 좌석-등급 삭제
      */
     public void deleteSeatGrades(final SeatGradeDeleteRequestDto requestDto) {
+        Round round = roundHelper.findById(requestDto.roundId());
+        RoundStatus.checkAvailable(round.getStatus());
         seatGradeHelper.findAllByIdIn(requestDto.seatGradeIdList())
                 .forEach(seatGrade -> {
                     SeatGradeStatus.checkDeleted(seatGrade.getStatus());
