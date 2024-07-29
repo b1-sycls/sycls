@@ -1,11 +1,14 @@
 package com.b1.review;
 
 import com.b1.common.PageResponseDto;
+import com.b1.content.ContentHelper;
+import com.b1.content.entity.Content;
 import com.b1.review.dto.ReviewAddRequestDto;
 import com.b1.review.dto.ReviewGetResponseDto;
 import com.b1.review.dto.ReviewUpdateRequestDto;
 import com.b1.review.entity.Review;
 import com.b1.review.entity.ReviewStatus;
+import com.b1.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,16 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewService {
 
     private final ReviewHelper reviewHelper;
-    //private final ContentHelper contentHelper;
+    private final ContentHelper contentHelper;
 
     /**
      * 리뷰 등록
      */
-    public void addReview(final Long contentId,
-            final ReviewAddRequestDto requestDto/*, User user*/) {
-        //Content content = contentHelper.getContent(contentId);
-        //Review review = Review.addReview(requestDto.comment(), requestDto.rating(), ReviewStatus.ENABLE, user, content)
-        //reviewHelper.saveReview(review);
+    public void addReview(
+            final Long contentId,
+            final ReviewAddRequestDto requestDto,
+            final User user
+    ) {
+        Content content = contentHelper.getContentForReview(contentId);
+        Review review = Review.addReview(requestDto.comment(), requestDto.rating(), user, content);
+        reviewHelper.saveReview(review);
     }
 
     /**

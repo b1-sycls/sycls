@@ -3,6 +3,12 @@ package com.b1.content;
 import com.b1.content.dto.ContentDetailImagePathGetUserResponseDto;
 import com.b1.content.dto.ContentGetUserResponseDto;
 import com.b1.content.dto.ContentSearchCondRequest;
+import com.b1.content.entity.Content;
+import com.b1.content.entity.ContentStatus;
+import com.b1.exception.customexception.ContentNotFoundException;
+import com.b1.exception.customexception.ReviewCannotAddException;
+import com.b1.exception.errorcode.ContentErrorCode;
+import com.b1.exception.errorcode.ReviewErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class ContentHelper {
 
     private final ContentQueryRepository contentQueryRepository;
+    private final ContentRepository contentRepository;
 
     /**
      * 단일 조회시 필요한 공연의 정보 조회
@@ -40,6 +47,19 @@ public class ContentHelper {
             final Pageable pageable) {
         return contentQueryRepository.getAllContentForUser(request.getCategoryId(),
                 request.getTitleKeyword(), pageable);
+    }
+
+    /**
+     * 리뷰 등록을 위한 공연 조회
+     */
+    public Content getContentForReview(final Long contentId) {
+        Content content = contentRepository.findById(contentId).orElseThrow(
+                () -> new ContentNotFoundException(ContentErrorCode.CONTENT_NOT_FOUND)
+        );
+        if (ContentStatus.VISIBLE.equals(content.getStatus())) {
+            throw new ReviewCannotAddException(ReviewErrorCode.CANNOT_ADD_REVIEW);
+        }
+        return content;
     }
 }
 

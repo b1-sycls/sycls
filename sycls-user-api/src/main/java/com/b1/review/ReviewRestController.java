@@ -5,10 +5,12 @@ import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.review.dto.ReviewAddRequestDto;
 import com.b1.review.dto.ReviewGetResponseDto;
 import com.b1.review.dto.ReviewUpdateRequestDto;
+import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,10 +34,10 @@ public class ReviewRestController {
     @PostMapping("/contents/{contentId}/reviews")
     public ResponseEntity<RestApiResponseDto<String>> addReview(
             @PathVariable final Long contentId,
-            @Valid @RequestBody final ReviewAddRequestDto requestDto
-            //, @AuthenticationPrincipal UserDetailsImpl userDetails
+            @Valid @RequestBody final ReviewAddRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        reviewService.addReview(contentId, requestDto/*, userDetails.getUser()*/);
+        reviewService.addReview(contentId, requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("등록되었습니다."));
     }
