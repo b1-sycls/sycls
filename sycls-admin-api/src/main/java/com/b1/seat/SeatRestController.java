@@ -78,11 +78,12 @@ public class SeatRestController {
     /**
      * 좌석 삭제
      */
-    @DeleteMapping("/seats/{seatId}")
+    @DeleteMapping("/places/{placeId}/seats/{seatId}")
     public ResponseEntity<RestApiResponseDto<String>> deleteSeat(
+            @PathVariable final Long placeId,
             @PathVariable final Long seatId
     ) {
-        seatService.deleteSeat(seatId);
+        seatService.deleteSeat(placeId, seatId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("수정되었습니다."));
     }

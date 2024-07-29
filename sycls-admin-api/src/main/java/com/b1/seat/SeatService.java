@@ -2,6 +2,8 @@ package com.b1.seat;
 
 import com.b1.place.PlaceHelper;
 import com.b1.place.entity.Place;
+import com.b1.place.entity.PlaceStatus;
+import com.b1.round.RoundHelper;
 import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
 import com.b1.seat.dto.SeatGetResponseDto;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SeatService {
 
     private final PlaceHelper placeHelper;
+    private final RoundHelper roundHelper;
     private final SeatHelper seatHelper;
 
     /**
@@ -29,6 +32,12 @@ public class SeatService {
      */
     public void addSeats(final Long placeId, final SeatAddRequestDto requestDto) {
         Place place = placeHelper.getPlace(placeId);
+
+        // 공연장 최대 좌석수와 총좌석수 비교 예외처리
+        seatHelper.checkMaxSeatAndSeatCount(placeId);
+
+        // 좌석 등록 시 중복되는 좌석코드가 있는지 확인(해당 공연장에)
+        seatHelper.checkForAddSeat(placeId, requestDto.codeList());
 
         Set<Seat> seatSet = requestDto.codeList().stream()
                 .map(code -> Seat.addSeat(code, place))
@@ -61,6 +70,13 @@ public class SeatService {
      */
     public Long updateSeat(final Long seatId, final SeatUpdateRequestDto requestDto) {
         Seat seat = seatHelper.getSeat(seatId);
+
+        // 해당 공연장을 사용하는 회차가 예매 진행중인지 확인
+        roundHelper.existsRoundByPlaceIdAndStatus(requestDto.placeId());
+
+        // 수정 시 중복되는 좌석코드가 존재하는지 확인(해당 공연장에)
+        seatHelper.checkForUpdateSeat(requestDto.placeId(), requestDto.code());
+
         seat.updateSeat(requestDto.code(), requestDto.status());
         return seat.getId();
     }
@@ -68,9 +84,21 @@ public class SeatService {
     /**
      * 좌석 삭제
      */
-    public void deleteSeat(final Long seatId) {
+    public void deleteSeat(final Long placeId, final Long seatId) {
         Seat seat = seatHelper.getSeat(seatId);
+        Place place = seat.getPlace();
+
+        // 좌석이 이미 삭제된 상태인지 확인
         SeatStatus.checkDeleted(seat.getStatus());
+
+        // 해당 공연장을 사용하는 회차가 예매 진행중인지 확인
+        roundHelper.existsRoundByPlaceIdAndStatus(placeId);
+
         seat.deleteSeat();
+
+        // 최대 좌석수와 총 좌석수를 비교하고 공연장 상태 수정
+        if (placeHelper.checkMaxSeatAndSeatCountForSeatDelete(place.getId())) {
+            place.updatePlaceStatus(PlaceStatus.INACTIVATED);
+        }
     }
 }
