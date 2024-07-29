@@ -18,7 +18,7 @@ public class PageResponseDto<T> {
     private final Boolean hasNextPage;
     private final List<T> data;
 
-    public static <T> PageResponseDto<T> of(Page<T> page) {
+    public static <T> PageResponseDto<T> of(final Page<T> page) {
         return PageResponseDto.<T>builder()
                 .currentPage(page.getNumber())
                 .totalPage(page.getTotalPages())

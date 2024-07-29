@@ -39,7 +39,7 @@ public class RoundDetailInfoUserResponseDto {
     private String placeLocation;
     private PlaceStatus placeStatus;
 
-    public void updateMainImagePath(String mainImagePath) {
+    public void updateMainImagePath(final String mainImagePath) {
         this.mainImagePath = mainImagePath;
     }
 }

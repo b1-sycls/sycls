@@ -45,7 +45,7 @@ public class RoundQueryRepository {
                 .selectFrom(round)
                 .leftJoin(round.place, place)
                 .where(round.place.id.eq(placeId)
-                        .and(round.status.in(RoundStatus.AVAILABLE, RoundStatus.WAITING))
+                        .and(round.status.eq(RoundStatus.CLOSED).not())
                         .and(round.startDate.eq(startDate))
                 ).fetch();
     }
@@ -232,6 +232,7 @@ public class RoundQueryRepository {
 
         QRound round = QRound.round;
         QContent content = QContent.content;
+        QPlace place = QPlace.place;
 
         return jpaQueryFactory
                 .select(Projections.constructor(
@@ -239,6 +240,9 @@ public class RoundQueryRepository {
                         content.id,
                         content.title,
                         content.description,
+                        place.id,
+                        place.name,
+                        place.location,
                         round.id,
                         round.sequence,
                         round.startDate,
@@ -247,6 +251,7 @@ public class RoundQueryRepository {
                 ))
                 .from(round)
                 .leftJoin(round.content, content)
+                .leftJoin(round.place, place)
                 .where(round.id.eq(roundId))
                 .fetchOne();
     }

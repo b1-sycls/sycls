@@ -49,8 +49,13 @@ public class Review extends TimeStamp {
     private Content content;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Review(String comment, Integer rating, ReviewStatus status, User user,
-            Content content) {
+    private Review(
+            final String comment,
+            final Integer rating,
+            final ReviewStatus status,
+            final User user,
+            final Content content
+    ) {
         this.comment = comment;
         this.rating = rating;
         this.status = status;
@@ -61,12 +66,16 @@ public class Review extends TimeStamp {
     /**
      * 리뷰 등록
      */
-    public static Review addReview(String comment, Integer rating,
-            ReviewStatus status, User user, Content content) {
+    public static Review addReview(
+            final String comment,
+            final Integer rating,
+            final User user,
+            final Content content
+    ) {
         return Review.builder()
                 .comment(comment)
                 .rating(rating)
-                .status(status)
+                .status(ReviewStatus.ENABLE)
                 .user(user)
                 .content(content)
                 .build();
@@ -75,7 +84,10 @@ public class Review extends TimeStamp {
     /**
      * 리뷰 수정
      */
-    public void updateReview(String comment, Integer rating) {
+    public void updateReview(
+            final String comment,
+            final Integer rating
+    ) {
         this.comment = comment;
         this.rating = rating;
     }

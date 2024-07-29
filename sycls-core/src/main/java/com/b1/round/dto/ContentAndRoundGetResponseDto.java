@@ -14,6 +14,10 @@ public class ContentAndRoundGetResponseDto {
     private final String contentTitle;
     private final String description;
 
+    private final Long placeId;
+    private final String placeName;
+    private final String location;
+
     private final Long roundId;
     private final Integer sequence;
     private final LocalDate startDate;

@@ -17,7 +17,7 @@ public enum CastStatus {
 
     private final String value;
 
-    public static void checkCanceled(CastStatus status) {
+    public static void checkCanceled(final CastStatus status) {
         if (status.equals(CANCELED)) {
             log.error("이미 취소된 출연자");
             throw new CastAlreadyCanceledException(CastErrorCode.CAST_ALREADY_CANCELED);

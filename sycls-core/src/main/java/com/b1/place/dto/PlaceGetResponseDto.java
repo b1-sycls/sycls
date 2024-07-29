@@ -17,7 +17,7 @@ public class PlaceGetResponseDto {
     private Integer maxSeat;
     private PlaceStatus status;
 
-    public static PlaceGetResponseDto of(Place place) {
+    public static PlaceGetResponseDto of(final Place place) {
         return PlaceGetResponseDto.builder()
                 .placeId(place.getId())
                 .location(place.getLocation())
