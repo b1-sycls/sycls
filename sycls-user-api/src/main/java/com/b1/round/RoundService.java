@@ -1,6 +1,7 @@
 package com.b1.round;
 
 import com.b1.common.PageResponseDto;
+import com.b1.round.dto.ContentAndRoundGetResponseDto;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
 import com.b1.round.dto.RoundSearchCondRequest;
@@ -25,10 +26,10 @@ public class RoundService {
     private final RoundHelper roundHelper;
 
     /**
-     * 회차 단일 조회
+     * 회차 단일 상세 조회
      */
     @Transactional(readOnly = true)
-    public RoundDetailResponseDto getRound(final Long roundId) {
+    public RoundDetailResponseDto getRoundDetail(final Long roundId) {
 
         RoundDetailInfoUserResponseDto responseDto = roundHelper.getRoundDetail(roundId);
 
@@ -60,5 +61,13 @@ public class RoundService {
                 request, pageable);
 
         return PageResponseDto.of(pageResponseDto);
+    }
+
+    /**
+     * 회차 단일 간단 조회
+     */
+    @Transactional(readOnly = true)
+    public ContentAndRoundGetResponseDto getRoundSimple(final Long roundId) {
+        return roundHelper.getRoundSimple(roundId);
     }
 }
