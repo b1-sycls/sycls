@@ -2,6 +2,7 @@ package com.b1.round;
 
 import com.b1.common.PageResponseDto;
 import com.b1.globalresponse.RestApiResponseDto;
+import com.b1.round.dto.ContentAndRoundGetResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
 import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleUserResponseDto;
@@ -24,20 +25,33 @@ public class RoundRestController {
     private final RoundService roundService;
 
     /**
-     * 회차 단일 조회
+     * 회차 단일 상세 조회
      */
-    @GetMapping("/rounds/{roundId}")
-    public ResponseEntity<RestApiResponseDto<RoundDetailResponseDto>> getRound(
+    @GetMapping("/rounds/{roundId}/detail")
+    public ResponseEntity<RestApiResponseDto<RoundDetailResponseDto>> getRoundDetail(
             @PathVariable final Long roundId
     ) {
-        RoundDetailResponseDto responseDto = roundService.getRound(roundId);
+        RoundDetailResponseDto responseDto = roundService.getRoundDetail(roundId);
 
         if (responseDto == null) {
             return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("회차를 등록해 주세요"));
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("정보 조회 성공", responseDto));
+                .body(RestApiResponseDto.of("정보 상세 조회 성공", responseDto));
+    }
+
+    /**
+     * 회차 단일 상세 조회
+     */
+    @GetMapping("/rounds/{roundId}")
+    public ResponseEntity<RestApiResponseDto<ContentAndRoundGetResponseDto>> getRoundSimple(
+            @PathVariable final Long roundId
+    ) {
+        ContentAndRoundGetResponseDto responseDto = roundService.getRoundSimple(roundId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("정보 간단 조회 성공", responseDto));
     }
 
     /**

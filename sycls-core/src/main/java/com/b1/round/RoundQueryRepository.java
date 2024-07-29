@@ -3,6 +3,7 @@ package com.b1.round;
 import com.b1.category.entity.QCategory;
 import com.b1.content.entity.QContent;
 import com.b1.place.entity.QPlace;
+import com.b1.round.dto.ContentAndRoundGetResponseDto;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
@@ -222,6 +223,32 @@ public class RoundQueryRepository {
                 );
 
         return PageableExecutionUtils.getPage(roundList, pageable, total::fetchOne);
+    }
+
+    /**
+     * (유저) 회차 단일 간단 조회
+     */
+    public ContentAndRoundGetResponseDto getRoundSimple(final Long roundId) {
+
+        QRound round = QRound.round;
+        QContent content = QContent.content;
+
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        ContentAndRoundGetResponseDto.class,
+                        content.id,
+                        content.title,
+                        content.description,
+                        round.id,
+                        round.sequence,
+                        round.startDate,
+                        round.startTime,
+                        round.endTime
+                ))
+                .from(round)
+                .leftJoin(round.content, content)
+                .where(round.id.eq(roundId))
+                .fetchOne();
     }
 
     /**
