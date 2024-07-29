@@ -73,9 +73,10 @@ public class ReviewService {
      * 리뷰 삭제
      */
     public void deleteReview(
-            final Long reviewId
+            final Long reviewId,
+            final User user
     ) {
-        Review review = reviewHelper.getReview(reviewId);
+        Review review = reviewHelper.getReview(reviewId, user);
         ReviewStatus.checkDeleted(review.getStatus());
         review.deleteReview();
     }

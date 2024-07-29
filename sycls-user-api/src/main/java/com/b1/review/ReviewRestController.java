@@ -80,10 +80,10 @@ public class ReviewRestController {
      */
     @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<RestApiResponseDto<String>> deleteReview(
-            @PathVariable final Long reviewId
-            //, @AuthenticationPrincipal UserDetailsImpl userDetails
+            @PathVariable final Long reviewId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        reviewService.deleteReview(reviewId);
+        reviewService.deleteReview(reviewId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("삭제되었습니다,"));
     }
