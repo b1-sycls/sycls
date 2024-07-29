@@ -15,12 +15,12 @@ Content-Type: application/json
 }
 
 
-### 회차 상태 수정
+### 회차 상태 수정 (WAITING, AVAILABLE, CLOSED)
 PATCH http://localhost:8081/v1/rounds/{{roundId}}/status
 Content-Type: application/json
 
 {
-  "status": "WAITING"
+  "status": "AVAILABLE"
 }
 
 ### 회차 정보 수정

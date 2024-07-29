@@ -1,5 +1,7 @@
 package com.b1.seatgrade;
 
+import com.b1.place.entity.QPlace;
+import com.b1.round.dto.RoundSeatGradeStatusDto;
 import com.b1.round.entity.QRound;
 import com.b1.seat.entity.QSeat;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
@@ -92,5 +94,30 @@ public class SeatGradeQueryRepository {
                         seatGrade.status.eq(SeatGradeStatus.DISABLE).not()
                 )
                 .fetch();
+    }
+
+    /**
+     * 해당 회차의 공연장의 최대좌석수와 enable 된 seatGrade 의 수를 반환
+     * TODO SeatGradeQueryRepository 의 getTotalCount 와 PlaceQueryRepository 의 getMaxSeatFromPlace 와 겹치는 쿼리
+     */
+    public RoundSeatGradeStatusDto getPlaceMaxSeatAndEnableSeatGradeByRoundId(
+            final Long roundId
+    ) {
+        QRound round = QRound.round;
+        QPlace place = QPlace.place;
+        QSeatGrade seatGrade = QSeatGrade.seatGrade;
+
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        RoundSeatGradeStatusDto.class,
+                        place.maxSeat,
+                        seatGrade.count()
+                ))
+                .from(seatGrade)
+                .leftJoin(seatGrade.round, round)
+                .leftJoin(round.place, place)
+                .where(round.id.eq(roundId)
+                        .and(seatGrade.status.eq(SeatGradeStatus.ENABLE)))
+                .fetchOne();
     }
 }
