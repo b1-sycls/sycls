@@ -2,6 +2,7 @@ package com.b1.round;
 
 import com.b1.exception.customexception.RoundNotFoundException;
 import com.b1.exception.errorcode.RoundErrorCode;
+import com.b1.round.dto.ContentAndRoundGetResponseDto;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
 import com.b1.round.dto.RoundSearchCondRequest;
@@ -55,5 +56,12 @@ public class RoundHelper {
     public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(
             final RoundSearchCondRequest request, final Pageable pageable) {
         return roundQueryRepository.getAllSimpleRoundsForUser(request.getContentId(), pageable);
+    }
+
+    /**
+     * 회차 단일 간단 조회
+     */
+    public ContentAndRoundGetResponseDto getRoundSimple(final Long roundId) {
+        return roundQueryRepository.getRoundSimple(roundId);
     }
 }
