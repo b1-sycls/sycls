@@ -74,7 +74,7 @@ public class PlaceQueryRepository {
     /**
      * 공연장 최대좌석수 와 총 좌석수 불러오기
      */
-    public PlaceCheckSeatDto getMaxSeatAndSeatCount(Long placeId) {
+    public PlaceCheckSeatDto getMaxSeatAndSeatCount(final Long placeId) {
         return jpaQueryFactory
                 .select(Projections.constructor
                         (
