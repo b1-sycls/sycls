@@ -1,7 +1,6 @@
 package com.b1.place;
 
 import static com.b1.place.entity.QPlace.place;
-import static com.b1.round.entity.QRound.round;
 import static com.b1.seat.entity.QSeat.seat;
 
 import com.b1.place.dto.PlaceCheckSeatDto;
@@ -58,18 +57,6 @@ public class PlaceQueryRepository {
                 );
 
         return PageableExecutionUtils.getPage(placeList, pageable, total::fetchOne);
-    }
-
-    /**
-     * 공연장 최대 좌석수 불러오기
-     */
-    public Integer getMaxSeatFromPlace(final Long roundId) {
-        return jpaQueryFactory
-                .select(place.maxSeat)
-                .from(place)
-                .leftJoin(round).on(place.id.eq(round.place.id))
-                .where(round.id.eq(roundId))
-                .fetchOne();
     }
 
     /**

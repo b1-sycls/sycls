@@ -62,13 +62,6 @@ public class PlaceHelper {
     }
 
     /**
-     * 공연장 최대 좌석 수 불러오기
-     */
-    public Integer getMaxSeatFromPlace(final Long roundId) {
-        return placeQueryRepository.getMaxSeatFromPlace(roundId);
-    }
-
-    /**
      * 공연장 최대 좌석 수 및 총 좌석수 불러오기
      */
     public void getMaxSeatAndSeatCount(final Long placeId) {
