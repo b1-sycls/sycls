@@ -90,7 +90,7 @@ public class PlaceService {
     /**
      * 공연장 삭제
      */
-    public void deletePlace(Long placeId) {
+    public void deletePlace(final Long placeId) {
         Place place = placeHelper.getPlace(placeId);
         PlaceStatus.checkDeleted(place.getStatus());
 
