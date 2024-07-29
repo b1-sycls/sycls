@@ -39,7 +39,8 @@ public class Place extends TimeStamp {
     private PlaceStatus status;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Place(String location, Integer maxSeat, String name, PlaceStatus status) {
+    private Place(final String location, final Integer maxSeat, final String name,
+            final PlaceStatus status) {
         this.location = location;
         this.maxSeat = maxSeat;
         this.name = name;

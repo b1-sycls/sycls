@@ -17,8 +17,8 @@ public class ReviewGetAllResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static ReviewGetAllResponseDto of(String email, String comment, Integer rating,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static ReviewGetAllResponseDto of(final String email, final String comment,
+            final Integer rating, final LocalDateTime createdAt, final LocalDateTime updatedAt) {
         return ReviewGetAllResponseDto.builder()
                 .email(email)
                 .comment(comment)

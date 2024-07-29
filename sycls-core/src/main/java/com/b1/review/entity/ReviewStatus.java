@@ -16,7 +16,7 @@ public enum ReviewStatus {
 
     private final String value;
 
-    public static void checkDeleted(ReviewStatus status) {
+    public static void checkDeleted(final ReviewStatus status) {
         if (status.equals(DISABLE)) {
             log.error("삭제된 상태. | {}", status);
             throw new ReviewAlreadyDeletedException(ReviewErrorCode.ALREADY_DELETED);
