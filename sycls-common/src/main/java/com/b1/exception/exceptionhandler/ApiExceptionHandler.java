@@ -1,5 +1,6 @@
 package com.b1.exception.exceptionhandler;
 
+import com.b1.exception.customexception.global.GlobalCannotAddExcpetion;
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
 import com.b1.exception.customexception.global.GlobalEntityInUseException;
 import com.b1.exception.customexception.global.GlobalInvalidException;
@@ -73,6 +74,14 @@ public class ApiExceptionHandler {
     protected ResponseEntity<ErrorResponseDto> globalReservationException(
             GlobalReservationException e) {
         log.error("GlobalReservationException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalCannotAddExcpetion.class)
+    protected ResponseEntity<ErrorResponseDto> globalCannotAddException(
+            GlobalCannotAddExcpetion e
+    ) {
+        log.error("GlobalCannotAddExcpetion 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 
