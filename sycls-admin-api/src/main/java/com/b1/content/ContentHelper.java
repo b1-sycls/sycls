@@ -91,4 +91,13 @@ public class ContentHelper {
             throw new ContentNotChangeStatusException(ContentErrorCode.CONTENT_NOT_CHANGE_STATUS);
         }
     }
+
+    /**
+     * 공연의 존재 유무 확인
+     */
+    public void checkContentById(Long contentId) {
+        if (!contentRepository.existsById(contentId)) {
+            throw new ContentNotFoundException(ContentErrorCode.CONTENT_NOT_FOUND);
+        }
+    }
 }
