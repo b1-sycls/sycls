@@ -1,5 +1,6 @@
 package com.b1.seatgrade;
 
+import com.b1.place.entity.PlaceStatus;
 import com.b1.place.entity.QPlace;
 import com.b1.round.dto.RoundSeatGradeStatusDto;
 import com.b1.round.entity.QRound;
@@ -117,7 +118,8 @@ public class SeatGradeQueryRepository {
                 .leftJoin(seatGrade.round, round)
                 .leftJoin(round.place, place)
                 .where(round.id.eq(roundId)
-                        .and(seatGrade.status.eq(SeatGradeStatus.ENABLE)))
+                        .and(seatGrade.status.eq(SeatGradeStatus.ENABLE)
+                                .and(place.status.eq(PlaceStatus.ENABLE))))
                 .fetchOne();
     }
 }
