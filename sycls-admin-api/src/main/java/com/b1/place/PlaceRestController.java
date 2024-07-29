@@ -64,7 +64,7 @@ public class PlaceRestController {
     }
 
     /**
-     * 공안장 정보 수정
+     * 공연장 정보 수정
      */
     @PatchMapping("/{placeId}")
     public ResponseEntity<RestApiResponseDto<Long>> updatePlace(
