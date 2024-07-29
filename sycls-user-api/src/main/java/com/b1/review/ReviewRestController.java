@@ -35,7 +35,7 @@ public class ReviewRestController {
     public ResponseEntity<RestApiResponseDto<String>> addReview(
             @PathVariable final Long contentId,
             @Valid @RequestBody final ReviewAddRequestDto requestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         reviewService.addReview(contentId, requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
@@ -68,7 +68,7 @@ public class ReviewRestController {
     public ResponseEntity<RestApiResponseDto<Long>> updateReview(
             @PathVariable final Long reviewId,
             @RequestBody final ReviewUpdateRequestDto requestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         Long response = reviewService.updateReview(reviewId, requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
@@ -81,7 +81,7 @@ public class ReviewRestController {
     @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<RestApiResponseDto<String>> deleteReview(
             @PathVariable final Long reviewId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         reviewService.deleteReview(reviewId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)

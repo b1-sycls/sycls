@@ -1,7 +1,9 @@
 package com.b1.content.entity;
 
 import com.b1.exception.customexception.ContentStatusEqualsException;
+import com.b1.exception.customexception.ReviewCannotAddException;
 import com.b1.exception.errorcode.ContentErrorCode;
+import com.b1.exception.errorcode.ReviewErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,13 @@ public enum ContentStatus {
 
     public static boolean isVisible(ContentStatus status) {
         return status.equals(VISIBLE);
+    }
+
+    public static void unVisible(ContentStatus status) {
+        if (!VISIBLE.equals(status)) {
+            log.error("리뷰 등록 불가능한 공연 | {}", status);
+            throw new ReviewCannotAddException(ReviewErrorCode.CANNOT_ADD_REVIEW);
+        }
     }
 
 }

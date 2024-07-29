@@ -95,8 +95,9 @@ public class ContentHelper {
     /**
      * 공연의 존재 유무 확인
      */
-    public void checkContentById(Long contentId) {
+    public void checkContentById(final Long contentId) {
         if (!contentRepository.existsById(contentId)) {
+            log.error("존재하지 않는 공연. | {}", contentId);
             throw new ContentNotFoundException(ContentErrorCode.CONTENT_NOT_FOUND);
         }
     }

@@ -52,6 +52,7 @@ public class ReviewHelper {
                 }
         );
         if (Objects.equals(review.getUser(), user)) {
+            log.error("일치하지 않는 사용자 | {}, {}", reviewId, user.getId());
             throw new ReviewerMisMatchException(ReviewErrorCode.MISMATCH_REVIEWER);
         }
         return review;

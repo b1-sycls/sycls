@@ -6,9 +6,7 @@ import com.b1.content.dto.ContentSearchCondRequest;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentStatus;
 import com.b1.exception.customexception.ContentNotFoundException;
-import com.b1.exception.customexception.ReviewCannotAddException;
 import com.b1.exception.errorcode.ContentErrorCode;
-import com.b1.exception.errorcode.ReviewErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,10 +57,7 @@ public class ContentHelper {
                     return new ContentNotFoundException(ContentErrorCode.CONTENT_NOT_FOUND);
                 }
         );
-        if (ContentStatus.VISIBLE.equals(content.getStatus())) {
-            log.error("리뷰 등록 불가능한 공연 | {}, {}", contentId, content.getStatus());
-            throw new ReviewCannotAddException(ReviewErrorCode.CANNOT_ADD_REVIEW);
-        }
+        ContentStatus.unVisible(content.getStatus());
         return content;
     }
 }
