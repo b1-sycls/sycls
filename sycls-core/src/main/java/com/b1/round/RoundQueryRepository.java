@@ -316,7 +316,6 @@ public class RoundQueryRepository {
      * 유저 상태 검증 조건 설정
      */
     private BooleanExpression statusNotClosed() {
-        return QRound.round.status.eq(RoundStatus.WAITING)
-                .or(QRound.round.status.eq(RoundStatus.AVAILABLE));
+        return QRound.round.status.eq(RoundStatus.CLOSED).not();
     }
 }

@@ -4,22 +4,22 @@ import com.b1.common.PageResponseDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.round.dto.RoundAddRequestDto;
 import com.b1.round.dto.RoundDetailResponseDto;
-import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.dto.RoundUpdateRequestDto;
 import com.b1.round.dto.RoundUpdateStatusRequestDto;
+import com.b1.round.entity.RoundStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j(topic = "Round Rest Controller")
@@ -81,17 +81,19 @@ public class RoundRestController {
     }
 
     /**
-     * 회차 전체 조회
+     * 공연장의 회차 전체 조회
      */
-    // 공연정보 상관없이 전체조회할 일이 있을지도 모른다고 생각해서 contentId를 동적쿼리화
-    // 공연정보에 해당하는 것만 불러온다면 PathVariable 로 변경
     @GetMapping("/rounds")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<RoundSimpleAdminResponseDto>>> getAllRounds(
-            @ModelAttribute final RoundSearchCondRequest request
+            @RequestParam(name = "contentId") final Long contentId,
+            @RequestParam(name = "status") final RoundStatus status,
+            @RequestParam(name = "page", defaultValue = "1") final int page,
+            @RequestParam(name = "sortProperty", defaultValue = "createdAt") final String sortProperty,
+            @RequestParam(name = "sortDirection", defaultValue = "DESC") final String sortDirection
     ) {
         PageResponseDto<RoundSimpleAdminResponseDto> responseDto = roundService.getAllRounds(
-                request);
+                contentId, status, page, sortProperty, sortDirection);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("전체 정보 조회 성공", responseDto));
+                .body(RestApiResponseDto.of("정보 조회 성공", responseDto));
     }
 }

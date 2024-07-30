@@ -4,7 +4,6 @@ import com.b1.common.PageResponseDto;
 import com.b1.round.dto.ContentAndRoundGetResponseDto;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
-import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleUserResponseDto;
 import com.b1.s3.S3Util;
 import com.b1.util.PageUtil;
@@ -47,18 +46,17 @@ public class RoundService {
      * 회차 전체 조회
      */
     @Transactional(readOnly = true)
-    public PageResponseDto<RoundSimpleUserResponseDto> getAllRounds(
-            final RoundSearchCondRequest request) {
+    public PageResponseDto<RoundSimpleUserResponseDto> getAllRounds(final Long contentId,
+            final int page, final String sortProperty, final String sortDirection) {
 
-        Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
-                request.getSortProperty());
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
 
-        PageUtil.checkPageNumber(request.getPage());
+        PageUtil.checkPageNumber(page);
 
-        Pageable pageable = PageRequest.of(request.getPage() - 1, 10, sort);
+        Pageable pageable = PageRequest.of(page - 1, 10, sort);
 
         Page<RoundSimpleUserResponseDto> pageResponseDto = roundHelper.getAllSimpleRoundsForUser(
-                request, pageable);
+                contentId, pageable);
 
         return PageResponseDto.of(pageResponseDto);
     }
