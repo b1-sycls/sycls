@@ -18,8 +18,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
@@ -51,26 +52,30 @@ public class WebSecurityConfig {
         return new JwtAuthorizationFilter(jwtProvider, userDetailsService);
     }
 
+    // CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        configuration.addExposedHeader("Authorization"); // 클라이언트에서 접근할 수 있게 허용할 헤더 추가
+        configuration.addExposedHeader("RefreshToken"); // 클라이언트에서 접근할 수 있게 허용할 헤더 추가
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
         http.csrf((csrf) -> csrf.disable());
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
-        http.cors(
-                corsConfigurer -> corsConfigurer.configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                        CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(
-                                Collections.singletonList("http://localhost:9090"));
-                        config.setAllowedMethods(Collections.singletonList("*"));
-                        config.setAllowCredentials(true);
-                        config.setAllowedHeaders(Collections.singletonList("*"));
-                        config.setMaxAge(3600L); //1시간
-                        return config;
-                    }
-                }));
+        http.cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()));
+
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -96,7 +101,6 @@ public class WebSecurityConfig {
                         .requestMatchers("/v1/payment/confirm").permitAll()
                         .requestMatchers("/v1/payment/success").permitAll()
                         .requestMatchers("/v1/payment/fail/**").permitAll()
-                        .requestMatchers("/v1/payment/client-key").permitAll()
 
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
