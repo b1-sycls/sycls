@@ -1,11 +1,7 @@
 package com.b1.reservation;
 
 import com.b1.globalresponse.RestApiResponseDto;
-import com.b1.reservation.dto.ReservationGetRequestDto;
-import com.b1.reservation.dto.ReservationGetResponseDto;
-import com.b1.reservation.dto.ReservationReleaseRequestDto;
-import com.b1.reservation.dto.ReservationReserveRequestDto;
-import com.b1.reservation.dto.ReservationReserveResponseDto;
+import com.b1.reservation.dto.*;
 import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +50,22 @@ public class ReservationRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
     }
+
+    /**
+     * 예매 상세 조회
+     */
+    @GetMapping("/reservations/reserve/detail")
+    public ResponseEntity<RestApiResponseDto<ReservationGetDetailResponseDto>> getReservationDetail(
+            @Valid @RequestBody final ReservationGetDetailRequestDto requestDto,
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
+    ) {
+        ReservationGetDetailResponseDto responseDto = reservationService.getReservationDetail(
+                requestDto,
+                userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of(responseDto));
+    }
+
 
     /**
      * 예매 취소

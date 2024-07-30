@@ -1,5 +1,7 @@
 package com.b1.reservation;
 
+import com.b1.reservation.dto.ReservationGetDetailRequestDto;
+import com.b1.reservation.dto.ReservationGetDetailResponseDto;
 import com.b1.reservation.dto.ReservationGetRequestDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
 import com.b1.reservation.dto.ReservationReleaseRequestDto;
@@ -12,8 +14,12 @@ import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.user.entity.User;
+
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -75,6 +81,21 @@ public class ReservationService {
                 .getSeatReservationLogsByUser(user);
 
         return ReservationGetResponseDto.of(selectedRound, findSeatGradeReservationLogs);
+    }
+
+    /**
+     * 예매 상세 조회
+     */
+    @Transactional(readOnly = true)
+    public ReservationGetDetailResponseDto getReservationDetail(
+            final ReservationGetDetailRequestDto requestDto,
+            final User user
+    ) {
+        Round round = roundHelper.getRound(requestDto.roundId());
+        Map<String, List<SeatGradeReservationLog>> map = seatGradeReservationLogHelper.
+                getSeatReservationLogsBySeatGrade(user);
+
+        return ReservationGetDetailResponseDto.of(round.getId(), map);
     }
 
     /**
