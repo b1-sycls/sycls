@@ -1,6 +1,5 @@
 package com.b1.reservation;
 
-import com.b1.reservation.dto.ReservationGetDetailRequestDto;
 import com.b1.reservation.dto.ReservationGetDetailResponseDto;
 import com.b1.reservation.dto.ReservationGetRequestDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
@@ -9,21 +8,20 @@ import com.b1.reservation.dto.ReservationReserveRequestDto;
 import com.b1.reservation.dto.ReservationReserveResponseDto;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
-import com.b1.seatgrade.SeatGradeReservationLogHelper;
-import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.seatgrade.SeatGradeHelper;
+import com.b1.seatgrade.SeatGradeReservationLogHelper;
 import com.b1.seatgrade.entity.SeatGrade;
+import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.user.entity.User;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j(topic = "Reservation Service")
 @Service
@@ -88,14 +86,12 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public ReservationGetDetailResponseDto getReservationDetail(
-            final ReservationGetDetailRequestDto requestDto,
             final User user
     ) {
-        Round round = roundHelper.getRound(requestDto.roundId());
         Map<String, List<SeatGradeReservationLog>> map = seatGradeReservationLogHelper.
                 getSeatReservationLogsBySeatGrade(user);
 
-        return ReservationGetDetailResponseDto.of(round.getId(), map);
+        return ReservationGetDetailResponseDto.of(map);
     }
 
     /**

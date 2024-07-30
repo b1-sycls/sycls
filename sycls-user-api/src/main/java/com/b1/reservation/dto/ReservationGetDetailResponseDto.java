@@ -15,11 +15,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReservationGetDetailResponseDto {
 
-    private Long roundId;
     private List<SeatGradeReservationDto> seatInfos;
 
     public static ReservationGetDetailResponseDto of(
-            final Long roundId,
             final Map<String, List<SeatGradeReservationLog>> seatInfos
     ) {
         List<SeatGradeReservationDto> convertedSeatInfos = seatInfos.entrySet().stream()
@@ -35,7 +33,6 @@ public class ReservationGetDetailResponseDto {
 
         // Build and return the ReservationGetDetailResponseDto instance
         return ReservationGetDetailResponseDto.builder()
-                .roundId(roundId)
                 .seatInfos(convertedSeatInfos)
                 .build();
     }

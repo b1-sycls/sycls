@@ -5,6 +5,7 @@ import com.b1.reservation.dto.*;
 import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
@@ -56,11 +58,10 @@ public class ReservationRestController {
      */
     @GetMapping("/reservations/reserve/detail")
     public ResponseEntity<RestApiResponseDto<ReservationGetDetailResponseDto>> getReservationDetail(
-            @Valid @RequestBody final ReservationGetDetailRequestDto requestDto,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
+        log.info("상세 조회");
         ReservationGetDetailResponseDto responseDto = reservationService.getReservationDetail(
-                requestDto,
                 userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
