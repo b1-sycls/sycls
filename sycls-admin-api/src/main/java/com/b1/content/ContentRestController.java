@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class ContentRestController {
 
     private final ContentService contentService;
-    private String titleKeyword = "";
 
     /**
      * 공연 등록 기능
