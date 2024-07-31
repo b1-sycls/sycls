@@ -62,26 +62,18 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/favicon.ico").permitAll()
-
-                        // 정적 파일
-                        .requestMatchers("/static/**").permitAll()
-                        .requestMatchers("/templates/**").permitAll()
-                        .requestMatchers("/static/css/**").permitAll()
 
                         .requestMatchers("/v1/users/signup").permitAll()
                         .requestMatchers("/v1/auth/login").permitAll()
                         //임시 권한 수정
                         .requestMatchers("/v1/users/**").permitAll()
                         .requestMatchers("/v1/auth/**").permitAll()
-                        // Payment
-                        .requestMatchers("/v1/payment").permitAll()
-                        .requestMatchers("/v1/payment/confirm").permitAll()
-                        .requestMatchers("/v1/payment/success").permitAll()
-                        .requestMatchers("/v1/payment/fail/**").permitAll()
 
                         // Place
                         .requestMatchers("/v1/places/**").permitAll()
+                        
+                        // Seat
+                        .requestMatchers("/v1/places/{placeId}/seats").permitAll()
 
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
