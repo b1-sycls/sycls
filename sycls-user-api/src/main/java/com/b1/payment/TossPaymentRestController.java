@@ -4,6 +4,7 @@ import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.payment.dto.ClientResponseDto;
 import com.b1.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,10 +20,10 @@ public class TossPaymentRestController {
 
     @PostMapping("/payment/client-key")
     public ResponseEntity<RestApiResponseDto<ClientResponseDto>> getClientKey(
-            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
+
         ClientResponseDto responseDto = tossPaymentService.getClientKey();
-        return ResponseEntity.status(200)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
     }
 
