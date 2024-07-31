@@ -59,7 +59,7 @@ public class Place extends TimeStamp {
                 .location(location)
                 .maxSeat(maxSeat)
                 .name(name)
-                .status(PlaceStatus.ENABLE)
+                .status(PlaceStatus.DISABLE)
                 .build();
     }
 

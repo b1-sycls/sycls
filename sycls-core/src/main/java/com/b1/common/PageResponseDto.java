@@ -20,7 +20,7 @@ public class PageResponseDto<T> {
 
     public static <T> PageResponseDto<T> of(final Page<T> page) {
         return PageResponseDto.<T>builder()
-                .currentPage(page.getNumber())
+                .currentPage(page.getNumber() + 1)
                 .totalPage(page.getTotalPages())
                 .totalElements(page.getTotalElements())
                 .hasNextPage(page.hasNext())
