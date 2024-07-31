@@ -7,7 +7,6 @@ import com.b1.security.JwtLogoutSuccessHandler;
 import com.b1.security.JwtProvider;
 import com.b1.security.UserDetailsServiceImpl;
 import com.b1.user.UserHelper;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +24,8 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
@@ -88,24 +89,18 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                        .permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/favicon.ico").permitAll()
-
+                        .permitAll()
                         // 정적 파일
-                        .requestMatchers("/static/**").permitAll()
-                        .requestMatchers("/templates/**").permitAll()
-                        .requestMatchers("/static/css/**").permitAll()
+//                        .requestMatchers("/favicon.ico").permitAll()
+//                        .requestMatchers("/static/**").permitAll()
+//                        .requestMatchers("/templates/**").permitAll()
+//                        .requestMatchers("/static/css/**").permitAll()
 
                         .requestMatchers("/v1/users/signup").permitAll()
                         .requestMatchers("/v1/auth/login").permitAll()
                         //임시 권한 수정
                         .requestMatchers("/v1/users/**").permitAll()
                         .requestMatchers("/v1/auth/**").permitAll()
-                        // Payment
-                        .requestMatchers("/v1/payment").permitAll()
-                        .requestMatchers("/v1/payment/confirm").permitAll()
-                        .requestMatchers("/v1/payment/success").permitAll()
-                        .requestMatchers("/v1/payment/fail/**").permitAll()
 
                         .requestMatchers("/error").permitAll()
 

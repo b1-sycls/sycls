@@ -1,14 +1,11 @@
 package com.b1.reservation;
 
 import com.b1.globalresponse.RestApiResponseDto;
-import com.b1.reservation.dto.ReservationGetRequestDto;
-import com.b1.reservation.dto.ReservationGetResponseDto;
-import com.b1.reservation.dto.ReservationReleaseRequestDto;
-import com.b1.reservation.dto.ReservationReserveRequestDto;
-import com.b1.reservation.dto.ReservationReserveResponseDto;
+import com.b1.reservation.dto.*;
 import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
@@ -54,6 +52,21 @@ public class ReservationRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
     }
+
+    /**
+     * 예매 상세 조회
+     */
+    @GetMapping("/reservations/reserve/detail")
+    public ResponseEntity<RestApiResponseDto<ReservationGetDetailResponseDto>> getReservationDetail(
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
+    ) {
+        log.info("상세 조회");
+        ReservationGetDetailResponseDto responseDto = reservationService.getReservationDetail(
+                userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of(responseDto));
+    }
+
 
     /**
      * 예매 취소
