@@ -96,11 +96,6 @@ public class WebSecurityConfig {
                         //임시 권한 수정
                         .requestMatchers("/v1/users/**").permitAll()
                         .requestMatchers("/v1/auth/**").permitAll()
-                        // Payment
-                        .requestMatchers("/v1/payment").permitAll()
-                        .requestMatchers("/v1/payment/confirm").permitAll()
-                        .requestMatchers("/v1/payment/success").permitAll()
-                        .requestMatchers("/v1/payment/fail/**").permitAll()
 
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()

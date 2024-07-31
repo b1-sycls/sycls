@@ -51,7 +51,9 @@ public class SeatGradeReservationDto {
         Map<Long, String> seatGradeMap = logs.stream()
                 .collect(Collectors.toMap(
                         srl -> srl.getSeatGrade().getId(),
-                        srl -> srl.getSeatGrade().getSeat().getCode()));
+                        srl -> srl.getSeatGrade().getSeat().getCode(),
+                        (existing, replacement) -> existing // 중복 발생 시 기존 값을 사용
+                ));
 
         return SeatGradeReservationDto.builder()
                 .seatGradeType(seatGradeType)
@@ -61,6 +63,6 @@ public class SeatGradeReservationDto {
                 .seatGradeIds(seatGradeMap.keySet())
                 .seatCodes(new HashSet<>(seatGradeMap.values()))
                 .build();
-
     }
+
 }
