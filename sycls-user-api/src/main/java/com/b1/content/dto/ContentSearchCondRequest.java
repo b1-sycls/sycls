@@ -3,6 +3,7 @@ package com.b1.content.dto;
 import lombok.Getter;
 
 @Getter
+@Deprecated
 public class ContentSearchCondRequest {
 
     private Long categoryId;

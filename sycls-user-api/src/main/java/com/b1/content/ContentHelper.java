@@ -2,7 +2,6 @@ package com.b1.content;
 
 import com.b1.content.dto.ContentDetailImagePathGetUserResponseDto;
 import com.b1.content.dto.ContentGetUserResponseDto;
-import com.b1.content.dto.ContentSearchCondRequest;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentStatus;
 import com.b1.exception.customexception.ContentNotFoundException;
@@ -40,11 +39,9 @@ public class ContentHelper {
     /**
      * 단일 조회시 필요한 공연의 회차 정보 페이징
      */
-    public Page<ContentGetUserResponseDto> getAllContentForAdmin(
-            final ContentSearchCondRequest request,
-            final Pageable pageable) {
-        return contentQueryRepository.getAllContentForUser(request.getCategoryId(),
-                request.getTitleKeyword(), pageable);
+    public Page<ContentGetUserResponseDto> getAllContentForUser(final Long categoryId,
+            final String titleKeyword, final Pageable pageable) {
+        return contentQueryRepository.getAllContentForUser(categoryId, titleKeyword, pageable);
     }
 
     /**

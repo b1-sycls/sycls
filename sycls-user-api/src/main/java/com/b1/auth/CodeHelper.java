@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CodeHelper {
 
-    private CodeRepository codeRepository;
+    private final CodeRepository codeRepository;
 
     public String findCodeByEmail(String email) {
         return codeRepository.findById(email).orElseThrow(() -> {

@@ -1,12 +1,19 @@
 package com.b1.config;
 
-import com.b1.security.*;
+import com.b1.security.JwtAuthenticationFilter;
+import com.b1.security.JwtAuthorizationFilter;
+import com.b1.security.JwtLogoutHandler;
+import com.b1.security.JwtLogoutSuccessHandler;
+import com.b1.security.JwtProvider;
+import com.b1.security.UserDetailsServiceImpl;
 import com.b1.user.UserHelper;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +28,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
@@ -83,7 +91,8 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                        .permitAll() // resources 접근 허용 설정
                         .requestMatchers("/favicon.ico").permitAll()
 
                         // 정적 파일
@@ -98,6 +107,20 @@ public class WebSecurityConfig {
                         .requestMatchers("/v1/auth/**").permitAll()
 
                         .requestMatchers("/error").permitAll()
+
+                        // Content
+                        .requestMatchers(HttpMethod.GET, "/v1/contents/**").permitAll()
+
+                        // Category
+                        .requestMatchers(HttpMethod.GET, "/v1/categories").permitAll()
+
+                        // Cast
+                        .requestMatchers(HttpMethod.GET, "/v1/casts").permitAll()
+
+                        // Round
+                        .requestMatchers(HttpMethod.GET, "/v1/rounds/**").permitAll()
+
+                        // ETC .. 필요한거 추가해서 사용하세요
                         .anyRequest().authenticated()
         );
 

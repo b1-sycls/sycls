@@ -4,6 +4,7 @@ import com.b1.content.entity.ContentStatus;
 import lombok.Getter;
 
 @Getter
+@Deprecated
 public class ContentSearchCondRequest {
 
     private Long categoryId;

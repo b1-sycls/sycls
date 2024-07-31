@@ -7,7 +7,6 @@ import com.b1.content.dto.ContentAddRequestDto;
 import com.b1.content.dto.ContentDetailImagePathGetAdminResponseDto;
 import com.b1.content.dto.ContentDetailResponseDto;
 import com.b1.content.dto.ContentGetAdminResponseDto;
-import com.b1.content.dto.ContentSearchCondRequest;
 import com.b1.content.dto.ContentUpdateRequestDto;
 import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.content.entity.Content;
@@ -155,18 +154,18 @@ public class ContentService {
      * 공연 전체 조회 기능
      */
     @Transactional(readOnly = true)
-    public PageResponseDto<ContentGetAdminResponseDto> getAllContents(
-            final ContentSearchCondRequest request) {
+    public PageResponseDto<ContentGetAdminResponseDto> getAllContents(final Long categoryId,
+            final String titleKeyword, final ContentStatus status, final int page,
+            final String sortProperty, final String sortDirection) {
 
-        Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
-                request.getSortProperty());
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
 
-        PageUtil.checkPageNumber(request.getPage());
+        PageUtil.checkPageNumber(page);
 
-        Pageable pageable = PageRequest.of(request.getPage() - 1, 4, sort);
+        Pageable pageable = PageRequest.of(page - 1, 4, sort);
 
         Page<ContentGetAdminResponseDto> pageResponseDto = contentHelper.getAllContentForAdmin(
-                request, pageable);
+                categoryId, titleKeyword, status, pageable);
 
         for (ContentGetAdminResponseDto dto : pageResponseDto) {
             dto.updateImagePath(S3Util.makeResponseImageDir(dto.getMainImagePath()));

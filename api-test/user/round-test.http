@@ -7,4 +7,4 @@ GET localhost:8080/v1/rounds/{{roundId}}/detail
 GET localhost:8080/v1/rounds/{{roundId}}
 
 ### 회차 전체 조회
-GET localhost:8080/v1/rounds
+GET localhost:8080/v1/rounds?contentId=1&page=1
