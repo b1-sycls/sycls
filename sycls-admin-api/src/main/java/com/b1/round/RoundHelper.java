@@ -6,7 +6,6 @@ import com.b1.exception.errorcode.PlaceErrorCode;
 import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
-import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
@@ -68,10 +67,9 @@ public class RoundHelper {
     /**
      * 회차 목록 정보 반환
      */
-    public Page<RoundSimpleAdminResponseDto> getAllSimpleRoundsForAdmin(
-            final RoundSearchCondRequest request, final Pageable pageable) {
-        return roundQueryRepository.getAllSimpleRoundsForAdmin(request.getContentId(),
-                request.getStatus(), pageable);
+    public Page<RoundSimpleAdminResponseDto> getAllSimpleRoundsForAdmin(final Long contentId,
+            final RoundStatus status, final Pageable pageable) {
+        return roundQueryRepository.getAllSimpleRoundsForAdmin(contentId, status, pageable);
     }
 
     /**

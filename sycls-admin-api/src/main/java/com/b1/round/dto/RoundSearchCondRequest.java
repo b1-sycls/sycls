@@ -4,6 +4,7 @@ import com.b1.round.entity.RoundStatus;
 import lombok.Getter;
 
 @Getter
+@Deprecated
 public class RoundSearchCondRequest {
 
     private Long contentId;

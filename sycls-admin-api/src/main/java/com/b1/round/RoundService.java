@@ -13,7 +13,6 @@ import com.b1.place.entity.Place;
 import com.b1.round.dto.RoundAddRequestDto;
 import com.b1.round.dto.RoundDetailInfoAdminResponseDto;
 import com.b1.round.dto.RoundDetailResponseDto;
-import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSeatGradeStatusDto;
 import com.b1.round.dto.RoundSimpleAdminResponseDto;
 import com.b1.round.dto.RoundUpdateRequestDto;
@@ -154,18 +153,18 @@ public class RoundService {
      * 회차 상세조회
      */
     @Transactional(readOnly = true)
-    public PageResponseDto<RoundSimpleAdminResponseDto> getAllRounds(
-            final RoundSearchCondRequest request) {
+    public PageResponseDto<RoundSimpleAdminResponseDto> getAllRounds(final Long contentId,
+            final RoundStatus status, final int page, final String sortProperty,
+            final String sortDirection) {
 
-        Sort sort = Sort.by(Sort.Direction.fromString(request.getSortDirection()),
-                request.getSortProperty());
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortProperty);
 
-        PageUtil.checkPageNumber(request.getPage());
+        PageUtil.checkPageNumber(page);
 
-        Pageable pageable = PageRequest.of(request.getPage() - 1, 10, sort);
+        Pageable pageable = PageRequest.of(page - 1, 10, sort);
 
         Page<RoundSimpleAdminResponseDto> pageResponseDto = roundHelper.getAllSimpleRoundsForAdmin(
-                request, pageable);
+                contentId, status, pageable);
 
         return PageResponseDto.of(pageResponseDto);
     }

@@ -5,7 +5,6 @@ import com.b1.exception.errorcode.RoundErrorCode;
 import com.b1.round.dto.ContentAndRoundGetResponseDto;
 import com.b1.round.dto.RoundDetailInfoUserResponseDto;
 import com.b1.round.dto.RoundInfoGetUserResponseDto;
-import com.b1.round.dto.RoundSearchCondRequest;
 import com.b1.round.dto.RoundSimpleUserResponseDto;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
@@ -24,6 +23,9 @@ public class RoundHelper {
     private final RoundRepository roundRepository;
     private final RoundQueryRepository roundQueryRepository;
 
+    /**
+     * 공연 단일 조회에 필요한 회차 조회
+     */
     public List<RoundInfoGetUserResponseDto> getAllRoundsInfoByContentId(final Long contentId) {
         return roundQueryRepository.getAllRoundsInfoByContentIdForUser(contentId);
     }
@@ -53,9 +55,9 @@ public class RoundHelper {
     /**
      * 회차 목록 조회
      */
-    public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(
-            final RoundSearchCondRequest request, final Pageable pageable) {
-        return roundQueryRepository.getAllSimpleRoundsForUser(request.getContentId(), pageable);
+    public Page<RoundSimpleUserResponseDto> getAllSimpleRoundsForUser(final Long contentId,
+            final Pageable pageable) {
+        return roundQueryRepository.getAllSimpleRoundsForUser(contentId, pageable);
     }
 
     /**
