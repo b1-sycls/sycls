@@ -82,8 +82,6 @@ public class PlaceQueryRepository {
                         place.id.eq(placeId),
                         seat.status.eq(SeatStatus.ENABLE)
                 )
-                .orderBy()
-                .groupBy()
                 .fetchOne();
     }
 
