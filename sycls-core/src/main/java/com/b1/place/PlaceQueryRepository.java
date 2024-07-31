@@ -5,6 +5,7 @@ import static com.b1.seat.entity.QSeat.seat;
 
 import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.place.dto.PlaceGetResponseDto;
+import com.b1.place.entity.PlaceStatus;
 import com.b1.seat.entity.SeatStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -24,8 +25,12 @@ public class PlaceQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    public Page<PlaceGetResponseDto> getAllPlaces(final String location, final String name,
-            final Integer maxSeat, final Pageable pageable) {
+    public Page<PlaceGetResponseDto> getAllPlaces(
+            final String location,
+            final String name,
+            final PlaceStatus status,
+            final Pageable pageable
+    ) {
 
         List<PlaceGetResponseDto> placeList = jpaQueryFactory
                 .select(Projections.constructor
@@ -41,9 +46,10 @@ public class PlaceQueryRepository {
                 .where(
                         locationLike(location),
                         nameLike(name),
-                        maxSeatEq(maxSeat)
+                        statusEq(status)
                 )
-                .offset(pageable.getOffset()) //TODO NO offset 구조로 변경 예정
+                .orderBy(place.status.desc(), place.createdAt.desc())
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
@@ -52,8 +58,7 @@ public class PlaceQueryRepository {
                 .from(place)
                 .where(
                         locationLike(location),
-                        nameLike(name),
-                        maxSeatEq(maxSeat)
+                        nameLike(name)
                 );
 
         return PageableExecutionUtils.getPage(placeList, pageable, total::fetchOne);
@@ -81,14 +86,14 @@ public class PlaceQueryRepository {
     }
 
     private BooleanExpression locationLike(final String location) {
-        return StringUtils.hasText(location) ? place.location.like(location) : null;
+        return StringUtils.hasText(location) ? place.location.contains(location) : null;
     }
 
     private BooleanExpression nameLike(final String name) {
-        return StringUtils.hasText(name) ? place.name.like(name) : null;
+        return StringUtils.hasText(name) ? place.name.contains(name) : null;
     }
 
-    private BooleanExpression maxSeatEq(final Integer maxSeat) {
-        return maxSeat != null ? place.maxSeat.eq(maxSeat) : null;
+    private BooleanExpression statusEq(final PlaceStatus status) {
+        return status != null ? place.status.eq(status) : null;
     }
 }

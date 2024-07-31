@@ -33,10 +33,16 @@ public class PlaceHelper {
     /**
      * 공연장 전체 조회
      */
-    public Page<PlaceGetResponseDto> getAllPlaces(final PlaceSearchCondRequestDto requestDto,
-            final Pageable pageable) {
-        return placeQueryRepository.getAllPlaces(requestDto.getLocation(),
-                requestDto.getName(), requestDto.getMaxSeat(), pageable);
+    public Page<PlaceGetResponseDto> getAllPlaces(
+            final PlaceSearchCondRequestDto requestDto,
+            final Pageable pageable
+    ) {
+        return placeQueryRepository.getAllPlaces(
+                requestDto.getLocation(),
+                requestDto.getName(),
+                requestDto.getStatus(),
+                pageable
+        );
     }
 
     /**
