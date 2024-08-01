@@ -14,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +45,11 @@ public class PlaceService {
     @Transactional(readOnly = true)
     public PageResponseDto<PlaceGetResponseDto> getAllPlaces(
             final PlaceSearchCondRequestDto requestDto) {
-        Sort.Direction direction = requestDto.getIsDesc() ? Direction.DESC : Direction.ASC;
         PageUtil.checkPageNumber(requestDto.getPageNum());
-        Pageable pageable = PageRequest.of(requestDto.getPageNum() - 1, requestDto.getPageSize(),
-                direction, requestDto.getOrderBy());
+        Pageable pageable = PageRequest.of(
+                requestDto.getPageNum() - 1,
+                8
+        );
 
         Page<PlaceGetResponseDto> pageResponseDto = placeHelper.getAllPlaces(requestDto, pageable);
         return PageResponseDto.of(pageResponseDto);
