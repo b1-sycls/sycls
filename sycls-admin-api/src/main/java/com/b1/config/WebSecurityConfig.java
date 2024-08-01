@@ -65,8 +65,21 @@ public class WebSecurityConfig {
                         //임시 권한 수정
                         .requestMatchers("/v1/users/**").permitAll()
                         .requestMatchers("/v1/auth/**").permitAll()
+                        // Payment
+                        .requestMatchers("/v1/payment").permitAll()
+                        .requestMatchers("/v1/payment/confirm").permitAll()
+                        .requestMatchers("/v1/payment/success").permitAll()
+                        .requestMatchers("/v1/payment/fail/**").permitAll()
 
-                        .requestMatchers("/v1/**").permitAll() // 로그인페이지 전까지 임시
+                        // Place
+                        .requestMatchers("/v1/places/**").permitAll()
+
+                        // Seat
+                        .requestMatchers("/v1/places/{placeId}/seats").permitAll()
+                        .requestMatchers("/error").permitAll()
+
+                        .requestMatchers("/v1/**").permitAll() // 로그인 전까지 임시
+
                         // ETC .. 필요한거 추가해서 사용하세요
                         .anyRequest().authenticated()
         );
