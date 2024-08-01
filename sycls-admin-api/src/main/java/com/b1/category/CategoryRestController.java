@@ -72,7 +72,7 @@ public class CategoryRestController {
     /**
      * 카테고리 전체조회
      */
-    @GetMapping("/v1/categories")
+    @GetMapping("/categories")
     public ResponseEntity<RestApiResponseDto<List<CategoryGetAdminResponseDto>>> getAllCategory() {
         List<CategoryGetAdminResponseDto> responseDtoList = categoryService.getAllCategory();
         return ResponseEntity.status(HttpStatus.OK)
