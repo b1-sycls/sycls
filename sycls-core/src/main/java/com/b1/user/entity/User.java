@@ -54,7 +54,7 @@ public class User extends TimeStamp {
 
     @Builder(access = AccessLevel.PRIVATE)
     private User(String email, String username, String nickname, String password,
-                 String phoneNumber, UserStatus status, UserLoginType type, UserRole role) {
+            String phoneNumber, UserStatus status, UserLoginType type, UserRole role) {
         this.email = email;
         this.username = username;
         this.nickname = nickname;
@@ -66,7 +66,7 @@ public class User extends TimeStamp {
     }
 
     public static User addCustomer(String email, String username, String nickname, String password,
-                                   String phoneNumber) {
+            String phoneNumber, UserRole role) {
         return User.builder()
                 .email(email)
                 .username(username)
@@ -75,7 +75,7 @@ public class User extends TimeStamp {
                 .phoneNumber(phoneNumber)
                 .status(UserStatus.ACTIVE)
                 .type(UserLoginType.COMMON)
-                .role(UserRole.USER)
+                .role(role)
                 .build();
     }
 

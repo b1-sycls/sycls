@@ -29,10 +29,17 @@ public class UserService {
 
     private final UserHelper userHelper;
     private final AuthService authService;
-
     private final PasswordEncoder passwordEncoder;
 
+    private final String adminKey = "7JeQ67iM66as7Yuw7LyT7Ja065Oc66+87YKk";
+
     public void signup(final UserSignupRequestDto requestDto) {
+        //관리자 키 인증
+        if (!this.adminKey.equals(requestDto.adminKey())) {
+            log.error("관리자 키 불일치");
+            throw new IllegalArgumentException("관리자 키가 일치하지 않습니다.");
+        }
+
         // 이메일 중복 검사
         if (userHelper.checkEmailExists(requestDto.email())) {
             log.error("이메일 중복 | email : {}", requestDto.email());
@@ -56,7 +63,7 @@ public class UserService {
                 requestDto.nickname(),
                 passwordEncoder.encode(requestDto.password()),
                 requestDto.phoneNumber(),
-                UserRole.USER
+                UserRole.ADMIN
         );
 
         userHelper.addUser(user);

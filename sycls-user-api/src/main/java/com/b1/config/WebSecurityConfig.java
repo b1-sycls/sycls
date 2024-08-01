@@ -7,6 +7,7 @@ import com.b1.security.JwtLogoutSuccessHandler;
 import com.b1.security.JwtProvider;
 import com.b1.security.UserDetailsServiceImpl;
 import com.b1.user.UserHelper;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +25,6 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
@@ -87,37 +86,40 @@ public class WebSecurityConfig {
         );
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
-                authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                        .permitAll()
-                        // 정적 파일
+                        authorizeHttpRequests
+                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                                .permitAll()
+                                // 정적 파일
 //                        .requestMatchers("/favicon.ico").permitAll()
 //                        .requestMatchers("/static/**").permitAll()
 //                        .requestMatchers("/templates/**").permitAll()
 //                        .requestMatchers("/static/css/**").permitAll()
+                                .requestMatchers("/v1/users/signup").permitAll()
+                                .requestMatchers("/v1/auth/login").permitAll()
 
-                        .requestMatchers("/v1/users/signup").permitAll()
-                        .requestMatchers("/v1/auth/login").permitAll()
-                        //임시 권한 수정
-                        .requestMatchers("/v1/users/**").permitAll()
-                        .requestMatchers("/v1/auth/**").permitAll()
+                                .requestMatchers("/v1/auth/send-verification-code").permitAll()
+                                .requestMatchers("/v1/auth/check-verification-code").permitAll()
+                                .requestMatchers("/v1/auth/forget-email").permitAll()
+                                .requestMatchers("/v1/auth/forget-password").permitAll()
 
-                        .requestMatchers("/error").permitAll()
+                                .requestMatchers("/v1/email/check").permitAll()
+                                .requestMatchers("/v1/nickname/check").permitAll()
+                                .requestMatchers("/error").permitAll()
 
-                        // Content
-                        .requestMatchers(HttpMethod.GET, "/v1/contents/**").permitAll()
+                                // Content
+                                .requestMatchers(HttpMethod.GET, "/v1/contents/**").permitAll()
 
-                        // Category
-                        .requestMatchers(HttpMethod.GET, "/v1/categories").permitAll()
+                                // Category
+                                .requestMatchers(HttpMethod.GET, "/v1/categories").permitAll()
 
-                        // Cast
-                        .requestMatchers(HttpMethod.GET, "/v1/casts").permitAll()
+                                // Cast
+                                .requestMatchers(HttpMethod.GET, "/v1/casts").permitAll()
 
-                        // Round
-                        .requestMatchers(HttpMethod.GET, "/v1/rounds/**").permitAll()
+                                // Round
+                                .requestMatchers(HttpMethod.GET, "/v1/rounds/**").permitAll()
 
-                        // ETC .. 필요한거 추가해서 사용하세요
-                        .anyRequest().authenticated()
+                                // ETC .. 필요한거 추가해서 사용하세요
+                                .anyRequest().authenticated()
         );
 
         http.logout(logout ->
