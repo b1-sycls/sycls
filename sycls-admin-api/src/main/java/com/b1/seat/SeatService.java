@@ -11,7 +11,6 @@ import com.b1.seat.dto.SeatUpdateRequestDto;
 import com.b1.seat.entity.Seat;
 import com.b1.seat.entity.SeatStatus;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,12 +36,10 @@ public class SeatService {
         seatHelper.checkMaxSeatAndSeatCount(placeId);
 
         // 좌석 등록 시 중복되는 좌석코드가 있는지 확인(해당 공연장에)
-        seatHelper.checkForAddSeat(placeId, requestDto.codeList());
+        seatHelper.checkForAddSeat(placeId, requestDto.code());
 
-        Set<Seat> seatSet = requestDto.codeList().stream()
-                .map(code -> Seat.addSeat(code, place))
-                .collect(Collectors.toSet());
-        seatHelper.saveSeats(seatSet);
+        Seat seat = Seat.addSeat(requestDto.code(), place);
+        seatHelper.saveSeats(seat);
     }
 
     /**
@@ -77,7 +74,7 @@ public class SeatService {
         // 수정 시 중복되는 좌석코드가 존재하는지 확인(해당 공연장에)
         seatHelper.checkForUpdateSeat(requestDto.placeId(), requestDto.code());
 
-        seat.updateSeat(requestDto.code(), requestDto.status());
+        seat.updateSeat(requestDto.code());
         return seat.getId();
     }
 
