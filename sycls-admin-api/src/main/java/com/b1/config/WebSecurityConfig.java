@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,14 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-            throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
+    // 테스트용 설정 이거 없으면 admin api 막힘
     // CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -62,20 +53,34 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll() // resources 접근 허용 설정
+                        .requestMatchers("/favicon.ico").permitAll()
+
+                        // 정적 파일
+                        .requestMatchers("/static/**").permitAll()
+                        .requestMatchers("/templates/**").permitAll()
+                        .requestMatchers("/static/css/**").permitAll()
 
                         .requestMatchers("/v1/users/signup").permitAll()
                         .requestMatchers("/v1/auth/login").permitAll()
                         //임시 권한 수정
                         .requestMatchers("/v1/users/**").permitAll()
                         .requestMatchers("/v1/auth/**").permitAll()
+                        // Payment
+                        .requestMatchers("/v1/payment").permitAll()
+                        .requestMatchers("/v1/payment/confirm").permitAll()
+                        .requestMatchers("/v1/payment/success").permitAll()
+                        .requestMatchers("/v1/payment/fail/**").permitAll()
 
                         // Place
                         .requestMatchers("/v1/places/**").permitAll()
-                        
+
                         // Seat
                         .requestMatchers("/v1/places/{placeId}/seats").permitAll()
-
                         .requestMatchers("/error").permitAll()
+
+                        .requestMatchers("/v1/**").permitAll() // 로그인 전까지 임시
+
+                        // ETC .. 필요한거 추가해서 사용하세요
                         .anyRequest().authenticated()
         );
 
