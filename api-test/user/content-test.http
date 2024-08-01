@@ -1,4 +1,4 @@
-@contentId = 1
+@contentId = 8
 
 ### 공연 단일 조회
 GET http://localhost:8080/v1/contents/{{contentId}}
