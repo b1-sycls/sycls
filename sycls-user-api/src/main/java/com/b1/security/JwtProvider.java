@@ -94,6 +94,7 @@ public class JwtProvider {
             }
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
+            //TODO 예외에 따른 Throw 처리
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {

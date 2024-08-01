@@ -32,16 +32,16 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public boolean checkEmailExists(String email) {
+    public boolean checkEmailExists(final String email) {
         return userHelper.checkEmailExists(email);
     }
 
     @Transactional(readOnly = true)
-    public boolean checkNicknameExists(String nickname) {
+    public boolean checkNicknameExists(final String nickname) {
         return userHelper.checkNicknameExists(nickname);
     }
 
-    public void resetPassword(UserResetPasswordRequestDto requestDto) {
+    public void resetPassword(final UserResetPasswordRequestDto requestDto) {
         User user = userHelper.findByEmail(requestDto.email());
         if (UserStatus.isDeleted(user.getStatus())) {
             throw new UserAlreadyDeletedException(UserErrorCode.USER_ALREADY_DELETED);
@@ -49,7 +49,7 @@ public class AuthService {
         user.changePassword(passwordEncoder.encode(requestDto.newPassword()));
     }
 
-    public void saveVerificationCode(String email, String code) {
+    public void saveVerificationCode(final String email, final String code) {
         if (userHelper.checkEmailExists(email)) {
             User user = userHelper.findByEmail(email);
             if (UserStatus.isDeleted(user.getStatus())) {
@@ -64,7 +64,7 @@ public class AuthService {
         codeHelper.addCode(emailVerificationCode);
     }
 
-    public boolean verifyCode(String email, String code) {
+    public boolean verifyCode(final String email, final String code) {
         String storedCode = codeHelper.findCodeByEmail(email);
         return storedCode != null && storedCode.equals(code);
     }
@@ -75,7 +75,7 @@ public class AuthService {
         return String.valueOf(code);
     }
 
-    public void refreshToken(String email, HttpServletRequest request) {
+    public void refreshToken(final String email, HttpServletRequest request) {
         String accessToken = request.getHeader(AUTHORIZATION_HEADER);
         String refreshToken = jwtProvider.getToken(accessToken).getRefresh();
 
@@ -89,7 +89,8 @@ public class AuthService {
         jwtProvider.deleteToken(accessToken);
     }
 
-    public String findEmail(String username, String phoneNumber) {
+    @Transactional(readOnly = true)
+    public String findEmail(final String username, final String phoneNumber) {
         List<User> userList = userHelper.findAllByUsername(username);
         for (User user : userList) {
             if (user.getPhoneNumber().equals(phoneNumber)) {

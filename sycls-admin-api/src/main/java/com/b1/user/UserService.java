@@ -33,7 +33,7 @@ public class UserService {
 
     private final String adminKey = "7JeQ67iM66as7Yuw7LyT7Ja065Oc66+87YKk";
 
-    public void signup(UserSignupRequestDto requestDto) {
+    public void signup(final UserSignupRequestDto requestDto) {
         //관리자 키 인증
         if (!this.adminKey.equals(requestDto.adminKey())) {
             log.error("관리자 키 불일치");
@@ -69,7 +69,7 @@ public class UserService {
         userHelper.addUser(user);
     }
 
-    public void resign(UserResignRequestDto requestDto, UserDetailsImpl user) {
+    public void resign(final UserResignRequestDto requestDto, final UserDetailsImpl user) {
         User getUser = userHelper.findByEmail(user.getEmail());
         if (UserStatus.isDeleted(getUser.getStatus())) {
             log.error("이미 삭제된 유저 | request : {}", getUser.getId());
@@ -84,7 +84,7 @@ public class UserService {
         getUser.deleteUser();
     }
 
-    public UserProfileResponseDto getProfile(User user) {
+    public UserProfileResponseDto getProfile(final User user) {
         return UserProfileResponseDto.of(
                 user.getUsername(),
                 user.getNickname(),

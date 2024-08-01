@@ -41,7 +41,7 @@ public class AuthRestController {
      */
     @GetMapping("/email/check")
     public ResponseEntity<RestApiResponseDto<Boolean>> checkEmail(
-            @RequestParam String email
+            @RequestParam final String email
     ) {
         boolean isDuplicated = authService.checkEmailExists(email);
 
@@ -54,7 +54,7 @@ public class AuthRestController {
      */
     @GetMapping("/nickname/check")
     public ResponseEntity<RestApiResponseDto<Boolean>> checkNickname(
-            @RequestParam String nickname
+            @RequestParam final String nickname
     ) {
         boolean isDuplicated = authService.checkNicknameExists(nickname);
 
@@ -70,7 +70,7 @@ public class AuthRestController {
      */
     @PostMapping("/auth/send-verification-code")
     public ResponseEntity<RestApiResponseDto<String>> sendVerificationCode(
-            @Valid @RequestBody EmailVerificationRequestDto requestDto
+            @Valid @RequestBody final EmailVerificationRequestDto requestDto
     ) {
         String email = requestDto.email();
         String code = authService.generateVerificationCode();
@@ -91,7 +91,7 @@ public class AuthRestController {
      */
     @PostMapping("/auth/check-verification-code")
     public ResponseEntity<RestApiResponseDto<Boolean>> checkVerificationCode(
-            @Valid @RequestBody UserVerificationCodeRequestDto requestDto
+            @Valid @RequestBody final UserVerificationCodeRequestDto requestDto
     ) {
         String message = AUTH_SUCCESS_MESSAGE;
         boolean isChecked = true;
@@ -110,7 +110,7 @@ public class AuthRestController {
      */
     @PatchMapping("/auth/forget-password")
     public ResponseEntity<RestApiResponseDto<String>> resetPassword(
-            @Valid @RequestBody UserResetPasswordRequestDto requestDto
+            @Valid @RequestBody final UserResetPasswordRequestDto requestDto
     ) {
         authService.resetPassword(requestDto);
 
@@ -127,8 +127,8 @@ public class AuthRestController {
      */
     @GetMapping("/auth/forget-email")
     public ResponseEntity<RestApiResponseDto<String>> findEmail(
-            @RequestParam("username") @NotEmpty String username,
-            @RequestParam("phoneNumber") @NotEmpty String phoneNumber) {
+            @RequestParam("username") @NotEmpty final String username,
+            @RequestParam("phoneNumber") @NotEmpty final String phoneNumber) {
         String findEmail = authService.findEmail(username, phoneNumber);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -142,7 +142,7 @@ public class AuthRestController {
      */
     @PostMapping("/auth/token")
     public ResponseEntity<RestApiResponseDto<String>> refreshToken(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @AuthenticationPrincipal final UserDetailsImpl userDetails,
             HttpServletRequest request
     ) {
         authService.refreshToken(userDetails.getEmail(), request);

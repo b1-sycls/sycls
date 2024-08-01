@@ -26,7 +26,7 @@ public class EmailService {
     /**
      * TODO 이메일 전송 실패에 대한 예외클래스 추가
      */
-    public void sendVerificationCode(String to, String subject, String text) {
+    public void sendVerificationCode(final String to, final String subject, final String text) {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");

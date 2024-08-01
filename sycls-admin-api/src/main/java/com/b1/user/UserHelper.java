@@ -15,26 +15,26 @@ public class UserHelper {
 
     private final UserRepository userRepository;
 
-    public void addUser(User user) {
+    public void addUser(final User user) {
         userRepository.save(user);
     }
 
-    public User findByEmail(String email) {
+    public User findByEmail(final String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> {
             log.error("유저를 찾지 못함 | request : {}", email);
             return new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
         });
     }
 
-    public boolean checkEmailExists(String email) {
+    public boolean checkEmailExists(final String email) {
         return userRepository.existsByEmail(email);
     }
 
-    public boolean checkNicknameExists(String nickname) {
+    public boolean checkNicknameExists(final String nickname) {
         return userRepository.existsByNickname(nickname);
     }
 
-    public List<User> findAllByUsername(String username) {
+    public List<User> findAllByUsername(final String username) {
         List<User> userList = userRepository.findAllByUsername(username);
         if (userList == null || userList.isEmpty()) {
             log.error("유저를 찾지 못함 : {}", username);

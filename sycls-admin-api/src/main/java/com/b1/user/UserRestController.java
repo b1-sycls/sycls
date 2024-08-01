@@ -31,7 +31,7 @@ public class UserRestController {
      */
     @PostMapping("/users/signup")
     public ResponseEntity<RestApiResponseDto<String>> signup(
-            @Valid @RequestBody UserSignupRequestDto requestDto
+            @Valid @RequestBody final UserSignupRequestDto requestDto
     ) {
         userService.signup(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -45,8 +45,8 @@ public class UserRestController {
      */
     @DeleteMapping("/users/resign")
     public ResponseEntity<RestApiResponseDto<String>> signup(
-            @Valid @RequestBody UserResignRequestDto requestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @Valid @RequestBody final UserResignRequestDto requestDto,
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         userService.resign(requestDto, userDetails);
 
@@ -60,7 +60,7 @@ public class UserRestController {
      */
     @GetMapping("/v1/users/me")
     public ResponseEntity<RestApiResponseDto<UserProfileResponseDto>> getProfile(
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         UserProfileResponseDto responseDto = userService.getProfile(userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)

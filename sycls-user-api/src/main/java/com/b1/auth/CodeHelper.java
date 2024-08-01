@@ -15,14 +15,14 @@ public class CodeHelper {
 
     private final CodeRepository codeRepository;
 
-    public String findCodeByEmail(String email) {
+    public String findCodeByEmail(final String email) {
         return codeRepository.findById(email).orElseThrow(() -> {
             log.error("Code가 없는 email입니다: {}", email);
             return new EmailCodeException(EmailAuthErrorCode.USER_CODE_NOT_FOUND);
         }).getCode();
     }
 
-    public void addCode(Code emailVerificationCode) {
+    public void addCode(final Code emailVerificationCode) {
         codeRepository.save(emailVerificationCode);
     }
 }
