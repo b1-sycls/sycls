@@ -88,9 +88,9 @@ public class ContentRestController {
      */
     @GetMapping("/contents")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<ContentGetAdminResponseDto>>> getAllContents(
-            @RequestParam(name = "contentId") final Long categoryId,
-            @RequestParam(name = "titleKeyword") final String titleKeyword,
-            @RequestParam(name = "status") final ContentStatus status,
+            @RequestParam(name = "categoryId", required = false) final Long categoryId,
+            @RequestParam(name = "titleKeyword", required = false) final String titleKeyword,
+            @RequestParam(name = "status", required = false) final ContentStatus status,
             @RequestParam(name = "page", defaultValue = "1") final int page,
             @RequestParam(name = "sortProperty", defaultValue = "createdAt") final String sortProperty,
             @RequestParam(name = "sortDirection", defaultValue = "DESC") final String sortDirection

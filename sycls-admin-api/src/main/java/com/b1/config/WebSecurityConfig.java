@@ -21,14 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-            throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
+    // 테스트용 설정 이거 없으면 admin api 막힘
     // CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -61,7 +54,13 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                        .permitAll()
+                        .permitAll() // resources 접근 허용 설정
+                        .requestMatchers("/favicon.ico").permitAll()
+                        // 정적 파일
+                        .requestMatchers("/static/**").permitAll()
+                        .requestMatchers("/templates/**").permitAll()
+                        .requestMatchers("/static/css/**").permitAll()
+
                         .requestMatchers("/v1/users/signup").permitAll()
                         .requestMatchers("/v1/auth/login").permitAll()
 
@@ -74,13 +73,20 @@ public class WebSecurityConfig {
                         .requestMatchers("/v1/email/check").permitAll()
                         .requestMatchers("/v1/nickname/check").permitAll()
 
+                        // Payment
+                        .requestMatchers("/v1/payment").permitAll()
+                        .requestMatchers("/v1/payment/confirm").permitAll()
+                        .requestMatchers("/v1/payment/success").permitAll()
+                        .requestMatchers("/v1/payment/fail/**").permitAll()
+
                         // Place
                         .requestMatchers("/v1/places/**").permitAll()
 
                         // Seat
                         .requestMatchers("/v1/places/{placeId}/seats").permitAll()
-
                         .requestMatchers("/error").permitAll()
+
+                        // ETC .. 필요한거 추가해서 사용하세요
                         .anyRequest().authenticated()
         );
 
