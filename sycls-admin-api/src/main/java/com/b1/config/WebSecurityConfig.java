@@ -31,12 +31,15 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers("/v1/users/signup").permitAll()
                         .requestMatchers("/v1/auth/login").permitAll()
-                        //임시 권한 수정
-                        .requestMatchers("/v1/users/**").permitAll()
-                        .requestMatchers("/v1/auth/**").permitAll()
 
-                        //test
-                        .requestMatchers("/v1/**").permitAll()
+                        .requestMatchers("/v1/auth/send-verification-code").permitAll()
+                        .requestMatchers("/v1/auth/check-verification-code").permitAll()
+
+                        .requestMatchers("/v1/auth/forget-email").permitAll()
+                        .requestMatchers("/v1/auth/forget-password").permitAll()
+
+                        .requestMatchers("/v1/email/check").permitAll()
+                        .requestMatchers("/v1/nickname/check").permitAll()
 
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()

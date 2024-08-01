@@ -1,0 +1,102 @@
+package com.b1.auth;
+
+import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
+
+import com.b1.auth.entity.Code;
+import com.b1.exception.customexception.UserAlreadyDeletedException;
+import com.b1.exception.customexception.UserNotFoundException;
+import com.b1.exception.errorcode.UserErrorCode;
+import com.b1.security.JwtProvider;
+import com.b1.user.UserHelper;
+import com.b1.user.dto.UserResetPasswordRequestDto;
+import com.b1.user.entity.User;
+import com.b1.user.entity.UserStatus;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Random;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+@Slf4j(topic = "Auth Service")
+public class AuthService {
+
+    private final UserHelper userHelper;
+    private final JwtProvider jwtProvider;
+    private final CodeHelper codeHelper;
+    private final PasswordEncoder passwordEncoder;
+
+    @Transactional(readOnly = true)
+    public boolean checkEmailExists(String email) {
+        return userHelper.checkEmailExists(email);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkNicknameExists(String nickname) {
+        return userHelper.checkNicknameExists(nickname);
+    }
+
+    public void resetPassword(UserResetPasswordRequestDto requestDto) {
+        User user = userHelper.findByEmail(requestDto.email());
+        if (UserStatus.isDeleted(user.getStatus())) {
+            throw new UserAlreadyDeletedException(UserErrorCode.USER_ALREADY_DELETED);
+        }
+        user.changePassword(passwordEncoder.encode(requestDto.newPassword()));
+    }
+
+    public void saveVerificationCode(String email, String code) {
+        if (userHelper.checkEmailExists(email)) {
+            User user = userHelper.findByEmail(email);
+            if (UserStatus.isDeleted(user.getStatus())) {
+                throw new UserAlreadyDeletedException(UserErrorCode.USER_ALREADY_DELETED);
+            }
+        }
+        Code emailVerificationCode = Code.builder()
+                .email(email)
+                .code(code)
+                .ttl(300)
+                .build();
+        codeHelper.addCode(emailVerificationCode);
+    }
+
+    public boolean verifyCode(String email, String code) {
+        String storedCode = codeHelper.findCodeByEmail(email);
+        return storedCode != null && storedCode.equals(code);
+    }
+
+    public String generateVerificationCode() {
+        Random random = new Random();
+        int code = random.nextInt(899999) + 100000; // 100000 ~ 999999 사이의 숫자 생성
+        return String.valueOf(code);
+    }
+
+    public void refreshToken(String email, HttpServletRequest request) {
+        String accessToken = request.getHeader(AUTHORIZATION_HEADER);
+        String refreshToken = jwtProvider.getToken(accessToken).getRefresh();
+
+        log.info("{}",
+                jwtProvider.getRemainingValidityMillis(jwtProvider.substringToken(refreshToken)));
+        long blacklistTokenTtl = jwtProvider.getRemainingValidityMillis(
+                jwtProvider.substringToken(refreshToken));
+
+        jwtProvider.addBlacklistToken(accessToken, blacklistTokenTtl);
+        jwtProvider.addBlacklistToken(refreshToken, blacklistTokenTtl);
+        jwtProvider.deleteToken(accessToken);
+    }
+
+    public String findEmail(String username, String phoneNumber) {
+        List<User> userList = userHelper.findAllByUsername(username);
+        for (User user : userList) {
+            if (user.getPhoneNumber().equals(phoneNumber)) {
+                return user.getEmail();
+            }
+        }
+        log.error("유저를 찾지 못함 : {}", username);
+        throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
+    }
+}
