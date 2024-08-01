@@ -61,9 +61,8 @@ public class Seat extends TimeStamp {
     /**
      * 좌석 수정
      */
-    public void updateSeat(final String code, final SeatStatus status) {
+    public void updateSeat(final String code) {
         this.code = code;
-        this.status = status;
     }
 
     /**
