@@ -11,4 +11,8 @@ public enum UserRole {
     ;
 
     private final String authority;
+
+    public static boolean isAdmin(UserRole role) {
+        return ADMIN.equals(role);
+    }
 }
