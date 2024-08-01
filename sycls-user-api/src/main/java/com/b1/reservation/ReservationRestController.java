@@ -1,7 +1,12 @@
 package com.b1.reservation;
 
 import com.b1.globalresponse.RestApiResponseDto;
-import com.b1.reservation.dto.*;
+import com.b1.reservation.dto.ReservationGetDetailResponseDto;
+import com.b1.reservation.dto.ReservationGetRequestDto;
+import com.b1.reservation.dto.ReservationGetResponseDto;
+import com.b1.reservation.dto.ReservationReleaseRequestDto;
+import com.b1.reservation.dto.ReservationReserveRequestDto;
+import com.b1.reservation.dto.ReservationReserveResponseDto;
 import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
