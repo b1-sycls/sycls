@@ -90,14 +90,13 @@ public class RoundService {
 
         if (RoundStatus.isAvailable(requestDto.status())) {
 
-            //TODO 출연진이 등록되어 있는지 확인
-
             RoundSeatGradeStatusDto statusDto = seatGradeHelper
                     .getPlaceMaxSeatAndEnableSeatGradeByRoundId(round.getId());
 
             Integer placeMaxSeat = statusDto.getPlaceMaxSeat();
             Long enableSeatGrade = statusDto.getEnableSeatGrade();
 
+            // TODO 이 아래 로직 place 가 enable 만 가져와서 없을경우가 있음 그렇다면 place 검증???
             if (placeMaxSeat == null) {
                 log.error("등록된 좌석이 없음 | roundId : {}", round.getId());
                 throw new RoundNotFullSeatGradeException(
