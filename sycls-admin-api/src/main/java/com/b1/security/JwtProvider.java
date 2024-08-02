@@ -44,7 +44,7 @@ public class JwtProvider {
     private final BlacklistTokenRepository blacklistTokenRepository;
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-    @Value("${JWT_SECRET_KEY}")
+    @Value("${jwt.secret.key}")
     private String secretKey;
     private Key key;
 
