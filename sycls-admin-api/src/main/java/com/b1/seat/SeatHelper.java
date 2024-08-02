@@ -8,7 +8,6 @@ import com.b1.place.PlaceQueryRepository;
 import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.seat.entity.Seat;
 import com.b1.seat.entity.SeatStatus;
-import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +24,15 @@ public class SeatHelper {
     /**
      * 좌석 등록
      */
-    public void saveSeats(final Set<Seat> seatSet) {
-        seatRepository.saveAll(seatSet);
+    public void saveSeats(final Seat seat) {
+        seatRepository.save(seat);
     }
 
     /**
      * 해당 공연장의 좌석 전체 조회
      */
     public Set<Seat> getAllSeats(final Long placeId) {
-        return seatRepository.findAllByPlaceId(placeId);
+        return seatRepository.findAllByPlaceIdAndStatus(placeId, SeatStatus.ENABLE);
     }
 
     /**
@@ -62,14 +61,14 @@ public class SeatHelper {
     /**
      * 좌석 등록을 위한 예외처리
      */
-    public void checkForAddSeat(final Long placeId, final List<String> codeList) {
+    public void checkForAddSeat(final Long placeId, final String code) {
         seatRepository.findAllByPlaceIdAndStatus(placeId, SeatStatus.ENABLE)
                 .stream()
                 .map(Seat::getCode)
-                .filter(codeList::contains)
+                .filter(code::contains)
                 .findAny()
-                .ifPresent(code -> {
-                    log.error("중복된 좌석코드 존재 | {}", placeId);
+                .ifPresent(seatCode -> {
+                    log.error("중복된 좌석코드 존재 | {}", seatCode);
                     throw new SeatCodeDuplicatedException(SeatErrorCode.DUPLICATED_SEAT);
                 });
     }

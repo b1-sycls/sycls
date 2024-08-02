@@ -66,7 +66,7 @@ public class PlaceRestController {
     /**
      * 공연장 정보 수정
      */
-    @PatchMapping("/{placeId}")
+    @PatchMapping("/places/{placeId}")
     public ResponseEntity<RestApiResponseDto<Long>> updatePlace(
             @PathVariable final Long placeId,
             @Valid @RequestBody final PlaceUpdateRequestDto requestDto
@@ -79,7 +79,7 @@ public class PlaceRestController {
     /**
      * 공연장 삭제
      */
-    @DeleteMapping("/{placeId}")
+    @DeleteMapping("/places/{placeId}")
     public ResponseEntity<RestApiResponseDto<String>> deletePlace(
             @PathVariable final Long placeId
     ) {
