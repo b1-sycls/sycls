@@ -55,7 +55,6 @@ public class WebSecurityConfig {
         return new JwtAuthorizationFilter(jwtProvider, userDetailsService);
     }
 
-    // CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
