@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SeatRepository extends JpaRepository<Seat, Long> {
 
-    Set<Seat> findAllByPlaceId(Long placeId);
-
     Set<Seat> findAllByPlaceIdAndStatus(Long placeId, SeatStatus seatStatus);
 
     List<Seat> findAllByIdIn(List<Long> seatIdList);
