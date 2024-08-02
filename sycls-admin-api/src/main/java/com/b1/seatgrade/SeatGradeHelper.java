@@ -35,8 +35,12 @@ public class SeatGradeHelper {
             final Long roundId,
             final Long seatId
     ) {
-        if (seatGradeRepository.existsByRoundIdAndSeatIdAndStatus(roundId, seatId,
-                SeatGradeStatus.ENABLE)) {
+        if (seatGradeRepository.existsByRoundIdAndSeatIdAndStatus(
+                roundId,
+                seatId,
+                SeatGradeStatus.ENABLE)
+        ) {
+            log.error("중복되는 좌석 | {}", seatId);
             throw new SeatGradeDuplicatedException(SeatGradeErrorCode.DUPLICATED_SEAT_GRADE);
         }
 
@@ -47,7 +51,10 @@ public class SeatGradeHelper {
      */
     public Seat getSeatForAddSeatGrade(final Long seatId) {
         return seatRepository.findById(seatId).orElseThrow(
-                () -> new SeatNotFoundException(SeatErrorCode.NOT_FOUND_SEAT)
+                () -> {
+                    log.error("찾을 수 없는 좌석 | {}", seatId);
+                    return new SeatNotFoundException(SeatErrorCode.NOT_FOUND_SEAT);
+                }
         );
     }
 
@@ -78,24 +85,17 @@ public class SeatGradeHelper {
      */
     public SeatGrade findById(final Long seatGradeId) {
         return seatGradeRepository.findById(seatGradeId).orElseThrow(
-                () -> new SeatGradeNotFoundException(SeatGradeErrorCode.NOT_FOUND_SEAT_GRADE)
+                () -> {
+                    log.error("찾을 수 없는 좌석등급정보 | {}", seatGradeId);
+                    return new SeatGradeNotFoundException(SeatGradeErrorCode.NOT_FOUND_SEAT_GRADE);
+                }
         );
     }
-
-
+    
     /**
      * 해당 회차의 공연장의 최대좌석수와 enable 된 seatGrade 의 수를 반환
      */
     public RoundSeatGradeStatusDto getPlaceMaxSeatAndEnableSeatGradeByRoundId(final Long roundId) {
         return seatGradeQueryRepository.getPlaceMaxSeatAndEnableSeatGradeByRoundId(roundId);
-    }
-
-    /**
-     * 공연장 최대 좌석수와 총 seatGrade 수를 비교
-     */
-    public boolean checkMaxSeatAndSeatCountForSeatGradeDelete(final Long roundId) {
-        RoundSeatGradeStatusDto dto =
-                seatGradeQueryRepository.getPlaceMaxSeatAndEnableSeatGradeByRoundId(roundId);
-        return dto.getEnableSeatGrade() != dto.getPlaceMaxSeat().longValue();
     }
 }
