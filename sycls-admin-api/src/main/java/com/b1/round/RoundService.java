@@ -96,6 +96,13 @@ public class RoundService {
             Integer placeMaxSeat = statusDto.getPlaceMaxSeat();
             Long enableSeatGrade = statusDto.getEnableSeatGrade();
 
+            // TODO 이 아래 로직 place 가 enable 만 가져와서 없을경우가 있음 그렇다면 place 검증???
+            if (placeMaxSeat == null) {
+                log.error("등록된 좌석이 없음 | roundId : {}", round.getId());
+                throw new RoundNotFullSeatGradeException(
+                        RoundErrorCode.ROUND_NOT_SETTING_SEAT_GRADE);
+            }
+
             if (!Objects.equals(placeMaxSeat.longValue(), enableSeatGrade)) {
                 log.error("해당 회차에 좌석이 다 등록되지 않음 | roundId : {}", round.getId());
                 throw new RoundNotFullSeatGradeException(RoundErrorCode.ROUND_NOT_FULL_SEAT_GRADE);
@@ -121,6 +128,14 @@ public class RoundService {
         RoundStatus.checkClosed(round.getStatus());
 
         Long placeId = round.getPlace().getId();
+
+        Place place;
+
+        if (!Objects.equals(round.getPlace().getId(), requestDto.placeId())) {
+            placeId = requestDto.placeId();
+            place = placeHelper.getPlace(requestDto.placeId());
+            round.updatePlace(place);
+        }
 
         List<Round> roundList = roundHelper.getAllRoundsByPlaceId(placeId, dtoStartDate);
 
