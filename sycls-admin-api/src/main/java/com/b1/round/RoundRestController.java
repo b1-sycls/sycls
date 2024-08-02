@@ -86,7 +86,7 @@ public class RoundRestController {
     @GetMapping("/rounds")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<RoundSimpleAdminResponseDto>>> getAllRounds(
             @RequestParam(name = "contentId") final Long contentId,
-            @RequestParam(name = "status") final RoundStatus status,
+            @RequestParam(name = "status", required = false) final RoundStatus status,
             @RequestParam(name = "page", defaultValue = "1") final int page,
             @RequestParam(name = "sortProperty", defaultValue = "createdAt") final String sortProperty,
             @RequestParam(name = "sortDirection", defaultValue = "DESC") final String sortDirection

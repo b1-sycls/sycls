@@ -7,6 +7,9 @@ import java.time.LocalTime;
 
 public record RoundUpdateRequestDto(
 
+        @NotNull(message = "공연장 번호는 누락될 수 없습니다.")
+        Long placeId,
+
         @NotNull(message = "공연 날짜는 누락될 수 없습니다.")
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate startDate,
