@@ -6,9 +6,9 @@ import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
 import com.b1.seat.SeatHelper;
+import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
-import com.b1.seatgrade.dto.SeatGradeDeleteRequestDto;
 import com.b1.seatgrade.dto.SeatGradeGetAllResponseDto;
 import com.b1.seatgrade.dto.SeatGradeUpdateRequestDto;
 import com.b1.seatgrade.entity.SeatGrade;
@@ -41,21 +41,19 @@ public class SeatGradeService {
         // 중복되는 좌석에 대한 등록이 있는지 확인
         seatGradeHelper.checkAllSeatGradesByRoundIdAndSeatIdIn(
                 round.getId(),
-                requestDto.seatIdList()
+                requestDto.seatId()
         );
 
         // 좌석-등급 등록
-        List<SeatGrade> seatGradeList =
-                seatGradeHelper.getSeatForAddSeatGrade(requestDto.seatIdList())
-                        .stream()
-                        .map(seat -> SeatGrade.addSeatGrade(
-                                requestDto.seatGradeType(),
-                                requestDto.price(),
-                                seat,
-                                round
-                        )).toList();
+        Seat seat = seatGradeHelper.getSeatForAddSeatGrade(requestDto.seatId());
+        SeatGrade seatGrade = SeatGrade.addSeatGrade(
+                requestDto.seatGradeType(),
+                requestDto.price(),
+                seat,
+                round
+        );
 
-        seatGradeHelper.saveSeatGrades(seatGradeList);
+        seatGradeHelper.saveSeatGrades(seatGrade);
     }
 
     /**
@@ -84,22 +82,18 @@ public class SeatGradeService {
     public void updateSeatGrades(final SeatGradeUpdateRequestDto requestDto) {
         Round round = roundHelper.findById(requestDto.roundId());
         RoundStatus.checkAvailable(round.getStatus());
-        seatGradeHelper.findAllByIdIn(requestDto.seatGradeIdList())
-                .forEach(seatGrade -> seatGrade.updateSeatGrade(
-                        requestDto.seatGradeType(),
-                        requestDto.price()));
+        SeatGrade seatGrade = seatGradeHelper.findById(requestDto.seatGradeId());
+        seatGrade.updateSeatGrade(requestDto.seatGradeType(), requestDto.price());
     }
 
     /**
      * 좌석-등급 삭제
      */
-    public void deleteSeatGrades(final SeatGradeDeleteRequestDto requestDto) {
-        Round round = roundHelper.findById(requestDto.roundId());
+    public void deleteSeatGrades(final Long roundId, final Long seatGradeId) {
+        Round round = roundHelper.findById(roundId);
         RoundStatus.checkAvailable(round.getStatus());
-        seatGradeHelper.findAllByIdIn(requestDto.seatGradeIdList())
-                .forEach(seatGrade -> {
-                    SeatGradeStatus.checkDeleted(seatGrade.getStatus());
-                    seatGrade.deleteSeatGrade();
-                });
+        SeatGrade seatGrade = seatGradeHelper.findById(seatGradeId);
+        SeatGradeStatus.checkDeleted(seatGrade.getStatus());
+        seatGrade.deleteSeatGrade();
     }
 }

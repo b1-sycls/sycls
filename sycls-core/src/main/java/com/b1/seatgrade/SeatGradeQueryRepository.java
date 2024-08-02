@@ -45,7 +45,10 @@ public class SeatGradeQueryRepository {
                 )
                 .from(seatGrade)
                 .leftJoin(seat).on(seatGrade.seat.id.eq(seat.id))
-                .where(seatGrade.round.id.eq(roundId))
+                .where(
+                        seatGrade.round.id.eq(roundId),
+                        seatGrade.status.eq(SeatGradeStatus.ENABLE)
+                )
                 .fetch();
     }
 
