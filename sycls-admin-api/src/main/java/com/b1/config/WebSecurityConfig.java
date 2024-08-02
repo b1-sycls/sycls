@@ -115,8 +115,13 @@ public class WebSecurityConfig {
 //                                .requestMatchers("/v1/places/**").permitAll()
 
                                 // Seat
-//                                .requestMatchers("/v1/places/{placeId}/seats").permitAll()
+                                .requestMatchers("/v1/places/{placeId}/seats").permitAll()
                                 .requestMatchers("/error").permitAll()
+
+                                // Seat-Grade
+                                .requestMatchers("/v1/seat-grades").permitAll()
+                                .requestMatchers("/v1/seat-grades/**").permitAll()
+                                .requestMatchers("/v1/rounds/**").permitAll()
 
                                 // ETC .. 필요한거 추가해서 사용하세요
                                 .anyRequest().authenticated()

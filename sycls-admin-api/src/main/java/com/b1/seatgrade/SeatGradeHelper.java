@@ -1,6 +1,9 @@
 package com.b1.seatgrade;
 
 import com.b1.exception.customexception.SeatGradeDuplicatedException;
+import com.b1.exception.customexception.SeatGradeNotFoundException;
+import com.b1.exception.customexception.SeatNotFoundException;
+import com.b1.exception.errorcode.SeatErrorCode;
 import com.b1.exception.errorcode.SeatGradeErrorCode;
 import com.b1.place.PlaceQueryRepository;
 import com.b1.place.dto.PlaceCheckSeatDto;
@@ -9,6 +12,7 @@ import com.b1.seat.SeatRepository;
 import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
 import com.b1.seatgrade.entity.SeatGrade;
+import com.b1.seatgrade.entity.SeatGradeStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +33,10 @@ public class SeatGradeHelper {
      */
     public void checkAllSeatGradesByRoundIdAndSeatIdIn(
             final Long roundId,
-            final List<Long> seatIdList
+            final Long seatId
     ) {
-        if (seatGradeRepository.existsByRoundIdAndSeatIdIn(roundId, seatIdList)) {
+        if (seatGradeRepository.existsByRoundIdAndSeatIdAndStatus(roundId, seatId,
+                SeatGradeStatus.ENABLE)) {
             throw new SeatGradeDuplicatedException(SeatGradeErrorCode.DUPLICATED_SEAT_GRADE);
         }
 
@@ -40,15 +45,17 @@ public class SeatGradeHelper {
     /**
      * 좌석 등급 등록을 위한 좌석 조회
      */
-    public List<Seat> getSeatForAddSeatGrade(final List<Long> seatIdList) {
-        return seatRepository.findAllByIdIn(seatIdList);
+    public Seat getSeatForAddSeatGrade(final Long seatId) {
+        return seatRepository.findById(seatId).orElseThrow(
+                () -> new SeatNotFoundException(SeatErrorCode.NOT_FOUND_SEAT)
+        );
     }
 
     /**
      * 좌석-등급 등록
      */
-    public void saveSeatGrades(final List<SeatGrade> seatGradeList) {
-        seatGradeRepository.saveAll(seatGradeList);
+    public void saveSeatGrades(final SeatGrade seatGrade) {
+        seatGradeRepository.save(seatGrade);
     }
 
     /**
@@ -69,8 +76,10 @@ public class SeatGradeHelper {
     /**
      * 좌석-등급 ID In절 조회
      */
-    public List<SeatGrade> findAllByIdIn(final List<Long> seatIdList) {
-        return seatGradeRepository.findAllByIdIn(seatIdList);
+    public SeatGrade findById(final Long seatGradeId) {
+        return seatGradeRepository.findById(seatGradeId).orElseThrow(
+                () -> new SeatGradeNotFoundException(SeatGradeErrorCode.NOT_FOUND_SEAT_GRADE)
+        );
     }
 
 

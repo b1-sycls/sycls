@@ -1,16 +1,14 @@
 package com.b1.seatgrade.dto;
 
 import com.b1.seatgrade.entity.SeatGradeType;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 
 public record SeatGradeUpdateRequestDto(
         @NotNull(message = "회차 정보가 누락되었습니다.")
         Long roundId,
 
-        @NotEmpty(message = "수정할 좌석이 누락되었습니다.")
-        List<Long> seatGradeIdList,
+        @NotNull(message = "수정할 좌석이 누락되었습니다.")
+        Long seatGradeId,
 
         @NotNull(message = "좌석의 등급이 누락되었습니다.")
         SeatGradeType seatGradeType,
