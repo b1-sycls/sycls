@@ -2,6 +2,7 @@
 
 ### 공연 상태 수정
 PATCH http://localhost:8081/v1/contents/{{contentId}}/status
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
@@ -10,6 +11,7 @@ Content-Type: application/json
 
 ### 공연 단일 조회
 GET http://localhost:8081/v1/contents/{{contentId}}
+Authorization: {{Authorization}}
 
 ### 공연 전체 조회
 GET http://localhost:8081/v1/contents

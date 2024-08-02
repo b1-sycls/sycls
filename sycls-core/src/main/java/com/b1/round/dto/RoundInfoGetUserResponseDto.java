@@ -16,4 +16,8 @@ public class RoundInfoGetUserResponseDto {
     private final LocalTime startTime;
     private final LocalTime endTime;
     private final RoundStatus status;
+
+    private final Long placeId;
+    private final String placeName;
+    private final String placeLocation;
 }

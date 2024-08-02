@@ -90,11 +90,19 @@ public class RoundService {
 
         if (RoundStatus.isAvailable(requestDto.status())) {
 
+            //TODO 출연진이 등록되어 있는지 확인
+
             RoundSeatGradeStatusDto statusDto = seatGradeHelper
                     .getPlaceMaxSeatAndEnableSeatGradeByRoundId(round.getId());
 
             Integer placeMaxSeat = statusDto.getPlaceMaxSeat();
             Long enableSeatGrade = statusDto.getEnableSeatGrade();
+
+            if (placeMaxSeat == null) {
+                log.error("등록된 좌석이 없음 | roundId : {}", round.getId());
+                throw new RoundNotFullSeatGradeException(
+                        RoundErrorCode.ROUND_NOT_SETTING_SEAT_GRADE);
+            }
 
             if (!Objects.equals(placeMaxSeat.longValue(), enableSeatGrade)) {
                 log.error("해당 회차에 좌석이 다 등록되지 않음 | roundId : {}", round.getId());
@@ -121,6 +129,14 @@ public class RoundService {
         RoundStatus.checkClosed(round.getStatus());
 
         Long placeId = round.getPlace().getId();
+
+        Place place;
+
+        if (!Objects.equals(round.getPlace().getId(), requestDto.placeId())) {
+            placeId = requestDto.placeId();
+            place = placeHelper.getPlace(requestDto.placeId());
+            round.updatePlace(place);
+        }
 
         List<Round> roundList = roundHelper.getAllRoundsByPlaceId(placeId, dtoStartDate);
 
