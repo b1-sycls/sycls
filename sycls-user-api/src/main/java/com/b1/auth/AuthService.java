@@ -12,6 +12,7 @@ import com.b1.user.dto.UserResetPasswordRequestDto;
 import com.b1.user.entity.User;
 import com.b1.user.entity.UserStatus;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +76,8 @@ public class AuthService {
         return String.valueOf(code);
     }
 
-    public void refreshToken(final String email, HttpServletRequest request) {
+    public void refreshToken(final String email, HttpServletRequest request,
+            HttpServletResponse response) {
         String accessToken = request.getHeader(AUTHORIZATION_HEADER);
         String refreshToken = jwtProvider.getToken(accessToken).getRefresh();
 
@@ -87,6 +89,16 @@ public class AuthService {
         jwtProvider.addBlacklistToken(accessToken, blacklistTokenTtl);
         jwtProvider.addBlacklistToken(refreshToken, blacklistTokenTtl);
         jwtProvider.deleteToken(accessToken);
+
+        // 토큰 생성
+        String newAccessToken = jwtProvider.createAccessToken(email);
+        String newRefreshToken = jwtProvider.createRefreshToken(email);
+
+        // 헤더에 토큰 저장
+        response.setHeader("Authorization", newAccessToken);
+        response.setHeader("RefreshToken", newRefreshToken);
+        jwtProvider.addToken(newAccessToken, newRefreshToken,
+                jwtProvider.extractExpirationMillis(jwtProvider.substringToken(newRefreshToken)));
     }
 
     @Transactional(readOnly = true)
