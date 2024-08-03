@@ -28,7 +28,3 @@ naver:
 
 server:
   port: 8081
-
-jwt:
-  secret:
-    key: ${JWT_SECRET_KEY}

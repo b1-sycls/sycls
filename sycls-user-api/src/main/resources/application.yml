@@ -32,7 +32,3 @@ server:
 toss:
   clientKey: ${TOSS_CLIENT_KEY}
   secretKey: ${TOSS_SECRET_KEY}
-
-jwt:
-  secret:
-    key: ${JWT_SECRET_KEY}
