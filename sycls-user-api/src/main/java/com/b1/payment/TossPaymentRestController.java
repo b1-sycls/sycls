@@ -20,9 +20,9 @@ public class TossPaymentRestController {
 
     @PostMapping("/payment/client-key")
     public ResponseEntity<RestApiResponseDto<ClientResponseDto>> getClientKey(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-
-        ClientResponseDto responseDto = tossPaymentService.getClientKey();
+        ClientResponseDto responseDto = tossPaymentService.getClientKey(userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
     }
