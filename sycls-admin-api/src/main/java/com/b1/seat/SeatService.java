@@ -33,7 +33,7 @@ public class SeatService {
         Place place = placeHelper.getPlace(placeId);
 
         // 공연장 최대 좌석수와 총좌석수 비교 예외처리
-        seatHelper.checkMaxSeatAndSeatCount(placeId);
+        seatHelper.checkMaxSeatAndSeatCount(placeId, place.getMaxSeat());
 
         // 좌석 등록 시 중복되는 좌석코드가 있는지 확인(해당 공연장에)
         seatHelper.checkForAddSeat(placeId, requestDto.code());

@@ -85,6 +85,21 @@ public class PlaceQueryRepository {
                 .fetchOne();
     }
 
+    /**
+     * 총 좌석수 불러오기
+     */
+    public Long getSeatCount(final Long placeId) {
+        return jpaQueryFactory
+                .select(seat.count())
+                .from(seat)
+                .leftJoin(place).on(seat.place.id.eq(place.id))
+                .where(
+                        place.id.eq(placeId),
+                        seat.status.eq(SeatStatus.ENABLE)
+                )
+                .fetchOne();
+    }
+
     private BooleanExpression locationLike(final String location) {
         return StringUtils.hasText(location) ? place.location.contains(location) : null;
     }
