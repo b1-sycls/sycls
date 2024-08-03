@@ -181,4 +181,12 @@ public class SeatGradeReservationLogHelper {
                 ));
     }
 
+    /**
+     * 특정 예매 정보 조회
+     */
+    public List<SeatGradeReservationLog> getSeatReservationLogsById(
+            final List<Long> reservationIds
+    ) {
+        return seatReservationLogRepository.findAllByIdIn(reservationIds);
+    }
 }

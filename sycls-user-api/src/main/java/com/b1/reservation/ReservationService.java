@@ -1,7 +1,6 @@
 package com.b1.reservation;
 
 import com.b1.reservation.dto.ReservationGetDetailResponseDto;
-import com.b1.reservation.dto.ReservationGetRequestDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
 import com.b1.reservation.dto.ReservationReleaseRequestDto;
 import com.b1.reservation.dto.ReservationReserveRequestDto;
@@ -70,10 +69,10 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public ReservationGetResponseDto getReservation(
-            final ReservationGetRequestDto requestDto,
+            final Long roundId,
             final User user
     ) {
-        Round selectedRound = roundHelper.getRound(requestDto.roundId());
+        Round selectedRound = roundHelper.getRound(roundId);
 
         Set<SeatGradeReservationLog> findSeatGradeReservationLogs = seatGradeReservationLogHelper
                 .getSeatReservationLogsByUser(user);
