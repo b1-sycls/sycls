@@ -26,5 +26,9 @@ naver:
     address: ${NAVER_EMAIL}
     password: ${NAVER_EMAIL_PASSWORD}
 
+toss:
+  secretKey: ${TOSS_SECRET_KEY}
+  clientKey: ${TOSS_CLIENT_KEY}
+
 server:
   port: 8081

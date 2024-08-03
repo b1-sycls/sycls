@@ -1,4 +1,4 @@
-package com.b1.auth.entity;
+package com.b1.token.entity;
 
 import java.io.Serializable;
 import lombok.AccessLevel;
@@ -11,20 +11,17 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
-@RedisHash("Code")
+@RedisHash("Blacklist")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Code implements Serializable {
+public class BlacklistToken implements Serializable {
 
     @Id
-    private String email;
-
-    private String code;
+    private String token;
 
     @TimeToLive
-    private long ttl;
-
+    private long ttl; // 토큰 만료 시간
 }

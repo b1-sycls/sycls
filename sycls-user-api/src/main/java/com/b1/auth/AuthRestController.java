@@ -143,11 +143,10 @@ public class AuthRestController {
      */
     @PostMapping("/auth/token")
     public ResponseEntity<RestApiResponseDto<String>> refreshToken(
-            @AuthenticationPrincipal final UserDetailsImpl userDetails,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        authService.refreshToken(userDetails.getEmail(), request, response);
+        authService.refreshToken(request, response);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("토큰이 성공적으로 재발급 됐습니다."));
     }
