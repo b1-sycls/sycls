@@ -113,14 +113,11 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public ReservationGetOccupiedResponseDto getOccupied(
-            final Long roundId,
-            final Set<Long> seatGradeIdList
+            final Long roundId
     ) {
         Round selectedRound = roundHelper.getRound(roundId);
 
-        Set<SeatGrade> seatGradesForRound = seatGradeHelper
-                .getAllSeatGradeByRoundAndSeatGradeIds(
-                        selectedRound, seatGradeIdList);
+        Set<SeatGrade> seatGradesForRound = seatGradeHelper.getAllSeatGradesByRound(selectedRound);
 
         Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatGradeReservationLogHelper
                 .getSeatReservationLogsBySeatGrade(seatGradesForRound);

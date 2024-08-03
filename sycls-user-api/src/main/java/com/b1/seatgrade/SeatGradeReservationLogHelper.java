@@ -179,22 +179,4 @@ public class SeatGradeReservationLogHelper {
                         log -> log.getSeatGrade().getGrade().getValue()
                 ));
     }
-
-    /**
-     * 점유 중인 좌석 조회
-     */
-    public Set<SeatGradeReservationLog> getSeatReservationLogs() {
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        List<SeatGradeReservationLog> reservationLogs = seatReservationLogRepository
-                .findAllByCreatedAtAfterAndStatus(
-                        currentTime.minusMinutes(SEAT_RESERVATION_TIME),
-                        SeatGradeReservationLogStatus.ENABLE);
-
-        Map<Long, SeatGradeReservationLog> latestLogsBySeatGradeId = getLongSeatReservationLogMap(
-                reservationLogs);
-
-        return new HashSet<>(latestLogsBySeatGradeId.values());
-    }
-
 }

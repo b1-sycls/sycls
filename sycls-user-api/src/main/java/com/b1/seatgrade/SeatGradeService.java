@@ -2,7 +2,6 @@ package com.b1.seatgrade;
 
 import com.b1.seatgrade.dto.SeatGradeGetAllResponseDto;
 import com.b1.seatgrade.dto.SeatGradeGetResponseDto;
-import com.b1.seatgrade.dto.SeatGradeUserGetDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,9 @@ public class SeatGradeService {
      */
     @Transactional(readOnly = true)
     public SeatGradeGetAllResponseDto getAllSeatGradesUser(final Long roundId) {
-        List<SeatGradeUserGetDto> seatGradeList = seatGradeHelper.getAllSeatGradesUser(roundId);
-        List<SeatGradeGetResponseDto> responseDto = SeatGradeGetResponseDto.of(seatGradeList);
+        List<SeatGradeGetResponseDto> responseDto = SeatGradeGetResponseDto.of(
+                seatGradeHelper.getAllSeatGradesUser(roundId)
+        );
         return SeatGradeGetAllResponseDto.of(roundId, responseDto);
     }
 }
