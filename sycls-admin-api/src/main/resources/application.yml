@@ -28,3 +28,7 @@ naver:
 
 server:
   port: 8081
+
+toss:
+  clientKey: ${TOSS_CLIENT_KEY}
+  secretKey: ${TOSS_SECRET_KEY}
