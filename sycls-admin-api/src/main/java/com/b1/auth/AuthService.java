@@ -1,12 +1,12 @@
 package com.b1.auth;
 
-import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
+import static com.b1.constant.TokenConstants.REFRESHTOKEN_HEADER;
 
-import com.b1.auth.entity.Code;
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserNotFoundException;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.JwtProvider;
+import com.b1.token.entity.Code;
 import com.b1.user.UserHelper;
 import com.b1.user.dto.UserResetPasswordRequestDto;
 import com.b1.user.entity.User;
@@ -76,23 +76,25 @@ public class AuthService {
         return String.valueOf(code);
     }
 
-    public void refreshToken(final String email, HttpServletRequest request,
-            HttpServletResponse response) {
-        String accessToken = request.getHeader(AUTHORIZATION_HEADER);
-        String refreshToken = jwtProvider.getToken(accessToken).getRefresh();
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String requestRefreshToken = request.getHeader(REFRESHTOKEN_HEADER);
 
-        log.info("{}",
-                jwtProvider.getRemainingValidityMillis(jwtProvider.substringToken(refreshToken)));
+        String getAccessToken = jwtProvider.getToken(requestRefreshToken).getAccess();
+
+        log.info("남은 유효시간 {}", jwtProvider.getRemainingValidityMillis(
+                jwtProvider.substringToken(requestRefreshToken)));
         long blacklistTokenTtl = jwtProvider.getRemainingValidityMillis(
-                jwtProvider.substringToken(refreshToken));
+                jwtProvider.substringToken(requestRefreshToken));
 
-        jwtProvider.addBlacklistToken(accessToken, blacklistTokenTtl);
-        jwtProvider.addBlacklistToken(refreshToken, blacklistTokenTtl);
-        jwtProvider.deleteToken(accessToken);
+        jwtProvider.addBlacklistToken(getAccessToken, blacklistTokenTtl);
+        jwtProvider.addBlacklistToken(requestRefreshToken, blacklistTokenTtl);
+        jwtProvider.deleteToken(requestRefreshToken);
 
+        String userEmail = jwtProvider.extractEmail(
+                jwtProvider.substringToken(requestRefreshToken));
         // 토큰 생성
-        String newAccessToken = jwtProvider.createAccessToken(email);
-        String newRefreshToken = jwtProvider.createRefreshToken(email);
+        String newAccessToken = jwtProvider.createAccessToken(userEmail);
+        String newRefreshToken = jwtProvider.createRefreshToken(userEmail);
 
         // 헤더에 토큰 저장
         response.setHeader("Authorization", newAccessToken);

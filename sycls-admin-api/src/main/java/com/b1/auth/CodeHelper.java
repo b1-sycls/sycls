@@ -1,9 +1,9 @@
 package com.b1.auth;
 
-import com.b1.auth.entity.Code;
-import com.b1.auth.repository.CodeRepository;
 import com.b1.exception.customexception.EmailCodeException;
 import com.b1.exception.errorcode.EmailAuthErrorCode;
+import com.b1.token.entity.Code;
+import com.b1.token.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

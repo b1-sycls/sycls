@@ -5,12 +5,12 @@ import static com.b1.constant.TokenConstants.BEARER_PREFIX;
 import static com.b1.constant.TokenConstants.REFRESH_TOKEN_TIME;
 import static com.b1.constant.TokenConstants.TOKEN_TIME;
 
-import com.b1.auth.entity.BlacklistToken;
-import com.b1.auth.entity.Token;
-import com.b1.auth.repository.BlacklistTokenRepository;
-import com.b1.auth.repository.TokenRepository;
 import com.b1.exception.customexception.TokenException;
 import com.b1.exception.errorcode.TokenErrorCode;
+import com.b1.token.entity.BlacklistToken;
+import com.b1.token.entity.Token;
+import com.b1.token.repository.BlacklistTokenRepository;
+import com.b1.token.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -96,14 +96,17 @@ public class JwtProvider {
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            throw new TokenException(TokenErrorCode.INVALID_SIGNATURE);
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.");
+            throw new TokenException(TokenErrorCode.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            throw new TokenException(TokenErrorCode.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+            throw new TokenException(TokenErrorCode.ILLEGAL_ARGUMENT);
         }
-        return false;
     }
 
     public Claims getUserInfoFromToken(String token) {
