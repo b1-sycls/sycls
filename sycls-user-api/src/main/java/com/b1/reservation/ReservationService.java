@@ -114,7 +114,7 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public ReservationGetOccupiedResponseDto getOccupied(
             final Long roundId,
-            Set<Long> seatGradeIdList
+            final Set<Long> seatGradeIdList
     ) {
         Round selectedRound = roundHelper.getRound(roundId);
 
