@@ -1,6 +1,8 @@
 package com.b1.payment;
 
 import com.b1.config.TossConfig;
+import com.b1.exception.customexception.TossPaymentException;
+import com.b1.exception.errorcode.PaymentErrorCode;
 import com.b1.payment.dto.ClientResponseDto;
 import com.b1.payment.dto.PaymentSuccessRequestDto;
 import com.b1.payment.dto.TossConfirmRequestDto;
@@ -52,18 +54,21 @@ public class TossPaymentService {
 
     public ResponseEntity<TossPaymentRestResponse> confirm(
             final TossConfirmRequestDto requestDto
-    ) throws Exception {
+    ) {
 
         String authorization = Base64.getEncoder().encodeToString((tossConfig.getPaymentSecretKey() + ":").getBytes());
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(AUTHORIZATION, BASIC + authorization);
 
-
-        URL url = new URL(TOSS_URL);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestProperty(AUTHORIZATION, authorization);
-        headers.setContentType(APPLICATION_JSON);
+        try {
+            URL url = new URL(TOSS_URL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty(AUTHORIZATION, authorization);
+            headers.setContentType(APPLICATION_JSON);
+        } catch (Exception e) {
+            throw new TossPaymentException(PaymentErrorCode.TOSS_PAYMENT_EXCEPTION);
+        }
 
         HttpEntity<TossConfirmRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 

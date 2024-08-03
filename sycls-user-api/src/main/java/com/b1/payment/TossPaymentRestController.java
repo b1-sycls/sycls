@@ -41,7 +41,7 @@ public class TossPaymentRestController {
     @PostMapping("/payment/confirm")
     public ResponseEntity<RestApiResponseDto<ResponseEntity<TossPaymentRestResponse>>> confirmPayment(
             @Valid @RequestBody final TossConfirmRequestDto requestDto
-    ) throws Exception {
+    ) {
         ResponseEntity<TossPaymentRestResponse> response = tossPaymentService.confirm(requestDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(response));
@@ -64,7 +64,7 @@ public class TossPaymentRestController {
      * 인증실패처리 TODO
      */
     @GetMapping("/payment/fail")
-    public String failPayment(HttpServletRequest request, Model model) throws Exception {
+    public String failPayment(HttpServletRequest request, Model model) {
         String failCode = request.getParameter("code");
         String failMessage = request.getParameter("message");
 
