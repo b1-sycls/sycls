@@ -12,6 +12,7 @@ import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.security.UserDetailsImpl;
 import com.b1.user.dto.UserResetPasswordRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -143,9 +144,10 @@ public class AuthRestController {
     @PostMapping("/auth/token")
     public ResponseEntity<RestApiResponseDto<String>> refreshToken(
             @AuthenticationPrincipal final UserDetailsImpl userDetails,
-            HttpServletRequest request
+            HttpServletRequest request,
+            HttpServletResponse response
     ) {
-        authService.refreshToken(userDetails.getEmail(), request);
+        authService.refreshToken(userDetails.getEmail(), request, response);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("토큰이 성공적으로 재발급 됐습니다."));
     }
