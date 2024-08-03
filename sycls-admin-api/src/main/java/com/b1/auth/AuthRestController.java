@@ -9,7 +9,6 @@ import com.b1.auth.dto.EmailVerificationRequestDto;
 import com.b1.auth.dto.UserVerificationCodeRequestDto;
 import com.b1.email.EmailService;
 import com.b1.globalresponse.RestApiResponseDto;
-import com.b1.security.UserDetailsImpl;
 import com.b1.user.dto.UserResetPasswordRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -143,11 +141,10 @@ public class AuthRestController {
      */
     @PostMapping("/auth/token")
     public ResponseEntity<RestApiResponseDto<String>> refreshToken(
-            @AuthenticationPrincipal final UserDetailsImpl userDetails,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        authService.refreshToken(userDetails.getEmail(), request, response);
+        authService.refreshToken(request, response);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("토큰이 성공적으로 재발급 됐습니다."));
     }

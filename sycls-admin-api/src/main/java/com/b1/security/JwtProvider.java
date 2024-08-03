@@ -5,18 +5,17 @@ import static com.b1.constant.TokenConstants.BEARER_PREFIX;
 import static com.b1.constant.TokenConstants.REFRESH_TOKEN_TIME;
 import static com.b1.constant.TokenConstants.TOKEN_TIME;
 
-import com.b1.auth.entity.BlacklistToken;
-import com.b1.auth.entity.Token;
-import com.b1.auth.repository.BlacklistTokenRepository;
-import com.b1.auth.repository.TokenRepository;
 import com.b1.exception.customexception.TokenException;
 import com.b1.exception.errorcode.TokenErrorCode;
+import com.b1.token.entity.BlacklistToken;
+import com.b1.token.entity.Token;
+import com.b1.token.repository.BlacklistTokenRepository;
+import com.b1.token.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -62,7 +61,7 @@ public class JwtProvider {
                         .setSubject(email)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
-                        .signWith(signatureAlgorithm, key)
+                        .signWith(key, signatureAlgorithm)
                         .compact();
     }
 
@@ -74,7 +73,7 @@ public class JwtProvider {
                         .setSubject(email)
                         .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
                         .setIssuedAt(date)
-                        .signWith(signatureAlgorithm, key)
+                        .signWith(key, signatureAlgorithm)
                         .compact();
     }
 
@@ -94,16 +93,19 @@ public class JwtProvider {
             }
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException | SignatureException e) {
+        } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            throw new TokenException(TokenErrorCode.INVALID_SIGNATURE);
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.");
+            throw new TokenException(TokenErrorCode.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            throw new TokenException(TokenErrorCode.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+            throw new TokenException(TokenErrorCode.ILLEGAL_ARGUMENT);
         }
-        return false;
     }
 
     public Claims getUserInfoFromToken(String token) {
@@ -132,7 +134,7 @@ public class JwtProvider {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
     public Date extractExpiration(String token) {

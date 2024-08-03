@@ -1,4 +1,4 @@
-package com.b1.auth.entity;
+package com.b1.token.entity;
 
 import java.io.Serializable;
 import lombok.AccessLevel;
@@ -20,9 +20,9 @@ import org.springframework.data.redis.core.TimeToLive;
 public class Token implements Serializable {
 
     @Id
-    private String access;
-
     private String refresh;
+
+    private String access;
 
     @TimeToLive
     private long ttl;
