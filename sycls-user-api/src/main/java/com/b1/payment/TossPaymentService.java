@@ -26,7 +26,7 @@ import java.util.Base64;
 import static com.b1.constant.TossConstant.*;
 import static org.springframework.http.MediaType.*;
 
-@Slf4j(topic = "Reservation Service")
+@Slf4j(topic = "Toss Payment Service")
 @Service
 @RequiredArgsConstructor
 @Transactional
