@@ -20,7 +20,7 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
 
-    @Value("${naver.email}")
+    @Value("${naver.email.address}")
     private String from;
 
     /**
