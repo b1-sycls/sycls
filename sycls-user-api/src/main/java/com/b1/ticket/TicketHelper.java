@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 public class TicketHelper {
     private final TicketRepository ticketRepository;
 
-    public Ticket addTicket(Ticket ticket) {
+    public Ticket addTicket(
+            final Ticket ticket
+    ) {
         return ticketRepository.save(ticket);
     }
 }
