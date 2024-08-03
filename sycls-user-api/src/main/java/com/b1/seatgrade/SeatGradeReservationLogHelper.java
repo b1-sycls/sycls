@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.b1.constant.DomainConstant.SEAT_RESERVATION_TIME;
+import static com.b1.constant.ReservationConstant.SEAT_RESERVATION_TIME;
 
 @Slf4j(topic = "Seat Reservation Log Helper")
 @Component
