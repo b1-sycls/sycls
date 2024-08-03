@@ -1,0 +1,15 @@
+### 어드민 유저 로그인 (토큰을 저장해서 다른테스트에 사용가능)
+POST http://localhost:8081/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "test1@gmail.com",
+  "password": "p@ssW0rd@"
+}
+
+> {%
+
+  client.global.set("Authorization", response.headers.valueOf("Authorization"));
+  client.global.set("X-Refresh-Token", response.headers.valueOf("X-Refresh-Token"));
+
+%}

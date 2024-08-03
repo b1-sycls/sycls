@@ -92,4 +92,8 @@ public class Round {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+
+    public void updatePlace(final Place place) {
+        this.place = place;
+    }
 }
