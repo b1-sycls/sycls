@@ -5,12 +5,12 @@ import static com.b1.constant.TokenConstants.BEARER_PREFIX;
 import static com.b1.constant.TokenConstants.REFRESH_TOKEN_TIME;
 import static com.b1.constant.TokenConstants.TOKEN_TIME;
 
-import com.b1.auth.entity.BlacklistToken;
-import com.b1.auth.entity.Token;
-import com.b1.auth.repository.BlacklistTokenRepository;
-import com.b1.auth.repository.TokenRepository;
 import com.b1.exception.customexception.TokenException;
 import com.b1.exception.errorcode.TokenErrorCode;
+import com.b1.token.entity.BlacklistToken;
+import com.b1.token.entity.Token;
+import com.b1.token.repository.BlacklistTokenRepository;
+import com.b1.token.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

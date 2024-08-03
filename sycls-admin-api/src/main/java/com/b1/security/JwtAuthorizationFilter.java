@@ -2,6 +2,7 @@ package com.b1.security;
 
 import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
 
+import com.b1.exception.customexception.TokenException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,17 +37,32 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             tokenValue = jwtProvider.substringToken(tokenValue);
             log.info(tokenValue);
 
-            if (!jwtProvider.validateToken(tokenValue)) {
-                log.error("Token Error");
-                return;
-            }
-
-            Claims info = jwtProvider.getUserInfoFromToken(tokenValue);
-
             try {
+                if (!jwtProvider.validateToken(tokenValue)) {
+                    log.error("Token validation failed.");
+                    res.setContentType("application/json; charset=UTF-8"); // 콘텐츠 타입과 캐릭터 인코딩 설정
+                    res.setCharacterEncoding("UTF-8"); // 캐릭터 인코딩 설정
+                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
+                    res.getWriter().write("Invalid Token");
+                    return;
+                }
+
+                Claims info = jwtProvider.getUserInfoFromToken(tokenValue);
                 setAuthentication(info.getSubject());
+            } catch (TokenException e) {
+                log.error("Token error: {}", e.getErrorCode().getHttpStatusCode());
+                res.setContentType("application/json; charset=UTF-8"); // 콘텐츠 타입과 캐릭터 인코딩 설정
+                res.setCharacterEncoding("UTF-8"); // 캐릭터 인코딩 설정
+                res.setStatus(e.getErrorCode().getHttpStatusCode());
+                res.getWriter().write(e.getErrorCode().getDescription());
+                return;
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error("An unexpected error occurred: {}", e.getMessage());
+                res.setContentType("application/json; charset=UTF-8"); // 콘텐츠 타입과 캐릭터 인코딩 설정
+                res.setCharacterEncoding("UTF-8"); // 캐릭터 인코딩 설정
+                res.setStatus(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500 Internal Server Error
+                res.getWriter().write("An unexpected error occurred.");
                 return;
             }
         }

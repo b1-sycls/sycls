@@ -1,6 +1,7 @@
 package com.b1.security;
 
 import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
+import static com.b1.constant.TokenConstants.REFRESHTOKEN_HEADER;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,15 +23,17 @@ public class JwtLogoutHandler implements LogoutHandler {
     public void logout(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) {
         log.info("로그아웃 시도");
-        String accessToken = request.getHeader(AUTHORIZATION_HEADER);
-        String refreshToken = jwtProvider.getToken(accessToken).getRefresh();
+        String requestRefreshToken = request.getHeader(REFRESHTOKEN_HEADER);
+        String requestAccessToken = request.getHeader(AUTHORIZATION_HEADER);
 
+        log.info("남은 유효시간 {}", jwtProvider.getRemainingValidityMillis(
+                jwtProvider.substringToken(requestRefreshToken)));
         long blacklistTokenTtl = jwtProvider.getRemainingValidityMillis(
-                jwtProvider.substringToken(refreshToken));
+                jwtProvider.substringToken(requestRefreshToken));
 
-        jwtProvider.addBlacklistToken(accessToken, blacklistTokenTtl);
-        jwtProvider.addBlacklistToken(refreshToken, blacklistTokenTtl);
-        jwtProvider.deleteToken(accessToken);
+        jwtProvider.addBlacklistToken(requestAccessToken, blacklistTokenTtl);
+        jwtProvider.addBlacklistToken(requestRefreshToken, blacklistTokenTtl);
+        jwtProvider.deleteToken(requestRefreshToken);
 
         SecurityContextHolder.clearContext();
     }
