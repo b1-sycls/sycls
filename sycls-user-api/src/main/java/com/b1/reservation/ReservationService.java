@@ -1,7 +1,7 @@
 package com.b1.reservation;
 
 import com.b1.reservation.dto.ReservationGetDetailResponseDto;
-import com.b1.reservation.dto.ReservationGetRequestDto;
+import com.b1.reservation.dto.ReservationGetOccupiedResponseDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
 import com.b1.reservation.dto.ReservationReleaseRequestDto;
 import com.b1.reservation.dto.ReservationReserveRequestDto;
@@ -13,15 +13,14 @@ import com.b1.seatgrade.SeatGradeReservationLogHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.user.entity.User;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j(topic = "Reservation Service")
 @Service
@@ -70,10 +69,10 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public ReservationGetResponseDto getReservation(
-            final ReservationGetRequestDto requestDto,
+            final Long roundId,
             final User user
     ) {
-        Round selectedRound = roundHelper.getRound(requestDto.roundId());
+        Round selectedRound = roundHelper.getRound(roundId);
 
         Set<SeatGradeReservationLog> findSeatGradeReservationLogs = seatGradeReservationLogHelper
                 .getSeatReservationLogsByUser(user);
@@ -107,6 +106,29 @@ public class ReservationService {
         for (SeatGradeReservationLog seatGradeReservationLog : seatGradeReservationLogByUser) {
             seatGradeReservationLog.deleteReservationStatus();
         }
+    }
+
+    /**
+     * 점유 중인 좌석 조회
+     */
+    @Transactional(readOnly = true)
+    public ReservationGetOccupiedResponseDto getOccupied(
+            final Long roundId,
+            final Set<Long> seatGradeIdList
+    ) {
+        Round selectedRound = roundHelper.getRound(roundId);
+
+        Set<SeatGrade> seatGradesForRound = seatGradeHelper
+                .getAllSeatGradeByRoundAndSeatGradeIds(
+                        selectedRound, seatGradeIdList);
+
+        Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatGradeReservationLogHelper
+                .getSeatReservationLogsBySeatGrade(seatGradesForRound);
+
+        return ReservationGetOccupiedResponseDto.of(
+                selectedRound,
+                existingSeatGradeReservationLogs
+        );
     }
 
 }

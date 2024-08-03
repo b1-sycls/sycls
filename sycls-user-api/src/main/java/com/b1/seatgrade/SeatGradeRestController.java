@@ -28,6 +28,4 @@ public class SeatGradeRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("조회되었습니다.", responseDto));
     }
-
-
 }
