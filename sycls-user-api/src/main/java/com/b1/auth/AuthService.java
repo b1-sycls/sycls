@@ -1,17 +1,18 @@
 package com.b1.auth;
 
-import static com.b1.constant.TokenConstants.AUTHORIZATION_HEADER;
+import static com.b1.constant.TokenConstants.REFRESHTOKEN_HEADER;
 
-import com.b1.auth.entity.Code;
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserNotFoundException;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.JwtProvider;
+import com.b1.token.entity.Code;
 import com.b1.user.UserHelper;
 import com.b1.user.dto.UserResetPasswordRequestDto;
 import com.b1.user.entity.User;
 import com.b1.user.entity.UserStatus;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
