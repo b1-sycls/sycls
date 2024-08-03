@@ -53,7 +53,7 @@ public class SeatGrade {
 
     @Builder(access = AccessLevel.PRIVATE)
     private SeatGrade(final SeatGradeType grade, final Integer price, final SeatGradeStatus status,
-            final Seat seat, final Round round, final Long ticketId) {
+                      final Seat seat, final Round round, final Long ticketId) {
         this.grade = grade;
         this.price = price;
         this.status = status;
@@ -66,7 +66,7 @@ public class SeatGrade {
      * 좌석-등급 등록
      */
     public static SeatGrade addSeatGrade(final SeatGradeType grade, final Integer price,
-            final Seat seat, final Round round) {
+                                         final Seat seat, final Round round) {
         return SeatGrade.builder()
                 .grade(grade)
                 .price(price)
@@ -89,5 +89,21 @@ public class SeatGrade {
      */
     public void deleteSeatGrade() {
         this.status = SeatGradeStatus.DISABLE;
+    }
+
+    /**
+     *
+     */
+    public void soldOutSeatGrade() {
+        this.status = SeatGradeStatus.SOLD_OUT;
+    }
+
+    /**
+     * 티켓 추가
+     */
+    public void updateTicket(
+            final Long ticketId
+    ) {
+        this.ticketId = ticketId;
     }
 }

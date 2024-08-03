@@ -7,6 +7,7 @@ import com.b1.exception.customexception.global.GlobalInvalidException;
 import com.b1.exception.customexception.global.GlobalLoadingException;
 import com.b1.exception.customexception.global.GlobalMissingException;
 import com.b1.exception.customexception.global.GlobalNotFoundException;
+import com.b1.exception.customexception.global.GlobalPaymentException;
 import com.b1.exception.customexception.global.GlobalReservationException;
 import com.b1.exception.customexception.global.GlobalStatusException;
 import com.b1.exception.errorcode.ErrorCode;
@@ -79,6 +80,14 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(GlobalCannotAddExcpetion.class)
     protected ResponseEntity<ErrorResponseDto> globalCannotAddException(
+            GlobalCannotAddExcpetion e
+    ) {
+        log.error("GlobalCannotAddExcpetion 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalPaymentException.class)
+    protected ResponseEntity<ErrorResponseDto> globalPaymentException(
             GlobalCannotAddExcpetion e
     ) {
         log.error("GlobalCannotAddExcpetion 발생");
