@@ -1,5 +1,7 @@
 package com.b1.seatgrade;
 
+import static com.b1.constant.ReservationConstant.SEAT_RESERVATION_TIME;
+
 import com.b1.exception.customexception.SeatReservationLogNotAvailableException;
 import com.b1.exception.customexception.SeatReservationLogNotFoundException;
 import com.b1.exception.errorcode.SeatReservationLogErrorCode;
@@ -7,18 +9,15 @@ import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.seatgrade.entity.SeatGradeReservationLogStatus;
 import com.b1.user.entity.User;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.b1.constant.ReservationConstant.SEAT_RESERVATION_TIME;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j(topic = "Seat Reservation Log Helper")
 @Component
@@ -179,6 +178,23 @@ public class SeatGradeReservationLogHelper {
                 .collect(Collectors.groupingBy(
                         log -> log.getSeatGrade().getGrade().getValue()
                 ));
+    }
+
+    /**
+     * 점유 중인 좌석 조회
+     */
+    public Set<SeatGradeReservationLog> getSeatReservationLogs() {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        List<SeatGradeReservationLog> reservationLogs = seatReservationLogRepository
+                .findAllByCreatedAtAfterAndStatus(
+                        currentTime.minusMinutes(SEAT_RESERVATION_TIME),
+                        SeatGradeReservationLogStatus.ENABLE);
+
+        Map<Long, SeatGradeReservationLog> latestLogsBySeatGradeId = getLongSeatReservationLogMap(
+                reservationLogs);
+
+        return new HashSet<>(latestLogsBySeatGradeId.values());
     }
 
 }

@@ -2,22 +2,25 @@ package com.b1.reservation;
 
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.reservation.dto.ReservationGetDetailResponseDto;
-import com.b1.reservation.dto.ReservationGetRequestDto;
+import com.b1.reservation.dto.ReservationGetOccupiedResponseDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
 import com.b1.reservation.dto.ReservationReleaseRequestDto;
 import com.b1.reservation.dto.ReservationReserveRequestDto;
 import com.b1.reservation.dto.ReservationReserveResponseDto;
 import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -46,13 +49,13 @@ public class ReservationRestController {
     /**
      * 예매 조회
      */
-    @GetMapping("/reservations/reserve")
+    @GetMapping("/rounds/{roundId}/reservations/reserve")
     public ResponseEntity<RestApiResponseDto<ReservationGetResponseDto>> getReservation(
-            @Valid @RequestBody final ReservationGetRequestDto requestDto,
+            @PathVariable(value = "roundId") final Long roundId,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         ReservationGetResponseDto responseDto = reservationService.getReservation(
-                requestDto,
+                roundId,
                 userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
@@ -84,6 +87,22 @@ public class ReservationRestController {
         reservationService.releaseReservation(requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("해당 좌석은 취소되었습니다."));
+    }
+
+    /**
+     * 점유 중인 좌석 조회
+     */
+    @GetMapping("/rounds/{roundId}/reservations/occupied")
+    public ResponseEntity<RestApiResponseDto<ReservationGetOccupiedResponseDto>> getOccupied(
+            @PathVariable("roundId") final Long roundId,
+            @RequestParam final Set<Long> seatGradeIdList
+    ) {
+        ReservationGetOccupiedResponseDto responseDto = reservationService.getOccupied(
+                roundId,
+                seatGradeIdList
+        );
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of(responseDto));
     }
 
 }
