@@ -17,6 +17,15 @@ spring:
         base:
           url: ${AWS_BASE_URL}
 
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
+
+naver:
+  email:
+    address: ${NAVER_EMAIL}
+    password: ${NAVER_EMAIL_PASSWORD}
+
 server:
   port: 8081
 
