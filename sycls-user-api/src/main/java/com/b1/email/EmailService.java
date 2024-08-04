@@ -2,13 +2,13 @@ package com.b1.email;
 
 import static com.b1.constant.EmailConstants.FROM_NAME;
 
+import com.b1.config.EmailConfig;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
-
-    @Value("${spring.mail.username}")
-    private String from;
+    private final EmailConfig emailConfig;
 
     /**
      * TODO 이메일 전송 실패에 대한 예외클래스 추가
@@ -30,7 +28,7 @@ public class EmailService {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-            helper.setFrom(new InternetAddress(from, FROM_NAME)); // 발신자 이메일과 이름 설정
+            helper.setFrom(new InternetAddress(emailConfig.getUsername(), FROM_NAME)); // 발신자 이메일과 이름 설정
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text, true);
