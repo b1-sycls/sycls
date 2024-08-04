@@ -38,7 +38,7 @@ jwt:
     key: ${JWT_SECRET_KEY}
 
 server:
-  port: ${USER_PORT}
+  port: ${SERVER_PORT}
 
 toss:
   clientKey: ${TOSS_CLIENT_KEY}
