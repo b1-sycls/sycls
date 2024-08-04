@@ -3,7 +3,6 @@ package com.b1.place;
 import com.b1.exception.customexception.PlaceCannotUpdateException;
 import com.b1.exception.customexception.PlaceNotFoundException;
 import com.b1.exception.errorcode.PlaceErrorCode;
-import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondRequestDto;
 import com.b1.place.entity.Place;
@@ -70,9 +69,9 @@ public class PlaceHelper {
     /**
      * 공연장 최대 좌석 수 및 총 좌석수 불러오기
      */
-    public void getMaxSeatAndSeatCount(final Long placeId) {
-        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(placeId);
-        if (!Objects.equals(dto.getMaxSeat().longValue(), dto.getSeatCount())) {
+    public void checkMaxSeatAndSeatCount(final Long placeId, final Integer maxSeat) {
+        Long seatCount = placeQueryRepository.getSeatCount(placeId);
+        if (!Objects.equals(maxSeat.longValue(), seatCount)) {
             log.error("공연장을 활성화할 수 없습니다.| {}", placeId);
             throw new PlaceCannotUpdateException(PlaceErrorCode.CANNOT_UPDATE_PLACE);
         }
@@ -92,8 +91,11 @@ public class PlaceHelper {
     /**
      * 총좌석수, 최대 좌석수 비교
      */
-    public Boolean checkMaxSeatAndSeatCountForSeatDelete(final Long placeId) {
-        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(placeId);
-        return dto.getMaxSeat().longValue() != dto.getSeatCount();
+    public Boolean checkMaxSeatAndSeatCountForSeatDelete(
+            final Long placeId,
+            final Integer maxSeat
+    ) {
+        Long seatCount = placeQueryRepository.getSeatCount(placeId);
+        return maxSeat.longValue() != seatCount;
     }
 }

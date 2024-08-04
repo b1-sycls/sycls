@@ -63,7 +63,10 @@ public class SeatGradeService {
     public Boolean confirmAllSeatSetting(final Long roundId) {
         Round round = roundHelper.findById(roundId);
         // 회차의 공연장 총 좌석수와 등록된 SeatGrade 를 비교
-        return seatGradeHelper.checkMaxSeatsAndSeatCount(round.getPlace().getId());
+        return seatGradeHelper.checkMaxSeatsAndSeatCount(
+                round.getPlace().getId(),
+                round.getPlace().getMaxSeat()
+        );
     }
 
     /**

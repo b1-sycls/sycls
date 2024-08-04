@@ -47,7 +47,7 @@ public class SeatHelper {
     }
 
     /**
-     * 총 좌석수와 공연장 최대 좌석수가 같은지 확인
+     * 총 좌석수와 공연장 최대 좌석수가 같은지 확인 momoysm
      */
     public void checkMaxSeatAndSeatCount(final Long placeId, Integer maxSeat) {
         Long seatCount = placeQueryRepository.getSeatCount(placeId);

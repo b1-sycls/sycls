@@ -94,7 +94,7 @@ public class SeatService {
         seat.deleteSeat();
 
         // 최대 좌석수와 총 좌석수를 비교하고 공연장 상태 수정
-        if (placeHelper.checkMaxSeatAndSeatCountForSeatDelete(place.getId())) {
+        if (placeHelper.checkMaxSeatAndSeatCountForSeatDelete(place.getId(), place.getMaxSeat())) {
             place.updatePlaceStatus(PlaceStatus.INACTIVATED);
         }
     }
