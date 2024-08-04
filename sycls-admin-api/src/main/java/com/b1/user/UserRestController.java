@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,8 +43,8 @@ public class UserRestController {
      *
      * @param requestDto : password
      */
-    @DeleteMapping("/users/resign")
-    public ResponseEntity<RestApiResponseDto<String>> signup(
+    @PatchMapping("/users/resign")
+    public ResponseEntity<RestApiResponseDto<String>> resign(
             @Valid @RequestBody final UserResignRequestDto requestDto,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
@@ -58,7 +58,7 @@ public class UserRestController {
     /**
      * 유저 프로필 조회 기능
      */
-    @GetMapping("/v1/users/me")
+    @GetMapping("/users/me")
     public ResponseEntity<RestApiResponseDto<UserProfileResponseDto>> getProfile(
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
