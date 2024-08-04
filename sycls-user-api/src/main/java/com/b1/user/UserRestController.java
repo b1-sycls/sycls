@@ -44,7 +44,7 @@ public class UserRestController {
      * @param requestDto : password
      */
     @DeleteMapping("/users/resign")
-    public ResponseEntity<RestApiResponseDto<String>> signup(
+    public ResponseEntity<RestApiResponseDto<String>> resign(
             @Valid @RequestBody final UserResignRequestDto requestDto,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
