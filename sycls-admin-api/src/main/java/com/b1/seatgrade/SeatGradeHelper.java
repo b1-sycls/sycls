@@ -6,7 +6,6 @@ import com.b1.exception.customexception.SeatNotFoundException;
 import com.b1.exception.errorcode.SeatErrorCode;
 import com.b1.exception.errorcode.SeatGradeErrorCode;
 import com.b1.place.PlaceQueryRepository;
-import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.round.dto.RoundSeatGradeStatusDto;
 import com.b1.seat.SeatRepository;
 import com.b1.seat.entity.Seat;
@@ -68,9 +67,9 @@ public class SeatGradeHelper {
     /**
      * 최대좌석수와 총 좌석수 비교
      */
-    public Boolean checkMaxSeatsAndSeatCount(final Long placeId) {
-        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(placeId);
-        return dto.getSeatCount() != dto.getMaxSeat().longValue();
+    public Boolean checkMaxSeatsAndSeatCount(final Long placeId, final Integer maxSeat) {
+        Long seatCount = placeQueryRepository.getSeatCount(placeId);
+        return seatCount != maxSeat.longValue();
     }
 
     /**
@@ -91,7 +90,7 @@ public class SeatGradeHelper {
                 }
         );
     }
-    
+
     /**
      * 해당 회차의 공연장의 최대좌석수와 enable 된 seatGrade 의 수를 반환
      */

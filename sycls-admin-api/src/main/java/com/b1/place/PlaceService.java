@@ -77,7 +77,7 @@ public class PlaceService {
             place.updatePlaceMaxSeat(requestDto.maxSeat());
         } else if (!requestDto.status().equals(place.getStatus())) {
             if (PlaceStatus.ENABLE.equals(requestDto.status())) {
-                placeHelper.getMaxSeatAndSeatCount(placeId);
+                placeHelper.checkMaxSeatAndSeatCount(placeId, place.getMaxSeat());
             }
             place.updatePlaceStatus(requestDto.status());
         }

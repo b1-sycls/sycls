@@ -11,4 +11,6 @@ public interface SeatGradeRepository extends JpaRepository<SeatGrade, Long> {
     Set<SeatGrade> findAllByRoundAndIdIn(Round round, Set<Long> seatGradeIdList);
 
     Boolean existsByRoundIdAndSeatIdAndStatus(Long roundId, Long seatId, SeatGradeStatus status);
+
+    Set<SeatGrade> findAllByRoundAndStatusNot(Round round, SeatGradeStatus seatGradeStatus);
 }
