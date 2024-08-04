@@ -3,7 +3,6 @@ package com.b1.place;
 import static com.b1.place.entity.QPlace.place;
 import static com.b1.seat.entity.QSeat.seat;
 
-import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.entity.PlaceStatus;
 import com.b1.seat.entity.SeatStatus;
@@ -65,19 +64,13 @@ public class PlaceQueryRepository {
     }
 
     /**
-     * 공연장 최대좌석수 와 총 좌석수 불러오기
+     * 총 좌석수 불러오기
      */
-    public PlaceCheckSeatDto getMaxSeatAndSeatCount(final Long placeId) {
+    public Long getSeatCount(final Long placeId) {
         return jpaQueryFactory
-                .select(Projections.constructor
-                        (
-                                PlaceCheckSeatDto.class,
-                                place.maxSeat,
-                                seat.count()
-                        )
-                )
-                .from(place)
-                .leftJoin(seat).on(seat.place.id.eq(place.id))
+                .select(seat.count().coalesce(0L))
+                .from(seat)
+                .leftJoin(place).on(seat.place.id.eq(place.id))
                 .where(
                         place.id.eq(placeId),
                         seat.status.eq(SeatStatus.ENABLE)

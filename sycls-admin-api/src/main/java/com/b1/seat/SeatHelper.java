@@ -5,7 +5,6 @@ import com.b1.exception.customexception.SeatCodeDuplicatedException;
 import com.b1.exception.customexception.SeatNotFoundException;
 import com.b1.exception.errorcode.SeatErrorCode;
 import com.b1.place.PlaceQueryRepository;
-import com.b1.place.dto.PlaceCheckSeatDto;
 import com.b1.seat.entity.Seat;
 import com.b1.seat.entity.SeatStatus;
 import java.util.Set;
@@ -48,11 +47,11 @@ public class SeatHelper {
     }
 
     /**
-     * 총 좌석수와 공연장 최대 좌석수가 같은지 확인
+     * 총 좌석수와 공연장 최대 좌석수가 같은지 확인 momoysm
      */
-    public void checkMaxSeatAndSeatCount(final Long placeId) {
-        PlaceCheckSeatDto dto = placeQueryRepository.getMaxSeatAndSeatCount(placeId);
-        if (dto.getMaxSeat().longValue() <= dto.getSeatCount()) {
+    public void checkMaxSeatAndSeatCount(final Long placeId, final Integer maxSeat) {
+        Long seatCount = placeQueryRepository.getSeatCount(placeId);
+        if (maxSeat.longValue() <= seatCount) {
             log.error("좌석 최대 등록 완료 | {}", placeId);
             throw new SeatCannotAddException(SeatErrorCode.CANNOT_ADD_SEAT);
         }

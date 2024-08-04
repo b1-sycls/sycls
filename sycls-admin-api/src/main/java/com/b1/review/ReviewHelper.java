@@ -22,8 +22,11 @@ public class ReviewHelper {
     /**
      * 해당 공연의 리뷰 전체 조회
      */
-    public Page<ReviewGetResponseDto> getAllReviewsByContent(final Long contentId,
-            final ReviewSearchCondRequestDto requestDto, final Pageable pageable) {
+    public Page<ReviewGetResponseDto> getAllReviewsByContent(
+            final Long contentId,
+            final ReviewSearchCondRequestDto requestDto,
+            final Pageable pageable
+    ) {
         return reviewQueryRepository.getAllReviewsByContent(
                 contentId,
                 requestDto.getEmail(),
@@ -36,7 +39,7 @@ public class ReviewHelper {
     /**
      * 리뷰 상세 조회
      */
-    public ReviewGetResponseDto getReview(Long reviewId) {
+    public ReviewGetResponseDto getReview(final Long reviewId) {
         return reviewQueryRepository.getReview(reviewId);
     }
 

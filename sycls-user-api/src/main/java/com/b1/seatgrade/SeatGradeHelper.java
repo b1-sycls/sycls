@@ -46,4 +46,12 @@ public class SeatGradeHelper {
         SeatGradeStatus.checkEnable(seatGrades);
         return seatGrades;
     }
+
+    /**
+     * 공연좌석 전체 조회
+     */
+    public Set<SeatGrade> getAllSeatGradesByRound(final Round round) {
+        return seatGradeRepository
+                .findAllByRoundAndStatusNot(round, SeatGradeStatus.DISABLE);
+    }
 }
