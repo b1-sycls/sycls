@@ -3,20 +3,6 @@ spring:
     include:
       - core
 
-  cloud:
-    aws:
-      s3:
-        bucket: ${AWS_BUCKET_NAME}
-        credentials:
-          accessKey: ${AWS_ACCESS_KEY}
-          secretKey: ${AWS_SECRET_KEY}
-        region:
-          static: ${AWS_STATIC}
-        stack:
-          auto: false
-        base:
-          url: ${AWS_BASE_URL}
-
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
