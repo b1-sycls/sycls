@@ -10,10 +10,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 public class EmailConfig {
 
-    @Value("${naver.email.address}")
+    @Value("${mail.username}")
     private String id;
 
-    @Value("${naver.email.password}")
+    @Value("${mail.password}")
     private String password;
 
     @Bean
