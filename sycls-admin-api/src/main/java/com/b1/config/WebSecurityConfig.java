@@ -7,6 +7,7 @@ import com.b1.security.JwtLogoutSuccessHandler;
 import com.b1.security.JwtProvider;
 import com.b1.security.UserDetailsServiceImpl;
 import com.b1.user.UserHelper;
+import com.b1.user.entity.UserRole;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -104,7 +105,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/error").permitAll()
 
                         // ETC .. 필요한거 추가해서 사용하세요
-                        .anyRequest().authenticated()
+                        .anyRequest().hasAuthority(UserRole.ADMIN.getAuthority())
         );
 
         http.logout(logout ->

@@ -17,14 +17,25 @@ spring:
         base:
           url: ${AWS_BASE_URL}
 
+  mail:
+    host: smtp.naver.com
+    port: 587
+    username: ${NAVER_EMAIL}
+    password: ${NAVER_EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.naver.com
+            protocols: TLSv1.2
+
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
-
-naver:
-  email:
-    address: ${NAVER_EMAIL}
-    password: ${NAVER_EMAIL_PASSWORD}
 
 toss:
   secretKey: ${TOSS_SECRET_KEY}
@@ -32,7 +43,3 @@ toss:
 
 server:
   port: 8081
-
-toss:
-  clientKey: ${TOSS_CLIENT_KEY}
-  secretKey: ${TOSS_SECRET_KEY}
