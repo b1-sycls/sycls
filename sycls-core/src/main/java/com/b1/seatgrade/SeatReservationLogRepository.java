@@ -22,4 +22,10 @@ public interface SeatReservationLogRepository extends JpaRepository<SeatGradeRes
             SeatGradeReservationLogStatus status);
 
     Set<SeatGradeReservationLog> findAllByIdInAndUser(Set<Long> reservationIds, User user);
+
+    List<SeatGradeReservationLog> findAllByIdIn(List<Long> id);
+
+    List<SeatGradeReservationLog> findAllByCreatedAtAfterAndStatus(
+            LocalDateTime createdAt,
+            SeatGradeReservationLogStatus status);
 }
