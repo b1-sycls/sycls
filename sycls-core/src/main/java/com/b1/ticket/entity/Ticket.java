@@ -68,4 +68,24 @@ public class Ticket extends TimeStamp {
         this.user = user;
         this.round = round;
     }
+
+    /**
+     * 티켓 생성
+     */
+    public static Ticket addTicket(
+            final String orderId,
+            final Integer price,
+            final User user,
+            final Round round
+    ) {
+        return Ticket.builder()
+                .code(orderId)
+                .price(price)
+                .status(TicketStatus.RESERVED)
+                .orderDate(LocalDateTime.now())
+                .orderDate(LocalDateTime.now())
+                .user(user)
+                .round(round)
+                .build();
+    }
 }
