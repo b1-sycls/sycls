@@ -58,7 +58,7 @@ public class UserRestController {
     /**
      * 유저 프로필 조회 기능
      */
-    @GetMapping("/v1/users/me")
+    @GetMapping("/users/me")
     public ResponseEntity<RestApiResponseDto<UserProfileResponseDto>> getProfile(
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
