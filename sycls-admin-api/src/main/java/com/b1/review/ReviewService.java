@@ -58,14 +58,14 @@ public class ReviewService {
      * 리뷰 상세 조회
      */
     @Transactional(readOnly = true)
-    public ReviewGetResponseDto getReview(Long reviewId) {
+    public ReviewGetResponseDto getReview(final Long reviewId) {
         return reviewHelper.getReview(reviewId);
     }
 
     /**
      * 리뷰 삭제
      */
-    public void deleteReview(Long reviewId) {
+    public void deleteReview(final Long reviewId) {
         Review review = reviewHelper.findReview(reviewId);
         ReviewStatus.checkDeleted(review.getStatus());
         review.deleteReview();
