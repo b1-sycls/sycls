@@ -71,7 +71,8 @@ public class RoundQueryRepository {
                         round.status,
                         place.id,
                         place.name,
-                        place.location
+                        place.location,
+                        place.maxSeat
                 ))
                 .from(round)
                 .leftJoin(round.content, content)
@@ -102,7 +103,8 @@ public class RoundQueryRepository {
                         round.status,
                         place.id,
                         place.name,
-                        place.location
+                        place.location,
+                        place.maxSeat
                 ))
                 .from(round)
                 .leftJoin(round.content, content)

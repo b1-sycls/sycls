@@ -20,4 +20,5 @@ public class RoundInfoGetAdminResponseDto {
     private final Long placeId;
     private final String placeName;
     private final String placeLocation;
+    private final Integer placeMaxSeat;
 }
