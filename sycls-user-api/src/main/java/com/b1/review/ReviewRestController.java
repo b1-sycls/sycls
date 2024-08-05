@@ -3,7 +3,7 @@ package com.b1.review;
 import com.b1.common.PageResponseDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.review.dto.ReviewAddRequestDto;
-import com.b1.review.dto.ReviewGetResponseDto;
+import com.b1.review.dto.ReviewGetUserResponseDto;
 import com.b1.review.dto.ReviewUpdateRequestDto;
 import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -46,12 +46,12 @@ public class ReviewRestController {
      * 리뷰 전체 조회
      */
     @GetMapping("/contents/{contentId}/reviews")
-    public ResponseEntity<RestApiResponseDto<PageResponseDto<ReviewGetResponseDto>>> getAllReviews(
+    public ResponseEntity<RestApiResponseDto<PageResponseDto<ReviewGetUserResponseDto>>> getAllReviews(
             @PathVariable final Long contentId,
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") final Integer pageNum,
             @RequestParam(value = "pageSize", required = false, defaultValue = "4") final Integer pageSize
     ) {
-        PageResponseDto<ReviewGetResponseDto> response =
+        PageResponseDto<ReviewGetUserResponseDto> response =
                 reviewService.getAllReviews(
                         contentId,
                         pageNum,
