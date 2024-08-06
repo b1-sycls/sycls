@@ -13,4 +13,8 @@ public enum TicketStatus {
     ;
 
     private final String value;
+
+    public static boolean isReserved(TicketStatus status) {
+        return status.equals(RESERVED);
+    }
 }

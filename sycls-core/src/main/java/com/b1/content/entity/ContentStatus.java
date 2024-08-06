@@ -40,4 +40,7 @@ public enum ContentStatus {
         }
     }
 
+    public static boolean isDeleted(ContentStatus status) {
+        return status.equals(DELETED);
+    }
 }

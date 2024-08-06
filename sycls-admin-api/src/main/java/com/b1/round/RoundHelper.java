@@ -81,4 +81,13 @@ public class RoundHelper {
             throw new PlaceCannotUpdateException(PlaceErrorCode.CANNOT_UPDATE_PLACE);
         }
     }
+
+    /**
+     * 해당 공연의 모든 회차 조회
+     */
+    public List<Round> getAllRoundsByContentIdAndAvailable(final Long contentId) {
+        return roundRepository.findAllByContentId(contentId).stream()
+                .filter(round -> RoundStatus.isAvailable(round.getStatus()))
+                .toList();
+    }
 }
