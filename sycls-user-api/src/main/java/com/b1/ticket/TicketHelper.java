@@ -1,6 +1,7 @@
 package com.b1.ticket;
 
 import com.b1.ticket.dto.TicketGetAllDto;
+import com.b1.ticket.dto.TicketGetDetailDto;
 import com.b1.ticket.entity.Ticket;
 import com.b1.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,11 @@ public class TicketHelper {
             final Pageable pageable
     ) {
         return ticketQueryRepository.getAllTicketForUser(user, pageable);
+    }
+
+    public TicketGetDetailDto getDetailTicketForUser(
+            final Long ticketId
+    ) {
+        return ticketQueryRepository.getDetailTicketForUser(ticketId);
     }
 }

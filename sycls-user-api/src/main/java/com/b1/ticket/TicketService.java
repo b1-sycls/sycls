@@ -1,10 +1,13 @@
 package com.b1.ticket;
 
+import com.b1.cast.CastHelper;
+import com.b1.cast.entity.dto.CastGetUserResponseDto;
 import com.b1.common.PageResponseDto;
 import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.ticket.dto.TicketGetAllDto;
 import com.b1.ticket.dto.TicketGetAllUserResponseDto;
+import com.b1.ticket.dto.TicketGetDetailDto;
 import com.b1.ticket.dto.TicketGetDetailUserResponseDto;
 import com.b1.user.entity.User;
 import com.b1.util.PageUtil;
@@ -27,6 +30,7 @@ public class TicketService {
 
     private final TicketHelper ticketHelper;
     private final SeatGradeHelper seatGradeHelper;
+    private final CastHelper castHelper;
 
     /**
      * 티켓 페이징 조회
@@ -50,4 +54,16 @@ public class TicketService {
         return TicketGetAllUserResponseDto.of(ticketDto, seatGrades);
     }
 
+    /**
+     * 티켓 상세 조회
+     */
+    public TicketGetDetailUserResponseDto getDetailTicket(
+            final Long ticketId
+    ) {
+        TicketGetDetailDto ticketGetDetailDto = ticketHelper.getDetailTicketForUser(ticketId);
+        Set<SeatGrade> seatGrades = seatGradeHelper.getSeatGradesByTicketId(ticketGetDetailDto.getTicketId());
+        List<CastGetUserResponseDto> castsDto = castHelper.getAllCastsByRoundId(ticketGetDetailDto.getRoundId());
+
+        return TicketGetDetailUserResponseDto.of(ticketGetDetailDto, seatGrades, castsDto);
+    }
 }

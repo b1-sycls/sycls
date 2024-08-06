@@ -58,7 +58,14 @@ public class SeatGradeHelper {
     }
 
     /**
-     * 공연좌석 조회
+     * 공연 좌석 조회
+     */
+    public Set<SeatGrade> getSeatGradesByTicketId(final Long ticketId) {
+        return seatGradeRepository.findByTicketId(ticketId);
+    }
+
+    /**
+     * 공연 좌석 다건 조회
      */
     public Set<SeatGrade> getAllSeatGradesByTicketId(final List<Long> ticketId) {
         return seatGradeRepository.findAllByTicketIdIn(ticketId);

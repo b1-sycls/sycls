@@ -1,6 +1,7 @@
 package com.b1.ticket;
 
 import com.b1.ticket.dto.TicketGetAllDto;
+import com.b1.ticket.dto.TicketGetDetailDto;
 import com.b1.ticket.entity.TicketStatus;
 import com.b1.user.entity.User;
 import com.querydsl.core.types.Projections;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.b1.cast.entity.QCast.cast;
 import static com.b1.content.entity.QContent.content;
+import static com.b1.place.entity.QPlace.place;
 import static com.b1.round.entity.QRound.round;
 import static com.b1.ticket.entity.QTicket.ticket;
 import static com.b1.user.entity.QUser.user;
@@ -84,4 +87,36 @@ public class TicketQueryRepository {
         return PageableExecutionUtils.getPage(roundList, pageable, total::fetchOne);
     }
 
+    public TicketGetDetailDto getDetailTicketForUser(
+            final Long ticketId
+    ) {
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        TicketGetDetailDto.class,
+                        content.id,
+                        content.title,
+                        content.status,
+                        content.mainImagePath,
+                        round.id,
+                        round.sequence,
+                        round.startDate,
+                        round.startTime,
+                        round.endTime,
+                        round.status,
+                        place.location,
+                        place.name,
+                        ticket.id,
+                        ticket.price,
+                        ticket.status,
+                        ticket.createdAt
+                ))
+                .from(content)
+                .join(round).on(content.id.eq(round.content.id))
+                .join(place).on(round.place.id.eq(place.id))
+                .join(ticket).on(ticket.round.id.eq(round.id))
+                .where(
+                        ticket.id.eq(ticketId)
+                )
+                .fetchFirst();
+    }
 }
