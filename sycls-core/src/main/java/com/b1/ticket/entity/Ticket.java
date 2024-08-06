@@ -89,7 +89,7 @@ public class Ticket extends TimeStamp {
                 .build();
     }
 
-    public void updateStatus(TicketStatus status) {
+    public void updateStatus(final TicketStatus status) {
         this.status = status;
     }
 }

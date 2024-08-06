@@ -14,8 +14,10 @@ public class TicketHelper {
 
     private final TicketRepository ticketRepository;
 
-
-    public List<Ticket> getAllTicketByRoundIdAndReserved(Long roundId) {
+    /**
+     * 해당 회차에 예매완료된 티켓들만 반환
+     */
+    public List<Ticket> getAllTicketByRoundIdAndReserved(final Long roundId) {
         return ticketRepository.findAllByRoundId(roundId).stream()
                 .filter(ticket -> TicketStatus.isReserved(ticket.getStatus()))
                 .toList();

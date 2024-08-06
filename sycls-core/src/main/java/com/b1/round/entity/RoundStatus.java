@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public enum RoundStatus {
     WAITING("WAITING"), // 대기
     AVAILABLE("AVAILABLE"), // 예매 가능
-    CLOSED("CLOSED"),  // 마감
+    CLOSED("CLOSED"),  // 해당 공연이 끝났을 때
     ;
 
     private final String value;
@@ -34,7 +34,7 @@ public enum RoundStatus {
         }
     }
 
-    public static void checkAvailable(RoundStatus status) {
+    public static void checkAvailable(final RoundStatus status) {
         if (status.equals(AVAILABLE)) {
             log.error("회차 등급 수정 불가 상태 | {}", status);
             throw new SeatGradeCannnotUpdateException(SeatGradeErrorCode.CANNOT_UPDATE_SEAT_GRADE);

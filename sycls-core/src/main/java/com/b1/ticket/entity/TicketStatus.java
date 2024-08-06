@@ -14,7 +14,10 @@ public enum TicketStatus {
 
     private final String value;
 
-    public static boolean isReserved(TicketStatus status) {
+    /**
+     * 예매 완료상태 여부 true / false 반환
+     */
+    public static boolean isReserved(final TicketStatus status) {
         return status.equals(RESERVED);
     }
 }

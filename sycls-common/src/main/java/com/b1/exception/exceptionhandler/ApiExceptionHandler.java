@@ -8,6 +8,7 @@ import com.b1.exception.customexception.global.GlobalInvalidException;
 import com.b1.exception.customexception.global.GlobalLoadingException;
 import com.b1.exception.customexception.global.GlobalMissingException;
 import com.b1.exception.customexception.global.GlobalNotFoundException;
+import com.b1.exception.customexception.global.GlobalNotSupportedException;
 import com.b1.exception.customexception.global.GlobalPaymentException;
 import com.b1.exception.customexception.global.GlobalReservationException;
 import com.b1.exception.customexception.global.GlobalStatusException;
@@ -100,6 +101,14 @@ public class ApiExceptionHandler {
             GlobalFailException e
     ) {
         log.error("GlobalFailException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalNotSupportedException.class)
+    protected ResponseEntity<ErrorResponseDto> globalPaymentException(
+            GlobalNotSupportedException e
+    ) {
+        log.error("GlobalNotSupportedException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 

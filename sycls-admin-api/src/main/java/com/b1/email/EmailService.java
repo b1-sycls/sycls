@@ -5,6 +5,9 @@ import static com.b1.constant.EmailConstants.CONTENT_CANCEL_SUBJECT;
 import static com.b1.constant.EmailConstants.FROM_NAME;
 
 import com.b1.config.EmailConfig;
+import com.b1.exception.customexception.EmailSendFailException;
+import com.b1.exception.customexception.EncodingNotSupportedException;
+import com.b1.exception.errorcode.EmailErrorCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -58,9 +61,10 @@ public class EmailService {
             helper.setText(contentTitle + "의 " + roundSequence + "번째 회차 공연이 취소 되었음을 알려드립니다.", true);
         } catch (MessagingException e) {
             log.error("이메일 전송 실패", e);
-            throw new IllegalStateException("이메일 전송 실패");
+            throw new EmailSendFailException(EmailErrorCode.EMAIL_SEND_FAIL);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            log.error("지원되지 않는 인코딩 타입입니다.", e);
+            throw new EncodingNotSupportedException(EmailErrorCode.ENCODING_NOT_SUPPORTED);
         }
     }
 }
