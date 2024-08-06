@@ -7,8 +7,10 @@ import com.b1.round.entity.Round;
 import com.b1.seatgrade.dto.SeatGradeUserGetDto;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeStatus;
+
 import java.util.List;
 import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -53,5 +55,12 @@ public class SeatGradeHelper {
     public Set<SeatGrade> getAllSeatGradesByRound(final Round round) {
         return seatGradeRepository
                 .findAllByRoundAndStatusNot(round, SeatGradeStatus.DISABLE);
+    }
+
+    /**
+     * 공연좌석 조회
+     */
+    public Set<SeatGrade> getAllSeatGradesByTicketId(final List<Long> ticketId) {
+        return seatGradeRepository.findAllByTicketIdIn(ticketId);
     }
 }
