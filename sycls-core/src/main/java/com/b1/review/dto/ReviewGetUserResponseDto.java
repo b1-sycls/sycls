@@ -6,8 +6,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ReviewGetResponseDto {
+public class ReviewGetUserResponseDto {
 
+    private Long id;
     private String nickName;
     private String comment;
     private Integer rating;

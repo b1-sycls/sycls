@@ -4,7 +4,7 @@ import com.b1.common.PageResponseDto;
 import com.b1.content.ContentHelper;
 import com.b1.content.entity.Content;
 import com.b1.review.dto.ReviewAddRequestDto;
-import com.b1.review.dto.ReviewGetResponseDto;
+import com.b1.review.dto.ReviewGetUserResponseDto;
 import com.b1.review.dto.ReviewUpdateRequestDto;
 import com.b1.review.entity.Review;
 import com.b1.review.entity.ReviewStatus;
@@ -45,14 +45,14 @@ public class ReviewService {
      * 리뷰 조회
      */
     @Transactional(readOnly = true)
-    public PageResponseDto<ReviewGetResponseDto> getAllReviews(
+    public PageResponseDto<ReviewGetUserResponseDto> getAllReviews(
             final Long contentId,
             final Integer pageNum,
             final Integer pageSize
     ) {
         PageUtil.checkPageNumber(pageNum);
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize, Direction.DESC, "createdAt");
-        Page<ReviewGetResponseDto> reviewList = reviewHelper.getAllReviews(contentId, pageable);
+        Page<ReviewGetUserResponseDto> reviewList = reviewHelper.getAllReviews(contentId, pageable);
         return PageResponseDto.of(reviewList);
     }
 
