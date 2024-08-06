@@ -4,7 +4,8 @@ import static com.b1.content.entity.QContent.content;
 import static com.b1.review.entity.QReview.review;
 import static com.b1.user.entity.QUser.user;
 
-import com.b1.review.dto.ReviewGetResponseDto;
+import com.b1.review.dto.ReviewGetAdminResponseDto;
+import com.b1.review.dto.ReviewGetUserResponseDto;
 import com.b1.review.entity.ReviewStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -27,15 +28,16 @@ public class ReviewQueryRepository {
     /**
      * 사용자 리뷰 전체 조회
      */
-    public Page<ReviewGetResponseDto> getAllReviews(
+    public Page<ReviewGetUserResponseDto> getAllReviews(
             final Long contentId,
             final Pageable pageable
     ) {
 
-        List<ReviewGetResponseDto> reviewList = jpaQueryFactory
+        List<ReviewGetUserResponseDto> reviewList = jpaQueryFactory
                 .select(Projections.constructor
                         (
-                                ReviewGetResponseDto.class,
+                                ReviewGetUserResponseDto.class,
+                                review.id,
                                 user.nickname,
                                 review.comment,
                                 review.rating,
@@ -50,6 +52,9 @@ public class ReviewQueryRepository {
                         review.status.eq(ReviewStatus.ENABLE),
                         content.id.eq(contentId)
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(content.createdAt.desc())
                 .fetch();
 
         JPAQuery<Long> total = jpaQueryFactory
@@ -61,27 +66,30 @@ public class ReviewQueryRepository {
                         review.status.eq(ReviewStatus.ENABLE),
                         content.id.eq(contentId)
                 );
+
         return PageableExecutionUtils.getPage(reviewList, pageable, total::fetchOne);
     }
 
     /**
      * 관리자 공연 전체 조회
      */
-    public Page<ReviewGetResponseDto> getAllReviewsByContent(
+    public Page<ReviewGetAdminResponseDto> getAllReviewsByContent(
             final Long contentId,
-            final String email,
+            final Integer rating,
             final String nickName,
             final ReviewStatus reviewStatus,
             final Pageable pageable
     ) {
 
-        List<ReviewGetResponseDto> reviewList = jpaQueryFactory
+        List<ReviewGetAdminResponseDto> reviewList = jpaQueryFactory
                 .select(
                         Projections.constructor(
-                                ReviewGetResponseDto.class,
+                                ReviewGetAdminResponseDto.class,
+                                review.id,
                                 user.nickname,
                                 review.comment,
                                 review.rating,
+                                review.status,
                                 review.createdAt,
                                 review.updatedAt
                         )
@@ -91,10 +99,13 @@ public class ReviewQueryRepository {
                 .leftJoin(content).on(review.content.id.eq(content.id))
                 .where(
                         review.content.id.eq(contentId),
-                        emailLike(email),
-                        nickNameLike(nickName),
+                        ratingEqual(rating),
+                        nickNameContains(nickName),
                         reviewStatusEq(reviewStatus)
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(content.createdAt.desc())
                 .fetch();
 
         JPAQuery<Long> total = jpaQueryFactory
@@ -102,8 +113,8 @@ public class ReviewQueryRepository {
                 .from(review)
                 .where(
                         review.content.id.eq(contentId),
-                        emailLike(email),
-                        nickNameLike(nickName),
+                        ratingEqual(rating),
+                        nickNameContains(nickName),
                         reviewStatusEq(reviewStatus)
                 );
 
@@ -113,11 +124,11 @@ public class ReviewQueryRepository {
     /**
      * 리뷰 상세조회
      */
-    public ReviewGetResponseDto getReview(final Long reviewId) {
+    public ReviewGetUserResponseDto getReview(final Long reviewId) {
         return jpaQueryFactory
                 .select(
                         Projections.constructor(
-                                ReviewGetResponseDto.class,
+                                ReviewGetUserResponseDto.class,
                                 user.nickname,
                                 review.comment,
                                 review.rating,
@@ -127,24 +138,26 @@ public class ReviewQueryRepository {
                 )
                 .from(review)
                 .leftJoin(user).on(review.user.id.eq(user.id))
+
                 .where(
                         review.id.eq(reviewId)
                 )
+
                 .fetchOne();
     }
 
     /**
-     * 관리자 리뷰 전체 조회시 검색조건 email
+     * 관리자 리뷰 전체 조회시 검색조건 rating
      */
-    private BooleanExpression emailLike(final String email) {
-        return StringUtils.hasText(email) ? user.email.like(email) : null;
+    private BooleanExpression ratingEqual(final Integer rating) {
+        return rating != null ? review.rating.eq(rating) : null;
     }
 
     /**
      * 관리자 리뷰 전체 조회시 검색조건 nickName
      */
-    private BooleanExpression nickNameLike(final String nickName) {
-        return StringUtils.hasText(nickName) ? user.email.like(nickName) : null;
+    private BooleanExpression nickNameContains(final String nickName) {
+        return StringUtils.hasText(nickName) ? user.nickname.contains(nickName) : null;
     }
 
     /**

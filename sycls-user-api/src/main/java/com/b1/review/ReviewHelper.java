@@ -3,7 +3,7 @@ package com.b1.review;
 import com.b1.exception.customexception.ReviewNotFoundException;
 import com.b1.exception.customexception.ReviewerMisMatchException;
 import com.b1.exception.errorcode.ReviewErrorCode;
-import com.b1.review.dto.ReviewGetResponseDto;
+import com.b1.review.dto.ReviewGetUserResponseDto;
 import com.b1.review.entity.Review;
 import com.b1.user.entity.User;
 import java.util.Objects;
@@ -31,7 +31,7 @@ public class ReviewHelper {
     /**
      * 리뷰 조회
      */
-    public Page<ReviewGetResponseDto> getAllReviews(
+    public Page<ReviewGetUserResponseDto> getAllReviews(
             final Long contentId,
             final Pageable pageable
     ) {
