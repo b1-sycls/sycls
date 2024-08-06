@@ -5,6 +5,7 @@ import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.ticket.dto.TicketGetAllDto;
 import com.b1.ticket.dto.TicketGetAllUserResponseDto;
+import com.b1.ticket.dto.TicketGetDetailUserResponseDto;
 import com.b1.user.entity.User;
 import com.b1.util.PageUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ import java.util.Set;
 @Transactional
 public class TicketService {
 
-    private final TicketQueryRepository ticketQueryRepository;
+    private final TicketHelper ticketHelper;
     private final SeatGradeHelper seatGradeHelper;
 
     /**
@@ -38,8 +39,8 @@ public class TicketService {
         PageUtil.checkPageNumber(pageNum);
 
         Pageable pageable = PageRequest.of(pageNum - 1, 10);
-        Page<TicketGetAllDto> ticketDto = ticketQueryRepository.getAllTicketForUser(user, pageable);
 
+        Page<TicketGetAllDto> ticketDto = ticketHelper.getAllTicketForUser(user, pageable);
         List<Long> ticketIds = ticketDto.getContent().stream()
                 .map(TicketGetAllDto::getTicketId)
                 .toList();
@@ -48,4 +49,5 @@ public class TicketService {
 
         return TicketGetAllUserResponseDto.of(ticketDto, seatGrades);
     }
+
 }
