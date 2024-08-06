@@ -1,8 +1,9 @@
 package com.b1.exception.exceptionhandler;
 
-import com.b1.exception.customexception.global.GlobalCannotAddExcpetion;
+import com.b1.exception.customexception.global.GlobalCannotAddException;
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
 import com.b1.exception.customexception.global.GlobalEntityInUseException;
+import com.b1.exception.customexception.global.GlobalFailException;
 import com.b1.exception.customexception.global.GlobalInvalidException;
 import com.b1.exception.customexception.global.GlobalLoadingException;
 import com.b1.exception.customexception.global.GlobalMissingException;
@@ -78,9 +79,9 @@ public class ApiExceptionHandler {
         return sendErrorResponse(e.getErrorCode());
     }
 
-    @ExceptionHandler(GlobalCannotAddExcpetion.class)
+    @ExceptionHandler(GlobalCannotAddException.class)
     protected ResponseEntity<ErrorResponseDto> globalCannotAddException(
-            GlobalCannotAddExcpetion e
+            GlobalCannotAddException e
     ) {
         log.error("GlobalCannotAddExcpetion 발생");
         return sendErrorResponse(e.getErrorCode());
@@ -88,9 +89,17 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(GlobalPaymentException.class)
     protected ResponseEntity<ErrorResponseDto> globalPaymentException(
-            GlobalCannotAddExcpetion e
+            GlobalPaymentException e
     ) {
-        log.error("GlobalCannotAddExcpetion 발생");
+        log.error("GlobalPaymentException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalFailException.class)
+    protected ResponseEntity<ErrorResponseDto> globalPaymentException(
+            GlobalFailException e
+    ) {
+        log.error("GlobalFailException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 
