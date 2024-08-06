@@ -58,7 +58,8 @@ public class EmailService {
             helper.setFrom(new InternetAddress(emailConfig.getUsername(), CANCEL_FROM_NAME));
             helper.setTo(userEmail);
             helper.setSubject(CONTENT_CANCEL_SUBJECT);
-            helper.setText(contentTitle + "의 " + roundSequence + "번째 회차 공연이 취소 되었음을 알려드립니다.", true);
+            helper.setText(contentTitle + "의 " + roundSequence + "회차 공연이 취소 되었음을 알려드립니다.", true);
+            javaMailSender.send(message);
         } catch (MessagingException e) {
             log.error("이메일 전송 실패", e);
             throw new EmailSendFailException(EmailErrorCode.EMAIL_SEND_FAIL);
