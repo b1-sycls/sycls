@@ -2,8 +2,8 @@ package com.b1.exception.exceptionhandler;
 
 import com.b1.exception.customexception.global.GlobalCannotAddException;
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
+import com.b1.exception.customexception.global.GlobalEmailServiceException;
 import com.b1.exception.customexception.global.GlobalEntityInUseException;
-import com.b1.exception.customexception.global.GlobalFailException;
 import com.b1.exception.customexception.global.GlobalInvalidException;
 import com.b1.exception.customexception.global.GlobalLoadingException;
 import com.b1.exception.customexception.global.GlobalMissingException;
@@ -96,16 +96,16 @@ public class ApiExceptionHandler {
         return sendErrorResponse(e.getErrorCode());
     }
 
-    @ExceptionHandler(GlobalFailException.class)
-    protected ResponseEntity<ErrorResponseDto> globalPaymentException(
-            GlobalFailException e
+    @ExceptionHandler(GlobalEmailServiceException.class)
+    protected ResponseEntity<ErrorResponseDto> globalEmailServiceException(
+            GlobalEmailServiceException e
     ) {
-        log.error("GlobalFailException 발생");
+        log.error("GlobalEmailServiceException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 
     @ExceptionHandler(GlobalNotSupportedException.class)
-    protected ResponseEntity<ErrorResponseDto> globalPaymentException(
+    protected ResponseEntity<ErrorResponseDto> globalNotSupportedException(
             GlobalNotSupportedException e
     ) {
         log.error("GlobalNotSupportedException 발생");

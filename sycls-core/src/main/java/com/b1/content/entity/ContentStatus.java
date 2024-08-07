@@ -39,8 +39,4 @@ public enum ContentStatus {
             throw new ReviewCannotAddException(ReviewErrorCode.CANNOT_ADD_REVIEW);
         }
     }
-
-    public static boolean isDeleted(ContentStatus status) {
-        return status.equals(DELETED);
-    }
 }
