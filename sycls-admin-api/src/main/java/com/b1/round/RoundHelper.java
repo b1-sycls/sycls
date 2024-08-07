@@ -58,7 +58,7 @@ public class RoundHelper {
     }
 
     /**
-     * 회차 단일 상세 조회 TODO 필드 추가 가능성 농후
+     * 회차 단일 상세 조회
      */
     public RoundDetailInfoAdminResponseDto getRoundDetail(final Long roundId) {
         return roundQueryRepository.getRoundDetailInfoForAdmin(roundId);
@@ -73,12 +73,21 @@ public class RoundHelper {
     }
 
     /**
-     * 해당 공연장을 사용하고 회차상태가 AVAILABLE인 공연장 존재 여부 확인
+     * 해당 공연장을 사용하고 회차상태가 AVAILABLE 인 공연장 존재 여부 확인
      */
     public void existsRoundByPlaceIdAndStatus(final Long placeId) {
         if (roundRepository.existsByPlaceIdAndStatus(placeId, RoundStatus.AVAILABLE)) {
             log.error("예매 중인 공연이 존재해 공연장을 수정할 수 없습니다. | {}", placeId);
             throw new PlaceCannotUpdateException(PlaceErrorCode.CANNOT_UPDATE_PLACE);
         }
+    }
+
+    /**
+     * 해당 공연의 활성화된 모든 회차 조회
+     */
+    public List<Round> getAllRoundsByContentIdAndAvailable(final Long contentId) {
+        return roundRepository.findAllByContentId(contentId).stream()
+                .filter(round -> RoundStatus.isAvailable(round.getStatus()))
+                .toList();
     }
 }

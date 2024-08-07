@@ -12,11 +12,17 @@ import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.content.entity.Content;
 import com.b1.content.entity.ContentDetailImage;
 import com.b1.content.entity.ContentStatus;
+import com.b1.email.EmailService;
 import com.b1.round.RoundHelper;
 import com.b1.round.dto.RoundInfoGetAdminResponseDto;
+import com.b1.round.entity.Round;
+import com.b1.round.entity.RoundStatus;
 import com.b1.s3.S3Uploader;
 import com.b1.s3.S3UrlPathType;
 import com.b1.s3.S3Util;
+import com.b1.ticket.TicketHelper;
+import com.b1.ticket.entity.Ticket;
+import com.b1.ticket.entity.TicketStatus;
 import com.b1.util.PageUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +45,9 @@ public class ContentService {
     private final ContentHelper contentHelper;
     private final CategoryHelper categoryHelper;
     private final RoundHelper roundHelper;
+    private final TicketHelper ticketHelper;
     private final S3Uploader s3Uploader;
+    private final EmailService emailService;
 
     /**
      * 공연 등록 기능
@@ -118,8 +126,20 @@ public class ContentService {
 
         if (ContentStatus.isVisible(requestDto.status())) {
             contentHelper.checkRoundStatusByContentId(content.getId());
+        } else {
+            List<Round> roundList = roundHelper.getAllRoundsByContentIdAndAvailable(contentId);
+            for (Round round : roundList) {
+                List<Ticket> ticketList = ticketHelper.getAllTicketByRoundIdAndReserved(
+                        round.getId());
+                for (Ticket ticket : ticketList) {
+                    ticket.updateStatus(TicketStatus.REFUNDED_CANCELED);
+                    String userEmail = ticket.getUser().getEmail();
+                    emailService.sendContentCancelEmail(userEmail, content.getTitle(),
+                            round.getSequence());
+                }
+                round.updateStatus(RoundStatus.CLOSED);
+            }
         }
-
         content.updateStatus(requestDto.status());
     }
 
