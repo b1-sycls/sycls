@@ -26,4 +26,8 @@ public class TicketGetDetailCastResponseDto {
                 .imagePath(dto.getImagePath())
                 .build();
     }
+
+    public void updateImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 }

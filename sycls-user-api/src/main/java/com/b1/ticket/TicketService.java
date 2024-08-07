@@ -66,11 +66,12 @@ public class TicketService {
         Set<SeatGrade> seatGrades = seatGradeHelper.getSeatGradesByTicketId(ticketGetDetailDto.getTicketId());
         List<CastGetUserResponseDto> castsDto = castHelper.getAllCastsByRoundId(ticketGetDetailDto.getRoundId());
 
-        TicketGetDetailUserResponseDto responseDto = TicketGetDetailUserResponseDto.of(ticketGetDetailDto, seatGrades, castsDto);
+        TicketGetDetailUserResponseDto responseDto = TicketGetDetailUserResponseDto
+                .of(ticketGetDetailDto, seatGrades, castsDto);
+
         responseDto.updateMainImagePath(S3Util.makeResponseImageDir(responseDto.getMainImagePath()));
-
-        castsDto.forEach(dto -> dto.updateImagePath(S3Util.makeResponseImageDir(dto.getImagePath())));
-
+        responseDto.getCastResponseDtos()
+                .forEach(dto -> dto.updateImagePath(S3Util.makeResponseImageDir(dto.getImagePath())));
         return responseDto;
     }
 }
