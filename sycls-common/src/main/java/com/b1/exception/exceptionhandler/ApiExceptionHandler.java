@@ -2,7 +2,7 @@ package com.b1.exception.exceptionhandler;
 
 import com.b1.exception.customexception.global.GlobalCannotAddException;
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
-import com.b1.exception.customexception.global.GlobalEmailServiceException;
+import com.b1.exception.customexception.global.GlobalEmailException;
 import com.b1.exception.customexception.global.GlobalEntityInUseException;
 import com.b1.exception.customexception.global.GlobalInvalidException;
 import com.b1.exception.customexception.global.GlobalLoadingException;
@@ -96,11 +96,11 @@ public class ApiExceptionHandler {
         return sendErrorResponse(e.getErrorCode());
     }
 
-    @ExceptionHandler(GlobalEmailServiceException.class)
-    protected ResponseEntity<ErrorResponseDto> globalEmailServiceException(
-            GlobalEmailServiceException e
+    @ExceptionHandler(GlobalEmailException.class)
+    protected ResponseEntity<ErrorResponseDto> globalEmailException(
+            GlobalEmailException e
     ) {
-        log.error("GlobalEmailServiceException 발생");
+        log.error("GlobalEmailException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 
