@@ -39,5 +39,4 @@ public enum ContentStatus {
             throw new ReviewCannotAddException(ReviewErrorCode.CANNOT_ADD_REVIEW);
         }
     }
-
 }

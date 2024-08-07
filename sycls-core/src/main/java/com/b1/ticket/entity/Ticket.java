@@ -88,4 +88,8 @@ public class Ticket extends TimeStamp {
                 .round(round)
                 .build();
     }
+
+    public void updateStatus(final TicketStatus status) {
+        this.status = status;
+    }
 }

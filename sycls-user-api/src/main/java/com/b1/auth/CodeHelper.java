@@ -1,7 +1,7 @@
 package com.b1.auth;
 
 import com.b1.exception.customexception.EmailCodeException;
-import com.b1.exception.errorcode.EmailAuthErrorCode;
+import com.b1.exception.errorcode.EmailErrorCode;
 import com.b1.token.entity.Code;
 import com.b1.token.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class CodeHelper {
     public String findCodeByEmail(final String email) {
         return codeRepository.findById(email).orElseThrow(() -> {
             log.error("Code가 없는 email입니다: {}", email);
-            return new EmailCodeException(EmailAuthErrorCode.USER_CODE_NOT_FOUND);
+            return new EmailCodeException(EmailErrorCode.USER_CODE_NOT_FOUND);
         }).getCode();
     }
 

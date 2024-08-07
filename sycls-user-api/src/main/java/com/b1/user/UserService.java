@@ -6,7 +6,7 @@ import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.customexception.UserEmailDuplicatedException;
 import com.b1.exception.customexception.UserIncorrectPasswordException;
 import com.b1.exception.customexception.UserNicknameDuplicatedException;
-import com.b1.exception.errorcode.EmailAuthErrorCode;
+import com.b1.exception.errorcode.EmailErrorCode;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.security.UserDetailsImpl;
 import com.b1.user.dto.UserProfileResponseDto;
@@ -47,7 +47,7 @@ public class UserService {
 
         if (!authService.verifyCode(requestDto.email(), requestDto.code())) {
             log.error("Email 에 Code 가 일치하지 않습니다. : {} , {}", requestDto.email(), requestDto.code());
-            throw new EmailCodeException(EmailAuthErrorCode.CODE_MISMATCH);
+            throw new EmailCodeException(EmailErrorCode.CODE_MISMATCH);
         }
 
         User user = User.addCustomer(

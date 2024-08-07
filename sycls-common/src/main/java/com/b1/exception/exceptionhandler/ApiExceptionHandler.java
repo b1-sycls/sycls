@@ -1,12 +1,14 @@
 package com.b1.exception.exceptionhandler;
 
-import com.b1.exception.customexception.global.GlobalCannotAddExcpetion;
+import com.b1.exception.customexception.global.GlobalCannotAddException;
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
+import com.b1.exception.customexception.global.GlobalEmailException;
 import com.b1.exception.customexception.global.GlobalEntityInUseException;
 import com.b1.exception.customexception.global.GlobalInvalidException;
 import com.b1.exception.customexception.global.GlobalLoadingException;
 import com.b1.exception.customexception.global.GlobalMissingException;
 import com.b1.exception.customexception.global.GlobalNotFoundException;
+import com.b1.exception.customexception.global.GlobalNotSupportedException;
 import com.b1.exception.customexception.global.GlobalPaymentException;
 import com.b1.exception.customexception.global.GlobalReservationException;
 import com.b1.exception.customexception.global.GlobalStatusException;
@@ -78,9 +80,9 @@ public class ApiExceptionHandler {
         return sendErrorResponse(e.getErrorCode());
     }
 
-    @ExceptionHandler(GlobalCannotAddExcpetion.class)
+    @ExceptionHandler(GlobalCannotAddException.class)
     protected ResponseEntity<ErrorResponseDto> globalCannotAddException(
-            GlobalCannotAddExcpetion e
+            GlobalCannotAddException e
     ) {
         log.error("GlobalCannotAddExcpetion 발생");
         return sendErrorResponse(e.getErrorCode());
@@ -88,9 +90,25 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(GlobalPaymentException.class)
     protected ResponseEntity<ErrorResponseDto> globalPaymentException(
-            GlobalCannotAddExcpetion e
+            GlobalPaymentException e
     ) {
-        log.error("GlobalCannotAddExcpetion 발생");
+        log.error("GlobalPaymentException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalEmailException.class)
+    protected ResponseEntity<ErrorResponseDto> globalEmailException(
+            GlobalEmailException e
+    ) {
+        log.error("GlobalEmailException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalNotSupportedException.class)
+    protected ResponseEntity<ErrorResponseDto> globalNotSupportedException(
+            GlobalNotSupportedException e
+    ) {
+        log.error("GlobalNotSupportedException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 
