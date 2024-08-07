@@ -26,7 +26,7 @@ public class TicketRestController {
      */
     @GetMapping("/tickets")
     public ResponseEntity<RestApiResponseDto<PageResponseDto<TicketGetAllUserResponseDto>>> getAllTickets(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @AuthenticationPrincipal final UserDetailsImpl userDetails,
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") final Integer pageNum
     ) {
         PageResponseDto<TicketGetAllUserResponseDto> responseDto = ticketService
@@ -38,7 +38,7 @@ public class TicketRestController {
 
     @GetMapping("/tickets/{ticketId}")
     public ResponseEntity<RestApiResponseDto<TicketGetDetailUserResponseDto>> getDetailTicket(
-            @PathVariable Long ticketId
+            @PathVariable final Long ticketId
     ) {
         TicketGetDetailUserResponseDto responseDto = ticketService.getDetailTicket(ticketId);
 
