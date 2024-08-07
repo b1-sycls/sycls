@@ -63,6 +63,10 @@ spring:
           auto: false
         base:
           url: ${AWS_BASE_URL}
+    data:
+      redis:
+        host: ${DEV_REDIS_HOST}
+        port: ${DEV_REDIS_PORT}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -73,7 +77,3 @@ spring:
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
-  data:
-    redis:
-      host: ${DEV_REDIS_HOST}
-      port: ${DEV_REDIS_PORT}
