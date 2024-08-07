@@ -3,6 +3,7 @@ package com.b1.ticket;
 import com.b1.cast.CastHelper;
 import com.b1.cast.entity.dto.CastGetUserResponseDto;
 import com.b1.common.PageResponseDto;
+import com.b1.s3.S3Util;
 import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.ticket.dto.TicketGetAllDto;
@@ -61,9 +62,15 @@ public class TicketService {
             final Long ticketId
     ) {
         TicketGetDetailDto ticketGetDetailDto = ticketHelper.getDetailTicketForUser(ticketId);
+
         Set<SeatGrade> seatGrades = seatGradeHelper.getSeatGradesByTicketId(ticketGetDetailDto.getTicketId());
         List<CastGetUserResponseDto> castsDto = castHelper.getAllCastsByRoundId(ticketGetDetailDto.getRoundId());
 
-        return TicketGetDetailUserResponseDto.of(ticketGetDetailDto, seatGrades, castsDto);
+        TicketGetDetailUserResponseDto responseDto = TicketGetDetailUserResponseDto.of(ticketGetDetailDto, seatGrades, castsDto);
+        responseDto.updateMainImagePath(S3Util.makeResponseImageDir(responseDto.getMainImagePath()));
+
+        castsDto.forEach(dto -> dto.updateImagePath(S3Util.makeResponseImageDir(dto.getImagePath())));
+
+        return responseDto;
     }
 }

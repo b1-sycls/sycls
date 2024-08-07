@@ -50,6 +50,7 @@ public class TicketGetDetailUserResponseDto {
                 .contentId(ticketDto.getContentId())
                 .contentTitle(ticketDto.getContentTitle())
                 .contentStatus(ticketDto.getContentStatus())
+                .mainImagePath(ticketDto.getMainImagePath())
                 .roundId(ticketDto.getRoundId())
                 .sequence(ticketDto.getSequence())
                 .seatGradeCode(seatGradeCodes)
@@ -57,11 +58,17 @@ public class TicketGetDetailUserResponseDto {
                 .startTime(ticketDto.getStartTime())
                 .endTime(ticketDto.getEndTime())
                 .roundStatus(ticketDto.getRoundStatus())
+                .location(ticketDto.getLocation())
+                .placeName(ticketDto.getPlaceName())
                 .ticketId(ticketDto.getTicketId())
                 .price(ticketDto.getPrice())
                 .ticketStatus(ticketDto.getTicketStatus())
                 .ticketCreateAt(ticketDto.getTicketCreateAt())
                 .castResponseDtos(TicketGetDetailCastResponseDto.from(castDto))
                 .build();
+    }
+
+    public void updateMainImagePath(String imagePath) {
+        this.mainImagePath = imagePath;
     }
 }
