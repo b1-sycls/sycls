@@ -96,4 +96,9 @@ public class User extends TimeStamp {
         this.kakaoId = kakaoId;
         return this;
     }
+
+    public void updateProfile(String nickname, String phoneNumber) {
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+    }
 }
