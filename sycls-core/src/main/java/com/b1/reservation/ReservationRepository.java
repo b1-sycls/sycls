@@ -13,18 +13,19 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j(topic = "Reservation Repository")
 @Repository
 @RequiredArgsConstructor
 public class ReservationRepository {
 
+    private final long LOCK_EXPIRATION_TIME = 5 * 60 * 1000; // 5분 동안 잠금 유지
+    private final long RESERVATION_EXPIRATION_TIME = 30; // 예약 만료 시간 (초)
+    private final String REDISSON_LOCK_KEY_PREFIX = "reservation:";
+
     private final RedissonClient redissonClient;
     private final RedisTemplate<String, String> redisTemplate;
-
-    private static final long LOCK_EXPIRATION_TIME = 5 * 60 * 1000; // 5분 동안 잠금 유지
-    private static final long RESERVATION_EXPIRATION_TIME = 30; // 예약 만료 시간 (초)
-    private static final String REDISSON_LOCK_KEY_PREFIX = "reservation:";
 
     /**
      * 예매 등록
@@ -50,6 +51,27 @@ public class ReservationRepository {
             // 잠금 해제
             unlockSeats(roundId, newSeatIds);
         }
+    }
+
+    /**
+     * 예매 정보 조회
+     *
+     * @return
+     */
+    public Set<Long> getReservationByUser(
+            final Long roundId,
+            final Long userId
+    ) {
+        String keyPattern = REDISSON_LOCK_KEY_PREFIX + roundId + ":*:" + userId;
+        Set<String> keys = redisTemplate.keys(keyPattern);
+        return keys.stream()
+                .map(key -> {
+                    int prefixLength = ("reservation:" + roundId + ":").length();
+                    int suffixLength = String.valueOf(userId).length() + 1;
+                    String substring = key.substring(prefixLength, key.length() - suffixLength);
+                    return Long.parseLong(substring);
+                })
+                .collect(Collectors.toSet());
     }
 
     private boolean lockSeats(Long roundId, Set<Long> seatIds) {
@@ -146,4 +168,5 @@ public class ReservationRepository {
     private String getLockKey(Long roundId, Long seatId, Long userId) {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId + ":" + userId;
     }
+
 }

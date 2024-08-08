@@ -37,23 +37,24 @@ public class ReservationRestController {
             @Valid @RequestBody final ReservationAddRequestDto requestDto,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
-        ReservationAddResponseDto responseDto = reservationService.addReservation(requestDto, userDetails.getUser());
+        ReservationAddResponseDto responseDto = reservationService
+                .addReservation(requestDto, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("좌석 선택 완료",responseDto));
+                .body(RestApiResponseDto.of("좌석 선택 완료", responseDto));
     }
 
     /**
      * 예매 조회
      */
-    @GetMapping("/rounds/{roundId}/reservations/reserve")
+    @GetMapping("/rounds/{roundId}/reservations")
     public ResponseEntity<RestApiResponseDto<ReservationGetResponseDto>> getReservation(
             @PathVariable(value = "roundId") final Long roundId,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         ReservationGetResponseDto responseDto = reservationService.getReservation(
-                roundId,
-                userDetails.getUser());
+                roundId, userDetails.getUser());
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
     }

@@ -30,10 +30,8 @@ public class ReservationService {
 
     private final RoundHelper roundHelper;
     private final SeatGradeHelper seatGradeHelper;
-    private static final long LOCK_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
 
     private final ReservationHelper reservationHelper;
-    private final ReservationRepository reservationRepository;
 
     /**
      * 예매 등록
@@ -44,8 +42,12 @@ public class ReservationService {
         Set<SeatGrade> seatGradesForRound = seatGradeHelper
                 .getAllSeatGradeByRoundAndSeatGradeIds(
                         selectedRound, requestDto.seatGradeIds());
-        Set<Long> seatGradeIds = seatGradesForRound.stream().map(SeatGrade::getId).collect(Collectors.toSet());
+        Set<Long> seatGradeIds = seatGradesForRound
+                .stream()
+                .map(SeatGrade::getId)
+                .collect(Collectors.toSet());
         reservationHelper.addReservation(requestDto.roundId(), seatGradeIds, user.getId());
+
         return ReservationAddResponseDto.of(selectedRound.getId(), seatGradesForRound);
     }
 
@@ -59,10 +61,15 @@ public class ReservationService {
     ) {
         Round selectedRound = roundHelper.getRound(roundId);
 
-        Set<SeatGradeReservationLog> findSeatGradeReservationLogs = reservationHelper
-                .getSeatReservationLogsByUser(user);
+        Set<Long> seatReservationIds = reservationHelper
+                .getReservationByUser(selectedRound.getId(), user.getId());
 
-        return ReservationGetResponseDto.of(selectedRound, findSeatGradeReservationLogs);
+        Set<SeatGrade> seatGradesForRound = seatGradeHelper
+                .getAllSeatGradeByRoundAndSeatGradeIds(
+                        selectedRound, seatReservationIds);
+
+
+        return ReservationGetResponseDto.of(selectedRound, seatGradesForRound);
     }
 
     /**
@@ -72,8 +79,8 @@ public class ReservationService {
     public ReservationGetDetailResponseDto getReservationDetail(
             final User user
     ) {
-        Map<String, List<SeatGradeReservationLog>> map = reservationHelper.
-                getSeatReservationLogsBySeatGrade(user);
+        Map<String, List<SeatGradeReservationLog>> map = reservationHelper
+                .getSeatReservationLogsBySeatGrade(user);
 
         return ReservationGetDetailResponseDto.of(map);
     }
@@ -113,8 +120,4 @@ public class ReservationService {
         );
     }
 
-    public List<String> getKeysByPattern(String pattern) {
-//        return reservationHelper.getKeyByPattern(pattern);
-        return null;
-    }
 }

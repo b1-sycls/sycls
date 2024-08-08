@@ -40,6 +40,16 @@ public class ReservationHelper {
     }
 
     /**
+     * 특정 유저 예매 좌석 조회
+     */
+    public Set<Long> getReservationByUser(
+            final Long roundId,
+            final Long userId
+    ) {
+        return reservationRepository.getReservationByUser(roundId, userId);
+    }
+
+    /**
      * 좌석 등급의 예매 상태를 확인하고 필요 시 예매 생성
      *
      * @throws SeatReservationLogNotAvailableException 이미 매진 된 좌석 또는 점유 중인 좌석
@@ -52,26 +62,6 @@ public class ReservationHelper {
         List<SeatGradeReservationLog> reservationLogs = seatReservationLogRepository
                 .findAllBySeatGradeInAndCreatedAtAfterAndStatus(
                         seatGrades,
-                        currentTime.minusMinutes(SEAT_RESERVATION_TIME),
-                        SeatGradeReservationLogStatus.ENABLE);
-
-        Map<Long, SeatGradeReservationLog> latestLogsBySeatGradeId = getLongSeatReservationLogMap(
-                reservationLogs);
-
-        return new HashSet<>(latestLogsBySeatGradeId.values());
-    }
-
-    /**
-     * 특정 유저 예매 좌석 조회
-     */
-    public Set<SeatGradeReservationLog> getSeatReservationLogsByUser(
-            final User user
-    ) {
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        List<SeatGradeReservationLog> reservationLogs = seatReservationLogRepository
-                .findAllByUserAndCreatedAtAfterAndStatus(
-                        user,
                         currentTime.minusMinutes(SEAT_RESERVATION_TIME),
                         SeatGradeReservationLogStatus.ENABLE);
 
