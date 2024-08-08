@@ -91,7 +91,9 @@ public class ReservationService {
             final Long roundId,
             final User user
     ) {
-        reservationHelper.releaseReservation(roundId, user.getId());
+        Round selectedRound = roundHelper.getRound(roundId);
+
+        reservationHelper.releaseReservation(selectedRound.getId(), user.getId());
     }
 
     /**
@@ -99,7 +101,8 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public ReservationGetOccupiedResponseDto getOccupied(
-            final Long roundId
+            final Long roundId,
+            final User user
     ) {
         Round selectedRound = roundHelper.getRound(roundId);
 
