@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReservationRepository {
 
-    private final long LOCK_EXPIRATION_TIME = 5 * 60 * 1000; // 5분 동안 잠금 유지
-    private final long RESERVATION_EXPIRATION_TIME = 30; // 예약 만료 시간 (초)
+    private final long LOCK_EXPIRATION_TIME = 10; // 10초 동안 잠금 유지
+    private final long RESERVATION_EXPIRATION_TIME = 5; // 예약 만료 시간 (분)
     private final String REDISSON_LOCK_KEY_PREFIX = "reservation:";
 
     private final RedissonClient redissonClient;
@@ -79,7 +79,7 @@ public class ReservationRepository {
         for (Long seatId : seatIds) {
             RLock lock = redissonClient.getLock(getLockKey(roundId, seatId));
             try {
-                if (!lock.tryLock(0, LOCK_EXPIRATION_TIME, TimeUnit.MILLISECONDS)) {
+                if (!lock.tryLock(0, LOCK_EXPIRATION_TIME, TimeUnit.SECONDS)) {
                     unlockSeats(roundId, seatIds);
                     allLocked = false;
                     break;
@@ -138,7 +138,7 @@ public class ReservationRepository {
             }
 
             // 예매 좌석 업데이트
-            bucket.setAsync(userId.toString(), RESERVATION_EXPIRATION_TIME, TimeUnit.SECONDS);
+            bucket.setAsync(userId.toString(), RESERVATION_EXPIRATION_TIME, TimeUnit.MINUTES);
         }
     }
 

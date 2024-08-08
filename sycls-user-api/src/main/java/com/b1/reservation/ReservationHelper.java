@@ -3,6 +3,7 @@ package com.b1.reservation;
 import com.b1.exception.customexception.SeatReservationLogNotAvailableException;
 import com.b1.exception.customexception.SeatReservationLogNotFoundException;
 import com.b1.exception.errorcode.SeatReservationLogErrorCode;
+import com.b1.seatgrade.SeatGradeRepository;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.seatgrade.entity.SeatGradeReservationLogStatus;
@@ -26,6 +27,7 @@ import static com.b1.constant.ReservationConstant.SEAT_RESERVATION_TIME;
 public class ReservationHelper {
 
     private final ReservationRepository reservationRepository;
+    private final SeatGradeRepository seatGradeRepository;
     private final SeatReservationLogRepository seatReservationLogRepository;
 
     /**
@@ -50,11 +52,24 @@ public class ReservationHelper {
     }
 
     /**
+     * 특정 유저 예매 좌석 상세 조회
+     */
+    public Map<String, List<SeatGrade>> getReservationDetailByUser(
+            final Long roundId,
+            final Long userId
+    ) {
+        Set<Long> seatReservationIds = reservationRepository.getReservationByUser(roundId, userId);
+        List<SeatGrade> selectSeatGrades = seatGradeRepository.findAllByIdIn(seatReservationIds);
+
+        return getLogSeatGradeMap(selectSeatGrades);
+    }
+
+    /**
      * 좌석 등급의 예매 상태를 확인하고 필요 시 예매 생성
      *
      * @throws SeatReservationLogNotAvailableException 이미 매진 된 좌석 또는 점유 중인 좌석
      */
-    public Set<SeatGradeReservationLog> getSeatReservationLogsBySeatGrade(
+    public Set<SeatGradeReservationLog> getReservationByUser(
             final Set<SeatGrade> seatGrades
     ) {
         LocalDateTime currentTime = LocalDateTime.now();
@@ -69,23 +84,6 @@ public class ReservationHelper {
                 reservationLogs);
 
         return new HashSet<>(latestLogsBySeatGradeId.values());
-    }
-
-    /**
-     * 특정 유저 예매 좌석 조회
-     */
-    public Map<String, List<SeatGradeReservationLog>> getSeatReservationLogsBySeatGrade(
-            final User user
-    ) {
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        List<SeatGradeReservationLog> reservationLogs = seatReservationLogRepository
-                .findAllByUserAndCreatedAtAfterAndStatus(
-                        user,
-                        currentTime.minusMinutes(SEAT_RESERVATION_TIME),
-                        SeatGradeReservationLogStatus.ENABLE);
-
-        return getLogSeatGradeMap(reservationLogs);
     }
 
     /**
@@ -174,12 +172,12 @@ public class ReservationHelper {
     /**
      * 좌석 등급별 데이터 추출
      */
-    private Map<String, List<SeatGradeReservationLog>> getLogSeatGradeMap(
-            final List<SeatGradeReservationLog> reservationLogs
+    private Map<String, List<SeatGrade>> getLogSeatGradeMap(
+            final List<SeatGrade> seatGrades
     ) {
-        return reservationLogs.stream()
+        return seatGrades.stream()
                 .collect(Collectors.groupingBy(
-                        log -> log.getSeatGrade().getGrade().getValue()
+                        sg -> sg.getGrade().getValue()
                 ));
     }
 

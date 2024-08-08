@@ -10,7 +10,6 @@ import com.b1.reservation.dto.ReservationReleaseRequestDto;
 import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
@@ -52,8 +50,8 @@ public class ReservationRestController {
             @PathVariable(value = "roundId") final Long roundId,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
-        ReservationGetResponseDto responseDto = reservationService.getReservation(
-                roundId, userDetails.getUser());
+        ReservationGetResponseDto responseDto = reservationService
+                .getReservation(roundId, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
@@ -62,13 +60,14 @@ public class ReservationRestController {
     /**
      * 예매 상세 조회
      */
-    @GetMapping("/reservations/reserve/detail")
+    @GetMapping("/rounds/{roundId}/reservations/detail")
     public ResponseEntity<RestApiResponseDto<ReservationGetDetailResponseDto>> getReservationDetail(
+            @PathVariable(value = "roundId") final Long roundId,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
-        log.info("상세 조회");
-        ReservationGetDetailResponseDto responseDto = reservationService.getReservationDetail(
-                userDetails.getUser());
+        ReservationGetDetailResponseDto responseDto = reservationService
+                .getReservationDetail(roundId, userDetails.getUser());
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
     }

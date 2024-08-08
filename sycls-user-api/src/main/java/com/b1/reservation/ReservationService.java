@@ -68,7 +68,6 @@ public class ReservationService {
                 .getAllSeatGradeByRoundAndSeatGradeIds(
                         selectedRound, seatReservationIds);
 
-
         return ReservationGetResponseDto.of(selectedRound, seatGradesForRound);
     }
 
@@ -77,10 +76,11 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public ReservationGetDetailResponseDto getReservationDetail(
+            final Long roundId,
             final User user
     ) {
-        Map<String, List<SeatGradeReservationLog>> map = reservationHelper
-                .getSeatReservationLogsBySeatGrade(user);
+        Map<String, List<SeatGrade>> map = reservationHelper
+                .getReservationDetailByUser(roundId, user.getId());
 
         return ReservationGetDetailResponseDto.of(map);
     }
@@ -112,7 +112,7 @@ public class ReservationService {
         Set<SeatGrade> seatGradesForRound = seatGradeHelper.getAllSeatGradesByRound(selectedRound);
 
         Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = reservationHelper
-                .getSeatReservationLogsBySeatGrade(seatGradesForRound);
+                .getReservationByUser(seatGradesForRound);
 
         return ReservationGetOccupiedResponseDto.of(
                 selectedRound,
