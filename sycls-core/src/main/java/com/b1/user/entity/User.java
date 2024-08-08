@@ -52,9 +52,13 @@ public class User extends TimeStamp {
     @Column(nullable = false)
     private UserRole role;
 
+    //    @Column(nullable = true, unique = true)
+    private Long kakaoId;
+
     @Builder(access = AccessLevel.PRIVATE)
     private User(String email, String username, String nickname, String password,
-            String phoneNumber, UserStatus status, UserLoginType type, UserRole role) {
+            String phoneNumber, UserStatus status, UserLoginType type, UserRole role,
+            Long kakaoId) {
         this.email = email;
         this.username = username;
         this.nickname = nickname;
@@ -63,10 +67,11 @@ public class User extends TimeStamp {
         this.status = status;
         this.type = type;
         this.role = role;
+        this.kakaoId = kakaoId;
     }
 
     public static User addCustomer(String email, String username, String nickname, String password,
-            String phoneNumber, UserRole role) {
+            String phoneNumber, UserLoginType type, UserRole role) {
         return User.builder()
                 .email(email)
                 .username(username)
@@ -74,7 +79,7 @@ public class User extends TimeStamp {
                 .password(password)
                 .phoneNumber(phoneNumber)
                 .status(UserStatus.ACTIVE)
-                .type(UserLoginType.COMMON)
+                .type(type)
                 .role(role)
                 .build();
     }
@@ -87,4 +92,8 @@ public class User extends TimeStamp {
         this.status = UserStatus.DELETED;
     }
 
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
 }

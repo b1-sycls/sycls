@@ -95,6 +95,9 @@ public class WebSecurityConfig {
 //                        .requestMatchers("/templates/**").permitAll()
 //                        .requestMatchers("/static/css/**").permitAll()
                                 .requestMatchers("/v1/users/signup").permitAll()
+
+                                .requestMatchers("/v1/user/kakao/callback").permitAll()
+                                
                                 .requestMatchers("/v1/auth/login").permitAll()
                                 .requestMatchers("/v1/auth/token").permitAll()
                                 .requestMatchers("/v1/auth/send-verification-code").permitAll()
