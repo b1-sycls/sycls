@@ -52,6 +52,16 @@ public class ReservationHelper {
     }
 
     /**
+     * 예매 좌석 취소
+     */
+    public void releaseReservation(
+            final Long roundId,
+            final Long userId
+    ) {
+        reservationRepository.releaseReservation(roundId, userId);
+    }
+
+    /**
      * 특정 유저 예매 좌석 상세 조회
      */
     public Map<String, List<SeatGrade>> getReservationDetailByUser(
@@ -189,5 +199,4 @@ public class ReservationHelper {
     ) {
         return seatReservationLogRepository.findAllByIdIn(reservationIds);
     }
-
 }

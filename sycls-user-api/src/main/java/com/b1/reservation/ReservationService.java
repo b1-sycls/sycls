@@ -5,7 +5,6 @@ import com.b1.reservation.dto.ReservationAddResponseDto;
 import com.b1.reservation.dto.ReservationGetDetailResponseDto;
 import com.b1.reservation.dto.ReservationGetOccupiedResponseDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
-import com.b1.reservation.dto.ReservationReleaseRequestDto;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
 import com.b1.seatgrade.SeatGradeHelper;
@@ -89,15 +88,10 @@ public class ReservationService {
      * 예매 취소
      */
     public void releaseReservation(
-            final ReservationReleaseRequestDto requestDto,
+            final Long roundId,
             final User user
     ) {
-        Set<SeatGradeReservationLog> seatGradeReservationLogByUser = reservationHelper
-                .getSeatReservationLogByUser(requestDto.reservationIds(), user);
-
-        for (SeatGradeReservationLog seatGradeReservationLog : seatGradeReservationLogByUser) {
-            seatGradeReservationLog.deleteReservationStatus();
-        }
+        reservationHelper.releaseReservation(roundId, user.getId());
     }
 
     /**

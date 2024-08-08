@@ -55,14 +55,12 @@ public class ReservationRepository {
 
     /**
      * 예매 정보 조회
-     *
-     * @return
      */
     public Set<Long> getReservationByUser(
             final Long roundId,
             final Long userId
     ) {
-        String keyPattern = REDISSON_LOCK_KEY_PREFIX + roundId + ":*:" + userId;
+        String keyPattern = generateKeyPatternForRoundAndUser(roundId, userId);
         Set<String> keys = redisTemplate.keys(keyPattern);
         return keys.stream()
                 .map(key -> {
@@ -74,10 +72,25 @@ public class ReservationRepository {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * 예매 중인 좌석 취소
+     */
+    public void releaseReservation(
+            final Long roundId,
+            final Long userId
+    ) {
+        String keyPattern = generateKeyPatternForRoundAndUser(roundId, userId);
+        Iterable<String> keys = redissonClient.getKeys().getKeysByPattern(keyPattern);
+
+        keys.forEach(k -> {
+            redissonClient.getBucket(k).delete();
+        });
+    }
+
     private boolean lockSeats(Long roundId, Set<Long> seatIds) {
         boolean allLocked = true;
         for (Long seatId : seatIds) {
-            RLock lock = redissonClient.getLock(getLockKey(roundId, seatId));
+            RLock lock = redissonClient.getLock(generateLockKeyForRoundAndSeat(roundId, seatId));
             try {
                 if (!lock.tryLock(0, LOCK_EXPIRATION_TIME, TimeUnit.SECONDS)) {
                     unlockSeats(roundId, seatIds);
@@ -95,7 +108,7 @@ public class ReservationRepository {
 
     private void unlockSeats(Long roundId, Set<Long> seatIds) {
         for (Long seatId : seatIds) {
-            RLock lock = redissonClient.getLock(getLockKey(roundId, seatId));
+            RLock lock = redissonClient.getLock(generateLockKeyForRoundAndSeat(roundId, seatId));
             if (lock.isHeldByCurrentThread()) {
                 lock.unlock();
             }
@@ -107,7 +120,7 @@ public class ReservationRepository {
      */
     private void removeExistingReservations(Long roundId, Long userId) {
         RKeys keys = redissonClient.getKeys();
-        String pattern = REDISSON_LOCK_KEY_PREFIX + roundId + ":*:" + userId;
+        String pattern = generateKeyPatternForRoundAndUser(roundId, userId);
         keys.getKeysByPattern(pattern).forEach(key -> {
             RBucket<String> bucket = redissonClient.getBucket(key);
             if (bucket.get() != null) {
@@ -127,7 +140,7 @@ public class ReservationRepository {
      */
     private void updateSeatReservations(Long roundId, Set<Long> newSeatIds, Long userId) {
         for (Long seatId : newSeatIds) {
-            String key = getLockKey(roundId, seatId, userId);
+            String key = generateLockKeyForRoundSeatAndUser(roundId, seatId, userId);
             RBucket<String> bucket = redissonClient.getBucket(key);
 
             String existingReservation = bucket.get();
@@ -147,7 +160,7 @@ public class ReservationRepository {
      */
     private boolean checkIfSeatsAlreadyReserved(Long roundId, Set<Long> seatIds, Long userId) {
         for (Long seatId : seatIds) {
-            String pattern = getLockKey(roundId, seatId) + ":*";
+            String pattern = generateLockKeyForRoundAndSeat(roundId, seatId) + ":*";
             Set<String> keys = redisTemplate.keys(pattern);
 
             for (String key : keys) {
@@ -161,12 +174,16 @@ public class ReservationRepository {
         return false;
     }
 
-    private String getLockKey(Long roundId, Long seatId) {
+    private String generateLockKeyForRoundAndSeat(Long roundId, Long seatId) {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId;
     }
 
-    private String getLockKey(Long roundId, Long seatId, Long userId) {
+    private String generateLockKeyForRoundSeatAndUser(Long roundId, Long seatId, Long userId) {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId + ":" + userId;
+    }
+
+    private String generateKeyPatternForRoundAndUser(Long roundId, Long userId) {
+        return REDISSON_LOCK_KEY_PREFIX + roundId + ":*:" + userId;
     }
 
 }
