@@ -1,12 +1,12 @@
 package com.b1.reservation;
 
 import com.b1.globalresponse.RestApiResponseDto;
+import com.b1.reservation.dto.ReservationAddRequestDto;
+import com.b1.reservation.dto.ReservationAddResponseDto;
 import com.b1.reservation.dto.ReservationGetDetailResponseDto;
 import com.b1.reservation.dto.ReservationGetOccupiedResponseDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
 import com.b1.reservation.dto.ReservationReleaseRequestDto;
-import com.b1.reservation.dto.ReservationReserveRequestDto;
-import com.b1.reservation.dto.ReservationReserveResponseDto;
 import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,16 +32,15 @@ public class ReservationRestController {
     /**
      * 예매 등록
      */
-    @PostMapping("/reservations/reserve")
-    public ResponseEntity<RestApiResponseDto<ReservationReserveResponseDto>> reserveReservation(
-            @Valid @RequestBody final ReservationReserveRequestDto requestDto,
+    @PostMapping("/reservations")
+    public ResponseEntity<RestApiResponseDto<ReservationAddResponseDto>> addReservation(
+            @Valid @RequestBody final ReservationAddRequestDto requestDto,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
-        ReservationReserveResponseDto responseDto = reservationService.reserveReservation(
-                requestDto,
-                userDetails.getUser());
+        ReservationAddResponseDto responseDto = reservationService.addReservation(requestDto, userDetails.getUser());
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(RestApiResponseDto.of("해당 좌석이 예매되었습니다.", responseDto));
+                .body(RestApiResponseDto.of("좌석 선택 완료",responseDto));
     }
 
     /**

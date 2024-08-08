@@ -1,11 +1,11 @@
 package com.b1.reservation;
 
+import com.b1.reservation.dto.ReservationAddRequestDto;
+import com.b1.reservation.dto.ReservationAddResponseDto;
 import com.b1.reservation.dto.ReservationGetDetailResponseDto;
 import com.b1.reservation.dto.ReservationGetOccupiedResponseDto;
 import com.b1.reservation.dto.ReservationGetResponseDto;
 import com.b1.reservation.dto.ReservationReleaseRequestDto;
-import com.b1.reservation.dto.ReservationReserveRequestDto;
-import com.b1.reservation.dto.ReservationReserveResponseDto;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
 import com.b1.seatgrade.SeatGradeHelper;
@@ -13,14 +13,15 @@ import com.b1.seatgrade.SeatGradeReservationLogHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.user.entity.User;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j(topic = "Reservation Service")
 @Service
@@ -31,38 +32,80 @@ public class ReservationService {
     private final RoundHelper roundHelper;
     private final SeatGradeHelper seatGradeHelper;
     private final SeatGradeReservationLogHelper seatGradeReservationLogHelper;
+    private static final long LOCK_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+    private final ReservationHelper reservationHelper;
+    private final ReservationRepository reservationRepository;
 
     /**
      * 예매 등록
      */
-    public ReservationReserveResponseDto reserveReservation(
-            final ReservationReserveRequestDto reservationRequest,
-            final User user
-    ) {
-        Round selectedRound = roundHelper.getRound(reservationRequest.roundId());
+    public ReservationAddResponseDto addReservation(ReservationAddRequestDto requestDto, User user) {
+        Round selectedRound = roundHelper.getRound(requestDto.roundId());
 
         Set<SeatGrade> seatGradesForRound = seatGradeHelper
                 .getAllSeatGradeByRoundAndSeatGradeIds(
-                        selectedRound, reservationRequest.seatGradeIds());
-
-        Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatGradeReservationLogHelper
-                .getSeatReservationLogsBySeatGrade(seatGradesForRound);
-
-        boolean processReservation = seatGradeReservationLogHelper.isProcessReservation(
-                existingSeatGradeReservationLogs, user,
-                reservationRequest.seatGradeIds());
-
-        if (processReservation) {
-            Set<SeatGradeReservationLog> newReservationLogs = new HashSet<>();
-            for (SeatGrade seatGrade : seatGradesForRound) {
-                newReservationLogs.add(
-                        SeatGradeReservationLog.addSeatReservationLog(seatGrade, user));
-            }
-
-            seatGradeReservationLogHelper.addAllSeatReservationLogs(newReservationLogs);
-        }
-        return ReservationReserveResponseDto.of(selectedRound.getId(), seatGradesForRound);
+                        selectedRound, requestDto.seatGradeIds());
+        Set<Long> seatGradeIds = seatGradesForRound.stream().map(SeatGrade::getId).collect(Collectors.toSet());
+        reservationHelper.addReservation(requestDto.roundId(), seatGradeIds, user.getId());
+        return ReservationAddResponseDto.of(selectedRound.getId(), seatGradesForRound);
     }
+
+//    public boolean addReservation(Long roundId, ReservationAddRequestDto requestDto, User userId) {
+//
+//        Round selectedRound = roundHelper.getRound(reservationRequest.roundId());
+//
+//        Set<SeatGrade> seatGradesForRound = seatGradeHelper
+//                .getAllSeatGradeByRoundAndSeatGradeIds(
+//                        selectedRound, reservationRequest.seatGradeIds());
+//
+//        Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatGradeReservationLogHelper
+//                .getSeatReservationLogsBySeatGrade(seatGradesForRound);
+//
+//        boolean processReservation = seatGradeReservationLogHelper.isProcessReservation(
+//                existingSeatGradeReservationLogs, user,
+//                reservationRequest.seatGradeIds());
+//
+//        if (processReservation) {
+//            Set<SeatGradeReservationLog> newReservationLogs = new HashSet<>();
+//            for (SeatGrade seatGrade : seatGradesForRound) {
+//                newReservationLogs.add(
+//                        SeatGradeReservationLog.addSeatReservationLog(seatGrade, user));
+//            }
+//
+//            seatGradeReservationLogHelper.addAllSeatReservationLogs(newReservationLogs);
+//        }
+//        return ReservationAddResponseDto.of(selectedRound.getId(), seatGradesForRound);
+//    }
+
+//    public ReservationAddResponseDto addReservation(
+//            final ReservationAddRequestDto reservationRequest,
+//            final User user
+//    ) {
+//        Round selectedRound = roundHelper.getRound(reservationRequest.roundId());
+//
+//        Set<SeatGrade> seatGradesForRound = seatGradeHelper
+//                .getAllSeatGradeByRoundAndSeatGradeIds(
+//                        selectedRound, reservationRequest.seatGradeIds());
+//
+//        Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatGradeReservationLogHelper
+//                .getSeatReservationLogsBySeatGrade(seatGradesForRound);
+//
+//        boolean processReservation = seatGradeReservationLogHelper.isProcessReservation(
+//                existingSeatGradeReservationLogs, user,
+//                reservationRequest.seatGradeIds());
+//
+//        if (processReservation) {
+//            Set<SeatGradeReservationLog> newReservationLogs = new HashSet<>();
+//            for (SeatGrade seatGrade : seatGradesForRound) {
+//                newReservationLogs.add(
+//                        SeatGradeReservationLog.addSeatReservationLog(seatGrade, user));
+//            }
+//
+//            seatGradeReservationLogHelper.addAllSeatReservationLogs(newReservationLogs);
+//        }
+//        return ReservationAddResponseDto.of(selectedRound.getId(), seatGradesForRound);
+//    }
 
     /**
      * 예매 조회
@@ -128,4 +171,8 @@ public class ReservationService {
         );
     }
 
+    public List<String> getKeysByPattern(String pattern) {
+//        return reservationHelper.getKeyByPattern(pattern);
+        return null;
+    }
 }
