@@ -7,7 +7,7 @@ import com.b1.payment.dto.ClientResponseDto;
 import com.b1.payment.dto.PaymentSuccessRequestDto;
 import com.b1.payment.dto.TossConfirmRequestDto;
 import com.b1.payment.dto.TossPaymentRestResponse;
-import com.b1.seatgrade.SeatGradeReservationLogHelper;
+import com.b1.reservation.ReservationHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.security.UserDetailsImpl;
@@ -40,7 +40,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class TossPaymentService {
 
     private final TossConfig tossConfig;
-    private final SeatGradeReservationLogHelper seatGradeReservationLogHelper;
+    private final ReservationHelper reservationHelper;
     private final TicketHelper ticketHelper;
 
     /**
@@ -83,7 +83,7 @@ public class TossPaymentService {
             final PaymentSuccessRequestDto requestDto,
             final UserDetailsImpl userDetails
     ) {
-        List<SeatGradeReservationLog> seatReservationLogsById = seatGradeReservationLogHelper
+        List<SeatGradeReservationLog> seatReservationLogsById = reservationHelper
                 .getSeatReservationLogsById(requestDto.seatGradeIds());
         seatReservationLogsById.forEach(SeatGradeReservationLog::deleteReservationStatus);
 

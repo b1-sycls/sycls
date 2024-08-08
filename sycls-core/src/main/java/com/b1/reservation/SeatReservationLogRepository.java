@@ -1,4 +1,4 @@
-package com.b1.seatgrade;
+package com.b1.reservation;
 
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeReservationLog;

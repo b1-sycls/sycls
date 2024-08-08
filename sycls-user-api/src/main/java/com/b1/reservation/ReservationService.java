@@ -9,7 +9,6 @@ import com.b1.reservation.dto.ReservationReleaseRequestDto;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
 import com.b1.seatgrade.SeatGradeHelper;
-import com.b1.seatgrade.SeatGradeReservationLogHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.user.entity.User;
@@ -31,7 +30,6 @@ public class ReservationService {
 
     private final RoundHelper roundHelper;
     private final SeatGradeHelper seatGradeHelper;
-    private final SeatGradeReservationLogHelper seatGradeReservationLogHelper;
     private static final long LOCK_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
 
     private final ReservationHelper reservationHelper;
@@ -61,7 +59,7 @@ public class ReservationService {
     ) {
         Round selectedRound = roundHelper.getRound(roundId);
 
-        Set<SeatGradeReservationLog> findSeatGradeReservationLogs = seatGradeReservationLogHelper
+        Set<SeatGradeReservationLog> findSeatGradeReservationLogs = reservationHelper
                 .getSeatReservationLogsByUser(user);
 
         return ReservationGetResponseDto.of(selectedRound, findSeatGradeReservationLogs);
@@ -74,7 +72,7 @@ public class ReservationService {
     public ReservationGetDetailResponseDto getReservationDetail(
             final User user
     ) {
-        Map<String, List<SeatGradeReservationLog>> map = seatGradeReservationLogHelper.
+        Map<String, List<SeatGradeReservationLog>> map = reservationHelper.
                 getSeatReservationLogsBySeatGrade(user);
 
         return ReservationGetDetailResponseDto.of(map);
@@ -87,7 +85,7 @@ public class ReservationService {
             final ReservationReleaseRequestDto requestDto,
             final User user
     ) {
-        Set<SeatGradeReservationLog> seatGradeReservationLogByUser = seatGradeReservationLogHelper
+        Set<SeatGradeReservationLog> seatGradeReservationLogByUser = reservationHelper
                 .getSeatReservationLogByUser(requestDto.reservationIds(), user);
 
         for (SeatGradeReservationLog seatGradeReservationLog : seatGradeReservationLogByUser) {
@@ -106,7 +104,7 @@ public class ReservationService {
 
         Set<SeatGrade> seatGradesForRound = seatGradeHelper.getAllSeatGradesByRound(selectedRound);
 
-        Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatGradeReservationLogHelper
+        Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = reservationHelper
                 .getSeatReservationLogsBySeatGrade(seatGradesForRound);
 
         return ReservationGetOccupiedResponseDto.of(
