@@ -51,62 +51,6 @@ public class ReservationService {
         return ReservationAddResponseDto.of(selectedRound.getId(), seatGradesForRound);
     }
 
-//    public boolean addReservation(Long roundId, ReservationAddRequestDto requestDto, User userId) {
-//
-//        Round selectedRound = roundHelper.getRound(reservationRequest.roundId());
-//
-//        Set<SeatGrade> seatGradesForRound = seatGradeHelper
-//                .getAllSeatGradeByRoundAndSeatGradeIds(
-//                        selectedRound, reservationRequest.seatGradeIds());
-//
-//        Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatGradeReservationLogHelper
-//                .getSeatReservationLogsBySeatGrade(seatGradesForRound);
-//
-//        boolean processReservation = seatGradeReservationLogHelper.isProcessReservation(
-//                existingSeatGradeReservationLogs, user,
-//                reservationRequest.seatGradeIds());
-//
-//        if (processReservation) {
-//            Set<SeatGradeReservationLog> newReservationLogs = new HashSet<>();
-//            for (SeatGrade seatGrade : seatGradesForRound) {
-//                newReservationLogs.add(
-//                        SeatGradeReservationLog.addSeatReservationLog(seatGrade, user));
-//            }
-//
-//            seatGradeReservationLogHelper.addAllSeatReservationLogs(newReservationLogs);
-//        }
-//        return ReservationAddResponseDto.of(selectedRound.getId(), seatGradesForRound);
-//    }
-
-//    public ReservationAddResponseDto addReservation(
-//            final ReservationAddRequestDto reservationRequest,
-//            final User user
-//    ) {
-//        Round selectedRound = roundHelper.getRound(reservationRequest.roundId());
-//
-//        Set<SeatGrade> seatGradesForRound = seatGradeHelper
-//                .getAllSeatGradeByRoundAndSeatGradeIds(
-//                        selectedRound, reservationRequest.seatGradeIds());
-//
-//        Set<SeatGradeReservationLog> existingSeatGradeReservationLogs = seatGradeReservationLogHelper
-//                .getSeatReservationLogsBySeatGrade(seatGradesForRound);
-//
-//        boolean processReservation = seatGradeReservationLogHelper.isProcessReservation(
-//                existingSeatGradeReservationLogs, user,
-//                reservationRequest.seatGradeIds());
-//
-//        if (processReservation) {
-//            Set<SeatGradeReservationLog> newReservationLogs = new HashSet<>();
-//            for (SeatGrade seatGrade : seatGradesForRound) {
-//                newReservationLogs.add(
-//                        SeatGradeReservationLog.addSeatReservationLog(seatGrade, user));
-//            }
-//
-//            seatGradeReservationLogHelper.addAllSeatReservationLogs(newReservationLogs);
-//        }
-//        return ReservationAddResponseDto.of(selectedRound.getId(), seatGradesForRound);
-//    }
-
     /**
      * 예매 조회
      */
