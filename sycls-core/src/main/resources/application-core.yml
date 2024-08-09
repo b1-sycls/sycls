@@ -63,10 +63,10 @@ spring:
           auto: false
         base:
           url: ${AWS_BASE_URL}
-    data:
-      redis:
-        host: ${DEV_REDIS_HOST}
-        port: ${DEV_REDIS_PORT}
+  data:
+    redis:
+      host: ${DEV_REDIS_HOST}
+      port: ${DEV_REDIS_PORT}
   jpa:
     hibernate:
       ddl-auto: validate
