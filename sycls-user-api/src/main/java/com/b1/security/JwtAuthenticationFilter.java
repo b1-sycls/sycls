@@ -2,6 +2,7 @@ package com.b1.security;
 
 import com.b1.exception.customexception.UserAlreadyDeletedException;
 import com.b1.exception.errorcode.UserErrorCode;
+import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.user.UserHelper;
 import com.b1.user.dto.UserLoginRequestDto;
 import com.b1.user.entity.User;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -24,10 +26,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final JwtProvider jwtProvider;
     private final UserHelper userHelper;
+    private final ObjectMapper objectMapper;
 
-    public JwtAuthenticationFilter(JwtProvider jwtProvider, UserHelper userHelper) {
+    public JwtAuthenticationFilter(JwtProvider jwtProvider, UserHelper userHelper,
+            ObjectMapper objectMapper) {
         this.jwtProvider = jwtProvider;
         this.userHelper = userHelper;
+        this.objectMapper = objectMapper;
         setFilterProcessesUrl("/v1/auth/login");
     }
 
@@ -77,8 +82,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 jwtProvider.extractExpirationMillis(jwtProvider.substringToken(refreshToken)));
 
         // 로그인 성공 메세지 반환
-        response.setContentType("application/json; charset=UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString("로그인 성공!"));
+        RestApiResponseDto<String> responseDto = RestApiResponseDto.of("로그인 성공");
+
+        String body = objectMapper.writeValueAsString(responseDto);
+        response.setContentType("text/html;charset=UTF-8");
+        response.setStatus(HttpStatus.OK.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write(body);
     }
 
     @Override
@@ -86,6 +96,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletResponse response, AuthenticationException failed)
             throws IOException, ServletException {
         log.info("로그인 실패");
+
+        RestApiResponseDto<String> responseDto = RestApiResponseDto.of("로그인 실패");
+
+        String body = objectMapper.writeValueAsString(responseDto);
+        response.setContentType("text/html;charset=UTF-8");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write(body);
     }
 }
