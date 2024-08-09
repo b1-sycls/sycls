@@ -4,6 +4,7 @@ import com.b1.exception.customexception.UserNotFoundException;
 import com.b1.exception.errorcode.UserErrorCode;
 import com.b1.user.entity.User;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,11 @@ public class UserHelper {
         });
     }
 
+    public User findByKakaoEmail(final String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.orElse(null);
+    }
+
     public boolean checkEmailExists(final String email) {
         return userRepository.existsByEmail(email);
     }
@@ -41,5 +47,10 @@ public class UserHelper {
             throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
         }
         return userList;
+    }
+
+    public User findByKakaoId(final Long kakaoId) {
+        Optional<User> user = userRepository.findByKakaoId(kakaoId);
+        return user.orElse(null);
     }
 }
