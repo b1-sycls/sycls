@@ -31,7 +31,7 @@ jobs:
 
       # Docker Image 생성
       - name: Docker build
-        run: sudo docker build . --platform linux/amd64 -f sycls-user-api/Dockerfile -t ${{secrets.ECR_URL}}-user:latest
+        run: sudo docker build . --platform linux/amd64 -f sycls-user-api/Dockerfile -t ${{secrets.ECR_URL}}:user-latest
 
       # AWS CLI 설치
       - name: AWS-CLI setup
@@ -59,13 +59,13 @@ jobs:
         id: build-image
         run: |
           aws ecr get-login-password --region ${{secrets.AWS_STATIC}} | sudo docker login --username AWS --password-stdin ${{secrets.ECR_PW}}
-          docker push ${{secrets.ECR_URL}}-user:latest 
-          echo "image=${{secrets.ECR_URL}}-user:latest" >> $GITHUB_OUTPUT
+          docker push ${{secrets.ECR_URL}}:user-latest
+          echo "image=${{secrets.ECR_URL}}:user-latest" >> $GITHUB_OUTPUT
           mkdir scripts
           touch scripts/deploy.sh
           echo "cd" >> scripts/deploy.sh
           echo "aws ecr get-login-password --region ${{ secrets.AWS_STATIC}} | sudo docker login --username AWS --password-stdin ${{secrets.ECR_PW}}" >> scripts/deploy.sh
-          echo "sudo docker pull ${{secrets.ECR_URL}}-user:latest" >> scripts/deploy.sh
+          echo "sudo docker pull ${{secrets.ECR_URL}}:user-latest" >> scripts/deploy.sh
           echo "sudo docker run -d -p 8080:8080 \
                 -e AWS_ACCESS_KEY=${{secrets.AWS_ACCESS_KEY}} \
                 -e AWS_SECRET_KEY=${{secrets.AWS_SECRET_KEY}} \
@@ -86,7 +86,7 @@ jobs:
                 -e DEV_REDIS_HOST=${{secrets.REDIS_HOST}} \
                 -e DEV_REDIS_PORT=${{secrets.REDIS_PORT}} \
                 -e SERVER_PORT=8080 \
-                --restart always --name sylcs-admin ${{secrets.ECR_URL}}-user:latest" >> scripts/deploy.sh
+                --restart always --name sylcs-admin ${{secrets.ECR_URL}}:user-latest" >> scripts/deploy.sh
 
       # deploy files upload to S3
       - name: upload to S3
