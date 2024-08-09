@@ -87,6 +87,18 @@ public class ReservationRepository {
         });
     }
 
+    /**
+     * 점유 중인 좌석 조회
+     */
+    public Set<Long> getOccupied(
+            final Long roundId
+    ) {
+        String keyPattern = generateKeyPatternForRound(roundId);
+        Set<String> keys = redisTemplate.keys(keyPattern);
+        return keys.stream().map(k -> Long.parseLong(k.split(":")[2])
+        ).collect(Collectors.toSet());
+    }
+
     private boolean lockSeats(Long roundId, Set<Long> seatIds) {
         boolean allLocked = true;
         for (Long seatId : seatIds) {
@@ -174,6 +186,10 @@ public class ReservationRepository {
         return false;
     }
 
+    private String generateKeyPatternForRound(final Long roundId) {
+        return REDISSON_LOCK_KEY_PREFIX + roundId + ":*:*";
+    }
+
     private String generateLockKeyForRoundAndSeat(Long roundId, Long seatId) {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId;
     }
@@ -185,5 +201,4 @@ public class ReservationRepository {
     private String generateKeyPatternForRoundAndUser(Long roundId, Long userId) {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":*:" + userId;
     }
-
 }

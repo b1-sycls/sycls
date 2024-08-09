@@ -46,7 +46,7 @@ public class ReservationRestController {
      */
     @GetMapping("/rounds/{roundId}/reservations")
     public ResponseEntity<RestApiResponseDto<ReservationGetResponseDto>> getReservation(
-            @PathVariable(value = "roundId") final Long roundId,
+            @PathVariable final Long roundId,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         ReservationGetResponseDto responseDto = reservationService
@@ -61,7 +61,7 @@ public class ReservationRestController {
      */
     @GetMapping("/rounds/{roundId}/reservations/detail")
     public ResponseEntity<RestApiResponseDto<ReservationGetDetailResponseDto>> getReservationDetail(
-            @PathVariable(value = "roundId") final Long roundId,
+            @PathVariable final Long roundId,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         ReservationGetDetailResponseDto responseDto = reservationService
@@ -77,7 +77,7 @@ public class ReservationRestController {
      */
     @PostMapping("/rounds/{roundId}/reservations/release")
     public ResponseEntity<RestApiResponseDto<String>> releaseReservation(
-            @PathVariable(value = "roundId") final Long roundId,
+            @PathVariable final Long roundId,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         reservationService.releaseReservation(roundId, userDetails.getUser());
@@ -90,11 +90,10 @@ public class ReservationRestController {
      */
     @GetMapping("/rounds/{roundId}/reservations/occupied")
     public ResponseEntity<RestApiResponseDto<ReservationGetOccupiedResponseDto>> getOccupied(
-            @PathVariable("roundId") final Long roundId
+            @PathVariable final Long roundId
     ) {
-        ReservationGetOccupiedResponseDto responseDto = reservationService.getOccupied(
-                roundId
-        );
+        ReservationGetOccupiedResponseDto responseDto = reservationService
+                .getOccupied(roundId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(responseDto));
     }
