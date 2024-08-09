@@ -49,7 +49,7 @@ public class UserHelper {
         return userList;
     }
 
-    public User findByKakaoId(Long kakaoId) {
+    public User findByKakaoId(final Long kakaoId) {
         Optional<User> user = userRepository.findByKakaoId(kakaoId);
         return user.orElse(null);
     }

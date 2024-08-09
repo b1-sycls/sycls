@@ -17,7 +17,8 @@ public class KakaoUserInfoResponseDto {
     @Setter
     private boolean newUser;
 
-    public static KakaoUserInfoResponseDto of(Long id, String nickname, String email) {
+    public static KakaoUserInfoResponseDto of(final Long id, final String nickname,
+            final String email) {
         return KakaoUserInfoResponseDto.builder()
                 .id(id)
                 .nickname(nickname)
