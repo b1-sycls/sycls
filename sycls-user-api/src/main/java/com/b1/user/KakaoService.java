@@ -17,6 +17,7 @@ import java.net.URI;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Slf4j(topic = "KAKAO Login")
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class KakaoService {
 
     private final PasswordEncoder passwordEncoder;
@@ -38,7 +40,13 @@ public class KakaoService {
     private final RestTemplate restTemplate;
     private final JwtProvider jwtProvider;
 
-    public KakaoUserInfoResponseDto kakaoLogin(String code, HttpServletResponse response)
+    @Value("${kakao.client.key}")
+    private String kakaoClientKey;
+
+    @Value("${uri.server.address}")
+    private String userBaseUrl;
+
+    public KakaoUserInfoResponseDto kakaoLogin(final String code, HttpServletResponse response)
             throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
@@ -64,7 +72,7 @@ public class KakaoService {
         return kakaoUserInfo;
     }
 
-    private boolean registerKakaoUserIfNeeded(KakaoUserInfoResponseDto kakaoUserInfo,
+    public boolean registerKakaoUserIfNeeded(final KakaoUserInfoResponseDto kakaoUserInfo,
             HttpServletResponse response) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         Long kakaoId = kakaoUserInfo.getId();
@@ -105,7 +113,7 @@ public class KakaoService {
         return isNewUser;
     }
 
-    private String getToken(String code) throws JsonProcessingException {
+    public String getToken(final String code) throws JsonProcessingException {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
                 .fromUriString("https://kauth.kakao.com")
@@ -116,15 +124,14 @@ public class KakaoService {
 
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
 
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        //TODO 클라이언트 키 환경변수화 필요
-        body.add("client_id", "375c9e35e4858fd12d0d56afaf1bb1c4");
+        body.add("client_id", kakaoClientKey);
         //TODO 서버 리다이렉트 URI 수정 필요
-        body.add("redirect_uri", "http://localhost:8080/v1/user/kakao/callback");
+        body.add("redirect_uri", userBaseUrl + "/v1/user/kakao/callback");
         body.add("code", code);
 
         RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
@@ -143,7 +150,7 @@ public class KakaoService {
         return jsonNode.get("access_token").asText();
     }
 
-    private KakaoUserInfoResponseDto getKakaoUserInfo(String accessToken)
+    public KakaoUserInfoResponseDto getKakaoUserInfo(final String accessToken)
             throws JsonProcessingException {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
@@ -156,7 +163,7 @@ public class KakaoService {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add(AUTHORIZATION_HEADER, BEARER_PREFIX + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
 
         RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
                 .post(uri)
@@ -180,8 +187,8 @@ public class KakaoService {
         return KakaoUserInfoResponseDto.of(id, nickname, email);
     }
 
-    @Transactional
-    public void profileUpdate(String accessToken, String nickname, String phoneNumber) {
+    public void profileUpdate(final String accessToken, final String nickname,
+            final String phoneNumber) {
         String email = jwtProvider.extractEmail(jwtProvider.substringToken(accessToken));
         User user = userHelper.findByEmail(email);
         if (user != null && user.getType() == UserLoginType.KAKAO) {

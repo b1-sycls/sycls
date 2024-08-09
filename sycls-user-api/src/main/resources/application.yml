@@ -19,9 +19,15 @@ spring:
             trust: ${MAIL_HOST}
             protocols: TLSv1.2
 
-client:
+uri:
+  client:
+    address: ${CLIENT_BASE_URL}
   server:
-    address: ${CLIENT_ADDRESS}
+    address: ${USER_BASE_URL}
+
+kakao:
+  client:
+    key: ${KAKAO_CLIENT_KEY}
 
 jwt:
   secret:

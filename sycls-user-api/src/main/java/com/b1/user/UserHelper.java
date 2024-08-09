@@ -50,6 +50,7 @@ public class UserHelper {
     }
 
     public User findByKakaoId(Long kakaoId) {
-        return userRepository.findByKakaoId(kakaoId);
+        Optional<User> user = userRepository.findByKakaoId(kakaoId);
+        return user.orElse(null);
     }
 }

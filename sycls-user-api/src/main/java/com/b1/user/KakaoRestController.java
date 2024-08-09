@@ -28,14 +28,14 @@ public class KakaoRestController {
 
     private final KakaoService kakaoService;
 
-    @Value("${client.server.address}")
-    private String clientServerAddress;
+    @Value("${uri.client.address}")
+    private String clientBaseUrl;
 
     /**
      * 카카오 회원가입 콜백
      */
     @GetMapping("/user/kakao/callback")
-    public ResponseEntity<RestApiResponseDto<String>> kakaoLogin(@RequestParam String code,
+    public ResponseEntity<RestApiResponseDto<String>> kakaoLogin(@RequestParam final String code,
             HttpServletResponse response)
             throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드 Service 전달 후 인증 처리 및 JWT 반환
@@ -45,16 +45,17 @@ public class KakaoRestController {
         String accessToken = response.getHeader(AUTHORIZATION_HEADER);
         String refreshToken = response.getHeader(REFRESHTOKEN_HEADER);
 
-        String redirectUrl = "http://";
+        String redirectUrl;
+
         if (kakaoUserInfo.isNewUser()) {
             // 신규 사용자일 경우 추가 정보 입력 페이지로 리다이렉트
-            redirectUrl +=
-                    clientServerAddress + "/kakao-signup?accessToken=" + accessToken
+            redirectUrl =
+                    clientBaseUrl + "/kakao-signup?accessToken=" + accessToken
                             + "&refreshToken=" + refreshToken;
         } else {
             // 기존 사용자일 경우 메인 페이지로 리다이렉트
-            redirectUrl +=
-                    clientServerAddress + "/kakao-callback?accessToken=" + accessToken
+            redirectUrl =
+                    clientBaseUrl + "/kakao-callback?accessToken=" + accessToken
                             + "&refreshToken=" + refreshToken;
         }
 
