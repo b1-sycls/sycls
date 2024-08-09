@@ -31,7 +31,7 @@ jobs:
 
       # Docker Image 생성
       - name: Docker build
-        run: docker build . --platform linux/amd64 -f sycls-admin-api/Dockerfile -t ${{secrets.ECR_URL}}:latest
+        run: sudo docker build . --platform linux/amd64 -f sycls-admin-api/Dockerfile -t ${{secrets.ECR_URL}}:latest
 
       # AWS CLI 설치
       - name: AWS-CLI setup
