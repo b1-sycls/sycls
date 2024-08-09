@@ -148,14 +148,4 @@ public class AuthRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("토큰이 성공적으로 재발급 됐습니다."));
     }
-
-    /**
-     * 헬스 체크
-     */
-    @GetMapping("/health")
-    public ResponseEntity<String> healthCheck() {
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
 }
