@@ -31,7 +31,7 @@ jobs:
 
       # Docker Image 생성
       - name: Docker build
-        run: sudo docker build . --platform linux/amd64 -f sycls-admin-api/Dockerfile -t ${{secrets.ECR_URL}}-admin:latest
+        run: sudo docker build . --platform linux/amd64 -f sycls-user-api/Dockerfile -t ${{secrets.ECR_URL}}-user:latest
 
       # AWS CLI 설치
       - name: AWS-CLI setup
@@ -59,14 +59,14 @@ jobs:
         id: build-image
         run: |
           aws ecr get-login-password --region ${{secrets.AWS_STATIC}} | sudo docker login --username AWS --password-stdin ${{secrets.ECR_PW}}
-          docker push ${{secrets.ECR_URL}}-admin:latest 
-          echo "image=${{secrets.ECR_URL}}-admin:latest" >> $GITHUB_OUTPUT
+          docker push ${{secrets.ECR_URL}}-user:latest 
+          echo "image=${{secrets.ECR_URL}}-user:latest" >> $GITHUB_OUTPUT
           mkdir scripts
           touch scripts/deploy.sh
           echo "cd" >> scripts/deploy.sh
           echo "aws ecr get-login-password --region ${{ secrets.AWS_STATIC}} | sudo docker login --username AWS --password-stdin ${{secrets.ECR_PW}}" >> scripts/deploy.sh
-          echo "sudo docker pull ${{secrets.ECR_URL}}-admin:latest" >> scripts/deploy.sh
-          echo "sudo docker run -d -p 8081:8081 \
+          echo "sudo docker pull ${{secrets.ECR_URL}}-user:latest" >> scripts/deploy.sh
+          echo "sudo docker run -d -p 8080:8080 \
                 -e AWS_ACCESS_KEY=${{secrets.AWS_ACCESS_KEY}} \
                 -e AWS_SECRET_KEY=${{secrets.AWS_SECRET_KEY}} \
                 -e AWS_STATIC=${{secrets.AWS_STATIC}} \
@@ -85,18 +85,18 @@ jobs:
                 -e MAIL_PORT=${{secrets.MAIL_PORT}} \
                 -e DEV_REDIS_HOST=${{secrets.REDIS_HOST}} \
                 -e DEV_REDIS_PORT=${{secrets.REDIS_PORT}} \
-                -e SERVER_PORT=8081 \
-                --restart always --name sylcs-admin ${{secrets.ECR_URL}}-admin:latest" >> scripts/deploy.sh
+                -e SERVER_PORT=8080 \
+                --restart always --name sylcs-admin ${{secrets.ECR_URL}}-user:latest" >> scripts/deploy.sh
 
       # deploy files upload to S3
       - name: upload to S3
         run: |
-          zip -r sycls-admin-latest.zip ./scripts appspec.yml
-          aws s3 cp --region ${{ secrets.AWS_STATIC }} --acl private ./sycls-admin-latest.zip s3://${{ secrets.AWS_BUCKET_NAME }}/scripts/
+          zip -r sycls-user-latest.zip ./scripts appspec.yml
+          aws s3 cp --region ${{ secrets.AWS_STATIC }} --acl private ./sycls-user-latest.zip s3://${{ secrets.AWS_BUCKET_NAME }}/scripts/
 
-      - name: start admin deploy
+      - name: start user deploy
         run: |
           aws deploy create-deployment --application-name every-ticket-codedeploy \
           --deployment-config-name CodeDeployDefault.OneAtATime \
-          --deployment-group-name admin-deploy-group \
-          --s3-location bucket=${{secrets.AWS_BUCKET_NAME}},bundleType=zip,key=scripts/sycls-admin-latest.zip
+          --deployment-group-name user-deploy-group \
+          --s3-location bucket=${{secrets.AWS_BUCKET_NAME}},bundleType=zip,key=scripts/sycls-user-latest.zip
