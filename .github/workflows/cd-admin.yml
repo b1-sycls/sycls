@@ -59,7 +59,7 @@ jobs:
         id: build-image
         run: |
           aws ecr get-login-password --region ${{secrets.AWS_STATIC}} | sudo docker login --username AWS --password-stdin ${{secrets.ECR_PW}}
-          docker push ${{secrets.ECR_URL}}-admin:latest 
+          docker push ${{secrets.ECR_URL}}:latest 
           echo "image=${{secrets.ECR_URL}}-admin:latest" >> $GITHUB_OUTPUT
           mkdir scripts
           touch scripts/deploy.sh
