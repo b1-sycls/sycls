@@ -82,8 +82,8 @@ jobs:
                 -e TOSS_SECRET_KEY=${{secrets.TOSS_SECRET_KEY}} \
                 -e MAIL_HOST=${{secrets.MAIL_HOST}} \
                 -e MAIL_PORT=${{secrets.MAIL_PORT}} \
-                -e DEV_REDIS_HOST=${{secrets.REDIS_HOST}}
-                -e DEV_REDIS_PORT=${{secrets.REDIS_PORT}}
+                -e DEV_REDIS_HOST=${{secrets.REDIS_HOST}} \
+                -e DEV_REDIS_PORT=${{secrets.REDIS_PORT}} \
                 -e SERVER_PORT=8081 \
                 --restart always --name sylcs-admin ${{secrets.ECR_URL}}:latest" >> scripts/deploy.sh
 
