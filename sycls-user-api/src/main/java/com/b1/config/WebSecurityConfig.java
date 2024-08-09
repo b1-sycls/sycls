@@ -7,6 +7,7 @@ import com.b1.security.JwtLogoutSuccessHandler;
 import com.b1.security.JwtProvider;
 import com.b1.security.UserDetailsServiceImpl;
 import com.b1.user.UserHelper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -37,6 +38,7 @@ public class WebSecurityConfig {
     private final UserHelper userHelper;
     private final JwtLogoutSuccessHandler jwtLogoutSuccessHandler;
     private final JwtLogoutHandler jwtLogoutHandler;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
@@ -46,7 +48,8 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider, userHelper);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider, userHelper,
+                objectMapper);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }

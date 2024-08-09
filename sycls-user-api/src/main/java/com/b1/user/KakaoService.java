@@ -5,7 +5,7 @@ import static com.b1.constant.TokenConstants.BEARER_PREFIX;
 import static com.b1.constant.TokenConstants.REFRESHTOKEN_HEADER;
 
 import com.b1.security.JwtProvider;
-import com.b1.user.dto.KakaoUserInfoDto;
+import com.b1.user.dto.KakaoUserInfoResponseDto;
 import com.b1.user.entity.User;
 import com.b1.user.entity.UserLoginType;
 import com.b1.user.entity.UserRole;
@@ -38,13 +38,13 @@ public class KakaoService {
     private final RestTemplate restTemplate;
     private final JwtProvider jwtProvider;
 
-    public KakaoUserInfoDto kakaoLogin(String code, HttpServletResponse response)
+    public KakaoUserInfoResponseDto kakaoLogin(String code, HttpServletResponse response)
             throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
 
         // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
-        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
+        KakaoUserInfoResponseDto kakaoUserInfo = getKakaoUserInfo(accessToken);
 
         // 3. 필요시에 회원가입
         boolean isNewUser = registerKakaoUserIfNeeded(kakaoUserInfo, response);
@@ -64,7 +64,7 @@ public class KakaoService {
         return kakaoUserInfo;
     }
 
-    private boolean registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo,
+    private boolean registerKakaoUserIfNeeded(KakaoUserInfoResponseDto kakaoUserInfo,
             HttpServletResponse response) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         Long kakaoId = kakaoUserInfo.getId();
@@ -143,7 +143,8 @@ public class KakaoService {
         return jsonNode.get("access_token").asText();
     }
 
-    private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
+    private KakaoUserInfoResponseDto getKakaoUserInfo(String accessToken)
+            throws JsonProcessingException {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
                 .fromUriString("https://kapi.kakao.com")
@@ -176,7 +177,7 @@ public class KakaoService {
                 .get("email").asText();
 
         log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
-        return KakaoUserInfoDto.of(id, nickname, email);
+        return KakaoUserInfoResponseDto.of(id, nickname, email);
     }
 
     @Transactional

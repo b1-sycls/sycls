@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class KakaoUserInfoDto {
+public class KakaoUserInfoResponseDto {
 
     private Long id;
     private String nickname;
@@ -17,8 +17,8 @@ public class KakaoUserInfoDto {
     @Setter
     private boolean newUser;
 
-    public static KakaoUserInfoDto of(Long id, String nickname, String email) {
-        return KakaoUserInfoDto.builder()
+    public static KakaoUserInfoResponseDto of(Long id, String nickname, String email) {
+        return KakaoUserInfoResponseDto.builder()
                 .id(id)
                 .nickname(nickname)
                 .email(email)

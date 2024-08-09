@@ -19,6 +19,10 @@ spring:
             trust: ${MAIL_HOST}
             protocols: TLSv1.2
 
+client:
+  server:
+    address: ${CLIENT_ADDRESS}
+
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
