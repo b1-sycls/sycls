@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-docker:
-    runs-on: ubuntu-latest #runs-on으로 변경ㅅ
+    runs-on: ubuntu-latest #runs-on으로 변경
     steps:
       # 레포지토리 체크
       - name: Checkout repository
