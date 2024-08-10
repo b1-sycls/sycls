@@ -27,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 import java.util.List;
+import java.util.Set;
 
 import static com.b1.constant.TossConstant.AUTHORIZATION;
 import static com.b1.constant.TossConstant.BASIC;
@@ -52,10 +53,13 @@ public class TossPaymentService {
         return ClientResponseDto.of(tossConfig.getPaymentClientKey(), user);
     }
 
+    /**
+     * 토스페이먼츠 결제 시도
+     */
     public ResponseEntity<TossPaymentRestResponse> confirm(
             final TossConfirmRequestDto requestDto
     ) {
-
+        //TODO
         String authorization = Base64.getEncoder().encodeToString((tossConfig.getPaymentSecretKey() + ":").getBytes());
 
         HttpHeaders headers = new HttpHeaders();
@@ -81,25 +85,24 @@ public class TossPaymentService {
      */
     public void successReservation(
             final PaymentSuccessRequestDto requestDto,
-            final UserDetailsImpl userDetails
+            final User user
     ) {
-        List<SeatGradeReservationLog> seatReservationLogsById = reservationHelper
-                .getSeatReservationLogsById(requestDto.seatGradeIds());
-        seatReservationLogsById.forEach(SeatGradeReservationLog::deleteReservationStatus);
+        List<SeatGrade> reservationByUserWithPayment = reservationHelper
+                .getReservationByUserWithPayment(requestDto.roundId(), user.getId());
 
         Ticket ticket = Ticket.addTicket(
                 requestDto.orderId(),
                 requestDto.price(),
-                userDetails.getUser(),
-                seatReservationLogsById.get(0).getSeatGrade().getRound());
+                user,
+                reservationByUserWithPayment.get(0).getRound());
 
         Ticket saveTicket = ticketHelper.addTicket(ticket);
 
-        seatReservationLogsById.forEach(log -> {
-            SeatGrade seatGrade = log.getSeatGrade();
-            seatGrade.updateTicket(saveTicket.getId());
-            seatGrade.soldOutSeatGrade();
+        reservationByUserWithPayment.forEach(sg -> {
+            sg.updateTicket(saveTicket.getId());
+            sg.soldOutSeatGrade();
         });
+        reservationHelper. clearReservation(requestDto.roundId(),user.getId());
     }
 
 }

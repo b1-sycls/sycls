@@ -2,7 +2,6 @@ package com.b1.reservation;
 
 import com.b1.seatgrade.SeatGradeRepository;
 import com.b1.seatgrade.entity.SeatGrade;
-import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -50,6 +49,7 @@ public class ReservationHelper {
             final Long userId
     ) {
         reservationRepository.releaseReservation(roundId, userId);
+
     }
 
     /**
@@ -75,12 +75,14 @@ public class ReservationHelper {
     }
 
     /**
-     * 특정 예매 정보 조회
+     * 예매 중인 좌석 조회
      */
-    public List<SeatGradeReservationLog> getSeatReservationLogsById(
-            final List<Long> reservationIds
+    public List<SeatGrade> getReservationByUserWithPayment(
+            final Long roundId,
+            final Long userId
     ) {
-        return seatReservationLogRepository.findAllByIdIn(reservationIds);
+        Set<Long> seatReservationIds = reservationRepository.getReservationByUser(roundId, userId);
+        return seatGradeRepository.findAllByIdIn(seatReservationIds);
     }
 
     /**
@@ -95,4 +97,13 @@ public class ReservationHelper {
                 ));
     }
 
+    /**
+     * 결제 완료 후 점유 기록 삭제
+     */
+    public void clearReservation(
+            final Long roundId,
+            final Long userId
+    ) {
+        reservationRepository.releaseReservation(roundId, userId);
+    }
 }
