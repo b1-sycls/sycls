@@ -62,14 +62,8 @@ public class ReservationRepository {
     ) {
         String keyPattern = generateKeyPatternForRoundAndUser(roundId, userId);
         Set<String> keys = redisTemplate.keys(keyPattern);
-        return keys.stream()
-                .map(key -> {
-                    int prefixLength = ("reservation:" + roundId + ":").length();
-                    int suffixLength = String.valueOf(userId).length() + 1;
-                    String substring = key.substring(prefixLength, key.length() - suffixLength);
-                    return Long.parseLong(substring);
-                })
-                .collect(Collectors.toSet());
+        return keys.stream().map(k -> Long.parseLong(k.split(":")[2])
+        ).collect(Collectors.toSet());
     }
 
     /**

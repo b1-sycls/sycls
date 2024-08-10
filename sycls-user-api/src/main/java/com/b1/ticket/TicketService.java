@@ -74,4 +74,5 @@ public class TicketService {
                 .forEach(dto -> dto.updateImagePath(S3Util.makeResponseImageDir(dto.getImagePath())));
         return responseDto;
     }
+
 }

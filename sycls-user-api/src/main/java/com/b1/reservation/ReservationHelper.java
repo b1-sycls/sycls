@@ -18,7 +18,6 @@ public class ReservationHelper {
 
     private final ReservationRepository reservationRepository;
     private final SeatGradeRepository seatGradeRepository;
-    private final SeatReservationLogRepository seatReservationLogRepository;
 
     /**
      * 선택 좌석 점유 등록

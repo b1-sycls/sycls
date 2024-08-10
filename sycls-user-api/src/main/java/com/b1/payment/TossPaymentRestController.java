@@ -39,10 +39,11 @@ public class TossPaymentRestController {
      * 결제
      */
     @PostMapping("/payment/confirm")
-    public ResponseEntity<RestApiResponseDto<ResponseEntity<TossPaymentRestResponse>>> confirmPayment(
-            @Valid @RequestBody final TossConfirmRequestDto requestDto
+    public ResponseEntity<RestApiResponseDto<TossPaymentRestResponse>> confirmPayment(
+            @Valid @RequestBody final TossConfirmRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        ResponseEntity<TossPaymentRestResponse> response = tossPaymentService.confirm(requestDto);
+        TossPaymentRestResponse response = tossPaymentService.confirm(requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(response));
     }

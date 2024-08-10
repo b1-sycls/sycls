@@ -1,38 +1,22 @@
 package com.b1.payment;
 
 import com.b1.config.TossConfig;
-import com.b1.exception.customexception.TossPaymentException;
-import com.b1.exception.errorcode.PaymentErrorCode;
 import com.b1.payment.dto.ClientResponseDto;
 import com.b1.payment.dto.PaymentSuccessRequestDto;
 import com.b1.payment.dto.TossConfirmRequestDto;
 import com.b1.payment.dto.TossPaymentRestResponse;
 import com.b1.reservation.ReservationHelper;
 import com.b1.seatgrade.entity.SeatGrade;
-import com.b1.seatgrade.entity.SeatGradeReservationLog;
-import com.b1.security.UserDetailsImpl;
 import com.b1.ticket.TicketHelper;
 import com.b1.ticket.entity.Ticket;
 import com.b1.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Base64;
 import java.util.List;
 import java.util.Set;
-
-import static com.b1.constant.TossConstant.AUTHORIZATION;
-import static com.b1.constant.TossConstant.BASIC;
-import static com.b1.constant.TossConstant.TOSS_URL;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Slf4j(topic = "Toss Payment Service")
 @Service
@@ -43,6 +27,7 @@ public class TossPaymentService {
     private final TossConfig tossConfig;
     private final ReservationHelper reservationHelper;
     private final TicketHelper ticketHelper;
+    private final TossPaymentHelper tossPaymentHelper;
 
     /**
      * 토스페이먼츠 ClientKey 및 User정보 전송
@@ -56,28 +41,16 @@ public class TossPaymentService {
     /**
      * 토스페이먼츠 결제 시도
      */
-    public ResponseEntity<TossPaymentRestResponse> confirm(
-            final TossConfirmRequestDto requestDto
+    public TossPaymentRestResponse confirm(
+            final TossConfirmRequestDto requestDto,
+            final User user
     ) {
-        //TODO
-        String authorization = Base64.getEncoder().encodeToString((tossConfig.getPaymentSecretKey() + ":").getBytes());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(AUTHORIZATION, BASIC + authorization);
+        Set<Long> reservationByUser = reservationHelper
+                .getReservationByUser(requestDto.roundId(), user.getId());
 
-        try {
-            URL url = new URL(TOSS_URL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty(AUTHORIZATION, authorization);
-            headers.setContentType(APPLICATION_JSON);
-        } catch (Exception e) {
-            throw new TossPaymentException(PaymentErrorCode.TOSS_PAYMENT_EXCEPTION);
-        }
-
-        HttpEntity<TossConfirmRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
-
-        return new RestTemplate()
-                .postForEntity(TOSS_URL, requestEntity, TossPaymentRestResponse.class);
+        return tossPaymentHelper
+                .confirmPayment(tossConfig, requestDto, reservationByUser, user.getId());
     }
 
     /**
@@ -102,7 +75,8 @@ public class TossPaymentService {
             sg.updateTicket(saveTicket.getId());
             sg.soldOutSeatGrade();
         });
-        reservationHelper. clearReservation(requestDto.roundId(),user.getId());
+        reservationHelper.clearReservation(requestDto.roundId(), user.getId());
+        tossPaymentHelper.clearReservation(requestDto.roundId(), user.getId());
     }
 
 }
