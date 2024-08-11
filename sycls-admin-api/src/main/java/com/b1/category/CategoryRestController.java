@@ -31,7 +31,6 @@ public class CategoryRestController {
      * 카테고리 추가
      */
     @PostMapping("/categories")
-//    @PreAuthorize("hasRole('ADMIN')") // 시큐리티후 추가
     public ResponseEntity<RestApiResponseDto<String>> addCategory(
             @Valid @RequestBody final CategoryAddRequestDto requestDto) {
         categoryService.addCategory(requestDto);
