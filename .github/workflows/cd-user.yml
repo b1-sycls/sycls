@@ -85,6 +85,9 @@ jobs:
                 -e MAIL_PORT=${{secrets.MAIL_PORT}} \
                 -e DEV_REDIS_HOST=${{secrets.REDIS_HOST}} \
                 -e DEV_REDIS_PORT=${{secrets.REDIS_PORT}} \
+                -e CLIENT_BASE_URL=${{secrets.CLIENT_BASE_URL}} \
+                -e KAKAO_CLIENT_KEY=${{secrets.KAKAO_CLIENT_KEY}} \
+                -e USER_BASE_URL=${{secrets.USER_BASE_URL}} \
                 -e SERVER_PORT=8080 \
                 --restart always --name sylcs-admin ${{secrets.ECR_URL}}:user-latest" >> scripts/deploy.sh
 
