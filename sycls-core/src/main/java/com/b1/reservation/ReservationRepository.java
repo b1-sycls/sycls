@@ -36,10 +36,12 @@ public class ReservationRepository {
             final Long userId
     ) {
         if (checkIfSeatsAlreadyReserved(roundId, newSeatIds, userId)) {
+            log.error("이미 매진된 좌석 {}", newSeatIds);
             throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
         }
 
         if (!lockSeats(roundId, newSeatIds)) {
+            log.error("이미 매진된 좌석 {}", newSeatIds);
             throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
         }
 
@@ -109,6 +111,7 @@ public class ReservationRepository {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 unlockSeats(roundId, seatIds);
+                log.error("이미 매진된 좌석 {}", seatIds);
                 throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
             }
         }
@@ -143,7 +146,7 @@ public class ReservationRepository {
                     if (ex != null) {
                         log.error("기존 예약된 좌석 {} 의 예약 삭제 실패", key, ex);
                     } else {
-                        log.info("기존 예약된 좌석 {} 의 예약을 삭제했습니다.", key);
+                        log.info("기존 예약된 좌석 {} 의 예약을 삭제", key);
                     }
                 });
             }
@@ -165,7 +168,7 @@ public class ReservationRepository {
             String existingReservation = bucket.get();
 
             if (existingReservation != null && !existingReservation.equals(userId.toString())) {
-                log.error("좌석 {} 은(는) 다른 사용자에 의해 이미 예약되었습니다.", seatId);
+                log.error("좌석 {} 은(는) 다른 사용자에 의해 이미 예약", seatId);
                 throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
             }
 

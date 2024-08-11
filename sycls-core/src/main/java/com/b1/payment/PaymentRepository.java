@@ -34,10 +34,12 @@ public class PaymentRepository {
             final Long userId
     ) {
         if (checkIfSeatsAlreadyReserved(roundId, newSeatIds, userId)) {
+            log.error("이미 매진된 좌석 {}", newSeatIds);
             throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
         }
 
         if (!lockSeats(roundId, newSeatIds)) {
+            log.error("이미 매진된 좌석 {}", newSeatIds);
             throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
         }
 
@@ -98,7 +100,7 @@ public class PaymentRepository {
             String existingReservation = bucket.get();
 
             if (existingReservation != null && !existingReservation.equals(userId.toString())) {
-                log.error("좌석 {} 은(는) 다른 사용자에 의해 이미 예약되었습니다.", seatId);
+                log.error("좌석 {} 은(는) 다른 사용자에 의해 이미 예약", seatId);
                 throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
             }
 
@@ -122,7 +124,7 @@ public class PaymentRepository {
             for (String key : keys) {
                 String[] parts = key.split(":");
                 if (parts.length == 4 && !parts[3].equals(userId.toString())) {
-                    log.error("좌석 {} 은(는) 다른 사용자에 의해 이미 예약되었습니다.", seatId);
+                    log.error("좌석 {} 은(는) 다른 사용자에 의해 이미 예약", seatId);
                     return true;
                 }
             }
@@ -159,8 +161,6 @@ public class PaymentRepository {
         String keyPattern = generateKeyPatternForRoundAndUser(roundId, userId);
         Iterable<String> keys = redissonClient.getKeys().getKeysByPattern(keyPattern);
 
-        keys.forEach(k -> {
-            redissonClient.getBucket(k).delete();
-        });
+        keys.forEach(k -> redissonClient.getBucket(k).delete());
     }
 }
