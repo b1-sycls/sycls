@@ -67,6 +67,7 @@ public class PaymentRepository {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 unlockSeats(roundId, seatIds);
+                log.error("이미 매진된 좌석 {} {}", seatId, seatIds);
                 throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
             }
         }
