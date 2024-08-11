@@ -38,7 +38,7 @@ public class CategoryService {
     }
 
     /**
-     * 카테고리 수정 TODO 상태변경 기능 추가 생각중
+     * 카테고리 수정
      */
     public void updateCategory(final Long categoryId, final CategoryUpdateRequestDto requestDto) {
         String name = requestDto.name();
