@@ -21,6 +21,7 @@ import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
 import com.b1.s3.S3Util;
 import com.b1.seatgrade.SeatGradeHelper;
+import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.util.PageUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -133,6 +134,13 @@ public class RoundService {
         if (!Objects.equals(round.getPlace().getId(), requestDto.placeId())) {
             placeId = requestDto.placeId();
             place = placeHelper.getPlace(requestDto.placeId());
+
+            List<SeatGrade> seatGradeList = seatGradeHelper.getAllSeatGradesEntity(round.getId());
+
+            for (SeatGrade seatGrade : seatGradeList) {
+                seatGrade.deleteSeatGrade();
+            }
+            
             round.updatePlace(place);
         }
 
