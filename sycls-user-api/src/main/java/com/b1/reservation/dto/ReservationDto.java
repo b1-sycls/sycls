@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SeatGradeReservationDto {
+public class ReservationDto {
 
     private String seatGradeType;
     private Integer quantity;
@@ -23,14 +23,14 @@ public class SeatGradeReservationDto {
     private Set<Long> seatGradeIds;
     private Set<String> seatCodes;
 
-    public static SeatGradeReservationDto of(
+    public static ReservationDto of(
             final String type,
             final Integer quantity,
             final Integer price,
             final Set<Long> seatGradeIds,
             final Set<String> seatCodes
     ) {
-        return SeatGradeReservationDto.builder()
+        return ReservationDto.builder()
                 .seatGradeType(type)
                 .quantity(quantity)
                 .price(price)
@@ -39,7 +39,7 @@ public class SeatGradeReservationDto {
                 .build();
     }
 
-    public static SeatGradeReservationDto of(String seatGradeType, int quantity, Integer price, List<SeatGrade> logs) {
+    public static ReservationDto of(String seatGradeType, int quantity, Integer price, List<SeatGrade> logs) {
         Map<Long, String> seatGradeMap = logs.stream()
                 .collect(Collectors.toMap(
                         SeatGrade::getId,
@@ -47,7 +47,7 @@ public class SeatGradeReservationDto {
                         (existing, replacement) -> existing // 중복 발생 시 기존 값을 사용
                 ));
 
-        return SeatGradeReservationDto.builder()
+        return ReservationDto.builder()
                 .seatGradeType(seatGradeType)
                 .quantity(quantity)
                 .price(price)

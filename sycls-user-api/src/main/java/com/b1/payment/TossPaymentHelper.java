@@ -50,6 +50,7 @@ public class TossPaymentHelper {
             connection.setRequestProperty(AUTHORIZATION, authorization);
             headers.setContentType(APPLICATION_JSON);
         } catch (Exception e) {
+            log.error("toss 결제 도중 오류 발생 유저ID {} | 회차ID {} | 주문ID {} | paymentKey {}", userId, requestDto.roundId(), requestDto.orderId(), requestDto.paymentKey());
             throw new TossPaymentException(PaymentErrorCode.TOSS_PAYMENT_EXCEPTION);
         }
 

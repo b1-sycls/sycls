@@ -9,7 +9,6 @@ import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
 import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.seatgrade.entity.SeatGrade;
-import com.b1.seatgrade.entity.SeatGradeReservationLog;
 import com.b1.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,13 +28,15 @@ public class ReservationService {
 
     private final RoundHelper roundHelper;
     private final SeatGradeHelper seatGradeHelper;
-
     private final ReservationHelper reservationHelper;
 
     /**
      * 예매 등록
      */
-    public ReservationAddResponseDto addReservation(ReservationAddRequestDto requestDto, User user) {
+    public ReservationAddResponseDto addReservation(
+            final ReservationAddRequestDto requestDto,
+            final User user
+    ) {
         Round selectedRound = roundHelper.getRound(requestDto.roundId());
 
         Set<SeatGrade> seatGradesForRound = seatGradeHelper

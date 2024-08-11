@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReservationGetDetailResponseDto {
 
-    private List<SeatGradeReservationDto> seatInfos;
+    private List<ReservationDto> seatInfos;
 
     public static ReservationGetDetailResponseDto of(
             final Map<String, List<SeatGrade>> seatInfos
@@ -31,13 +31,13 @@ public class ReservationGetDetailResponseDto {
             });
         });
 
-        // SeatGradeReservationDto 리스트로 변환
-        List<SeatGradeReservationDto> convertedSeatInfos = mergedSeatInfos.entrySet().stream()
+        // ReservationDto 리스트로 변환
+        List<ReservationDto> convertedSeatInfos = mergedSeatInfos.entrySet().stream()
                 .map(entry -> {
                     List<SeatGrade> logs = entry.getValue();
                     int quantity = logs.size();
                     int price = logs.get(0).getPrice(); // 모든 로그의 가격이 동일하다고 가정
-                    return SeatGradeReservationDto.of(entry.getKey(), quantity, price, logs);
+                    return ReservationDto.of(entry.getKey(), quantity, price, logs);
                 })
                 .collect(Collectors.toList());
 
