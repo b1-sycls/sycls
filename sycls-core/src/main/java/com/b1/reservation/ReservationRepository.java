@@ -93,7 +93,10 @@ public class ReservationRepository {
         ).collect(Collectors.toSet());
     }
 
-    private boolean lockSeats(Long roundId, Set<Long> seatIds) {
+    private boolean lockSeats(
+            final Long roundId,
+            final Set<Long> seatIds
+    ) {
         boolean allLocked = true;
         for (Long seatId : seatIds) {
             RLock lock = redissonClient.getLock(generateLockKeyForRoundAndSeat(roundId, seatId));
@@ -112,7 +115,10 @@ public class ReservationRepository {
         return allLocked;
     }
 
-    private void unlockSeats(Long roundId, Set<Long> seatIds) {
+    private void unlockSeats(
+            final Long roundId,
+            final Set<Long> seatIds
+    ) {
         for (Long seatId : seatIds) {
             RLock lock = redissonClient.getLock(generateLockKeyForRoundAndSeat(roundId, seatId));
             if (lock.isHeldByCurrentThread()) {
@@ -124,7 +130,10 @@ public class ReservationRepository {
     /**
      * 기존 예매 좌석 삭제
      */
-    private void removeExistingReservations(Long roundId, Long userId) {
+    private void removeExistingReservations(
+            final Long roundId,
+            final Long userId
+    ) {
         RKeys keys = redissonClient.getKeys();
         String pattern = generateKeyPatternForRoundAndUser(roundId, userId);
         keys.getKeysByPattern(pattern).forEach(key -> {
@@ -144,7 +153,11 @@ public class ReservationRepository {
     /**
      * 새로운 좌석 예매 등록
      */
-    private void updateSeatReservations(Long roundId, Set<Long> newSeatIds, Long userId) {
+    private void updateSeatReservations(
+            final Long roundId,
+            final Set<Long> newSeatIds,
+            final Long userId
+    ) {
         for (Long seatId : newSeatIds) {
             String key = generateLockKeyForRoundSeatAndUser(roundId, seatId, userId);
             RBucket<String> bucket = redissonClient.getBucket(key);
@@ -164,7 +177,11 @@ public class ReservationRepository {
     /**
      * 이미 예매 된 좌석여부를 검증
      */
-    private boolean checkIfSeatsAlreadyReserved(Long roundId, Set<Long> seatIds, Long userId) {
+    private boolean checkIfSeatsAlreadyReserved(
+            final Long roundId,
+            final Set<Long> seatIds,
+            final Long userId
+    ) {
         for (Long seatId : seatIds) {
             String pattern = generateLockKeyForRoundAndSeat(roundId, seatId) + ":*";
             Set<String> keys = redisTemplate.keys(pattern);
@@ -184,15 +201,25 @@ public class ReservationRepository {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":*:*";
     }
 
-    private String generateLockKeyForRoundAndSeat(Long roundId, Long seatId) {
+    private String generateLockKeyForRoundAndSeat(
+            final Long roundId,
+            final Long seatId
+    ) {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId;
     }
 
-    private String generateLockKeyForRoundSeatAndUser(Long roundId, Long seatId, Long userId) {
+    private String generateLockKeyForRoundSeatAndUser(
+            final Long roundId,
+            final Long seatId,
+            final Long userId
+    ) {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId + ":" + userId;
     }
 
-    private String generateKeyPatternForRoundAndUser(Long roundId, Long userId) {
+    private String generateKeyPatternForRoundAndUser(
+            final Long roundId,
+            final Long userId
+    ) {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":*:" + userId;
     }
 }
