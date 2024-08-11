@@ -13,14 +13,14 @@ import org.springframework.stereotype.Repository;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static com.b1.constant.PaymentConstants.LOCK_EXPIRATION_TIME;
+import static com.b1.constant.PaymentConstants.REDISSON_LOCK_KEY_PREFIX;
+import static com.b1.constant.PaymentConstants.RESERVATION_EXPIRATION_TIME;
+
 @Slf4j(topic = "Payment Repository")
 @Repository
 @RequiredArgsConstructor
 public class PaymentRepository {
-
-    private final long LOCK_EXPIRATION_TIME = 10; // 10초 동안 잠금 유지
-    private final long RESERVATION_EXPIRATION_TIME = 5; // 결제 만료 시간 (분)
-    private final String REDISSON_LOCK_KEY_PREFIX = "payment:";
 
     private final RedissonClient redissonClient;
     private final RedisTemplate<String, String> redisTemplate;

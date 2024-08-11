@@ -1,5 +1,6 @@
 package com.b1.reservation;
 
+import com.b1.constant.ReservationConstants;
 import com.b1.exception.customexception.SeatGradeAlreadySoldOutException;
 import com.b1.exception.errorcode.SeatGradeErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +16,13 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.b1.constant.ReservationConstants.*;
+
 @Slf4j(topic = "Reservation Repository")
 @Repository
 @RequiredArgsConstructor
 public class ReservationRepository {
 
-    private final long LOCK_EXPIRATION_TIME = 10; // 10초 동안 잠금 유지
-    private final long RESERVATION_EXPIRATION_TIME = 5; // 예약 만료 시간 (분)
-    private final String REDISSON_LOCK_KEY_PREFIX = "reservation:";
 
     private final RedissonClient redissonClient;
     private final RedisTemplate<String, String> redisTemplate;
