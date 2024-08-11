@@ -1,0 +1,105 @@
+name: CD
+
+# main 브랜치 PR 발생 시 실행
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest #runs-on으로 변경ㅅ
+    steps:
+      # 레포지토리 체크
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # JDK 17 설치
+      - name: JDK 17 setup
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: "adopt"
+
+      # gradlew 실행 권한 부여
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # build
+      - name: Build with Gradle Wrapper
+        run: ./gradlew clean build
+
+      # Docker Image 생성
+      - name: Docker build
+        run: sudo docker build . --platform linux/amd64 -f sycls-admin-api/Dockerfile -t ${{secrets.ECR_URL}}:admin-latest
+
+      # AWS CLI 설치
+      - name: AWS-CLI setup
+        run: |
+          sudo apt install unzip
+          sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          sudo unzip awscliv2.zip
+          sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+
+      # AWS 연결 설정
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_KEY}}
+          aws-region: ${{secrets.AWS_STATIC}}
+
+      # ECR 로그인
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Docker image upload and setting deploy files
+      - name: AWS ECR upload and setting deploy files
+        id: build-image
+        run: |
+          aws ecr get-login-password --region ${{secrets.AWS_STATIC}} | sudo docker login --username AWS --password-stdin ${{secrets.ECR_PW}}
+          docker push ${{secrets.ECR_URL}}:admin-latest 
+          echo "image=${{secrets.ECR_URL}}:admin-latest" >> $GITHUB_OUTPUT
+          mkdir scripts
+          touch scripts/deploy.sh
+          echo "cd" >> scripts/deploy.sh
+          echo "aws ecr get-login-password --region ${{ secrets.AWS_STATIC}} | sudo docker login --username AWS --password-stdin ${{secrets.ECR_PW}}" >> scripts/deploy.sh
+          echo "sudo docker pull ${{secrets.ECR_URL}}:admin-latest" >> scripts/deploy.sh
+          echo "sudo docker run -d -p 8081:8081 \
+                -e AWS_ACCESS_KEY=${{secrets.AWS_ACCESS_KEY}} \
+                -e AWS_SECRET_KEY=${{secrets.AWS_SECRET_KEY}} \
+                -e AWS_STATIC=${{secrets.AWS_STATIC}} \
+                -e AWS_BASE_URL=${{secrets.AWS_BASE_URL}} \
+                -e AWS_BUCKET_NAME=${{secrets.AWS_BUCKET_NAME}} \
+                -e DEV_DB_PASSWORD=${{secrets.DEV_DB_PASSWORD}} \
+                -e DEV_DB_URL=${{secrets.DEV_DB_URL}} \
+                -e DEV_DB_NAME=${{secrets.DEV_DB_NAME}} \
+                -e DEV_DB_USER=${{secrets.DEV_DB_USER}} \
+                -e JWT_SECRET_KEY=${{secrets.JWT_SECRET_KEY}} \
+                -e NAVER_EMAIL=${{secrets.NAVER_EMAIL}} \
+                -e NAVER_EMAIL_PASSWORD=${{secrets.NAVER_EMAIL_PASSWORD}} \
+                -e TOSS_CLIENT_KEY=${{secrets.TOSS_CLIENT_KEY}} \
+                -e TOSS_SECRET_KEY=${{secrets.TOSS_SECRET_KEY}} \
+                -e MAIL_HOST=${{secrets.MAIL_HOST}} \
+                -e MAIL_PORT=${{secrets.MAIL_PORT}} \
+                -e DEV_REDIS_HOST=${{secrets.REDIS_HOST}} \
+                -e DEV_REDIS_PORT=${{secrets.REDIS_PORT}} \
+                -e CLIENT_BASE_URL=${{secrets.CLIENT_BASE_URL}} \
+                -e KAKAO_CLIENT_KEY=${{secrets.KAKAO_CLIENT_KEY}} \
+                -e USER_BASE_URL=${{secrets.USER_BASE_URL}} \
+                -e SERVER_PORT=8081 \
+                --restart always --name sylcs-admin ${{secrets.ECR_URL}}:admin-latest" >> scripts/deploy.sh
+
+      # deploy files upload to S3
+      - name: upload to S3
+        run: |
+          zip -r sycls-admin-latest.zip ./scripts appspec.yml
+          aws s3 cp --region ${{ secrets.AWS_STATIC }} --acl private ./sycls-admin-latest.zip s3://${{ secrets.AWS_BUCKET_NAME }}/scripts/
+
+      - name: start admin deploy
+        run: |
+          aws deploy create-deployment --application-name every-ticket-codedeploy \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --deployment-group-name admin-deploy-group \
+          --s3-location bucket=${{secrets.AWS_BUCKET_NAME}},bundleType=zip,key=scripts/sycls-admin-latest.zip
