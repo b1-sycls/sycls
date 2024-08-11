@@ -97,4 +97,11 @@ public class SeatGradeHelper {
     public RoundSeatGradeStatusDto getPlaceMaxSeatAndEnableSeatGradeByRoundId(final Long roundId) {
         return seatGradeQueryRepository.getPlaceMaxSeatAndEnableSeatGradeByRoundId(roundId);
     }
+
+    /**
+     * 해당 회차의 모든 좌석등급을 불러옴
+     */
+    public List<SeatGrade> getAllSeatGradesEntity(final Long roundId) {
+        return seatGradeRepository.findAllByRoundId(roundId);
+    }
 }
