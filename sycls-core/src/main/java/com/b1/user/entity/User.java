@@ -52,9 +52,15 @@ public class User extends TimeStamp {
     @Column(nullable = false)
     private UserRole role;
 
+    //    @Column(nullable = true, unique = true)
+    private Long kakaoId;
+
     @Builder(access = AccessLevel.PRIVATE)
-    private User(String email, String username, String nickname, String password,
-            String phoneNumber, UserStatus status, UserLoginType type, UserRole role) {
+    private User(final String email, final String username, final String nickname,
+            final String password,
+            final String phoneNumber, final UserStatus status, final UserLoginType type,
+            final UserRole role,
+            final Long kakaoId) {
         this.email = email;
         this.username = username;
         this.nickname = nickname;
@@ -63,10 +69,12 @@ public class User extends TimeStamp {
         this.status = status;
         this.type = type;
         this.role = role;
+        this.kakaoId = kakaoId;
     }
 
-    public static User addCustomer(String email, String username, String nickname, String password,
-            String phoneNumber, UserRole role) {
+    public static User addCustomer(final String email, final String username, final String nickname,
+            final String password,
+            final String phoneNumber, final UserLoginType type, final UserRole role) {
         return User.builder()
                 .email(email)
                 .username(username)
@@ -74,12 +82,12 @@ public class User extends TimeStamp {
                 .password(password)
                 .phoneNumber(phoneNumber)
                 .status(UserStatus.ACTIVE)
-                .type(UserLoginType.COMMON)
+                .type(type)
                 .role(role)
                 .build();
     }
 
-    public void changePassword(String password) {
+    public void changePassword(final String password) {
         this.password = password;
     }
 
@@ -87,4 +95,13 @@ public class User extends TimeStamp {
         this.status = UserStatus.DELETED;
     }
 
+    public User kakaoIdUpdate(final Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
+
+    public void updateProfile(final String nickname, final String phoneNumber) {
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+    }
 }

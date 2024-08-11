@@ -13,6 +13,7 @@ import com.b1.user.dto.UserProfileResponseDto;
 import com.b1.user.dto.UserResignRequestDto;
 import com.b1.user.dto.UserSignupRequestDto;
 import com.b1.user.entity.User;
+import com.b1.user.entity.UserLoginType;
 import com.b1.user.entity.UserRole;
 import com.b1.user.entity.UserStatus;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +64,7 @@ public class UserService {
                 requestDto.nickname(),
                 passwordEncoder.encode(requestDto.password()),
                 requestDto.phoneNumber(),
+                UserLoginType.COMMON,
                 UserRole.ADMIN
         );
 
