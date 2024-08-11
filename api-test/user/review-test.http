@@ -1,0 +1,24 @@
+### POST 리뷰 등록
+POST http://localhost:8080/v1/contents/1/reviews
+Content-Type: application/json
+
+{
+  "comment": "댓글",
+  "rating": 3
+}
+
+### GET 리뷰 전체 조회
+GET http://localhost:8080/v1/contents/56/reviews?pageNum=2&pageSize=4
+
+
+### PATCH 리뷰 수정
+PATCH http://localhost:8080/v1/reviews/1
+Content-Type: application/json
+
+{
+  "comment": "댓글 수정",
+  "rating": 10
+}
+
+### DELETE 리뷰 삭제
+DELETE http://localhost:8080/v1/reviews/1

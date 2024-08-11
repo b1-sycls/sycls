@@ -1,0 +1,11 @@
+@contentId = 8
+
+### 공연 단일 조회
+GET http://localhost:8080/v1/contents/{{contentId}}
+
+### 공연 전체 조회
+GET http://localhost:8080/v1/contents?page=1
+
+### 공연 전체 조회 (풀조건)
+GET http://localhost:8080/v1/contents?categoryId=1&titleKeyword=콘서트&page=1&sortProperty=createdAt&
+    sortDirection=DESC

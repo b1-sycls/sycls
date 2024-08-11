@@ -1,0 +1,10 @@
+@roundId = 1
+
+### 회차 단일 상세 조회
+GET localhost:8080/v1/rounds/{{roundId}}/detail
+
+### 회차 단일 간단 조회
+GET localhost:8080/v1/rounds/{{roundId}}
+
+### 회차 전체 조회
+GET localhost:8080/v1/rounds?contentId=1&page=1

@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    include:
+      - core
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${NAVER_EMAIL}
+    password: ${NAVER_EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: ${MAIL_HOST}
+            protocols: TLSv1.2
+
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
+
+server:
+  port: ${SERVER_PORT}
+
+toss:
+  clientKey: ${TOSS_CLIENT_KEY}
+  secretKey: ${TOSS_SECRET_KEY}

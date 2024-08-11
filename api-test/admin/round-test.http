@@ -1,0 +1,45 @@
+@roundId = 2
+
+### 회차 등록
+POST http://localhost:8081/v1/rounds
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "contentId": 8,
+  "placeId": 1,
+  "sequence": 1,
+  "startDate": "2024-09-08",
+  "startTime": "17:00",
+  "endTime": "22:00"
+}
+
+
+### 회차 상태 수정 (WAITING, AVAILABLE, CLOSED)
+PATCH http://localhost:8081/v1/rounds/{{roundId}}/status
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "status": "AVAILABLE"
+}
+
+### 회차 정보 수정
+PATCH http://localhost:8081/v1/rounds/1
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "startDate": "2024-09-07",
+  "startTime": "04:00",
+  "endTime": "05:00"
+}
+
+### 회차 단일 조회
+GET localhost:8081/v1/rounds/{{roundId}}
+Authorization: {{Authorization}}
+
+
+### 회차 전체 조회
+GET localhost:8081/v1/rounds?contentId=1
+Authorization: {{Authorization}}

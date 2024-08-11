@@ -1,0 +1,3 @@
+
+### 출연진 조회
+GET http://localhost:8080/v1/casts?roundId=2
