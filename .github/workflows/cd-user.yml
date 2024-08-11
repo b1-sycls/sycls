@@ -89,7 +89,7 @@ jobs:
                 -e KAKAO_CLIENT_KEY=${{secrets.KAKAO_CLIENT_KEY}} \
                 -e USER_BASE_URL=${{secrets.USER_BASE_URL}} \
                 -e SERVER_PORT=8080 \
-                --restart always --name sylcs-admin ${{secrets.ECR_URL}}:user-latest" >> scripts/deploy.sh
+                --restart always --name sylcs-user ${{secrets.ECR_URL}}:user-latest" >> scripts/deploy.sh
 
       # deploy files upload to S3
       - name: upload to S3
