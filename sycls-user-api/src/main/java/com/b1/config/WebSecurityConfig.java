@@ -97,6 +97,7 @@ public class WebSecurityConfig {
 //                        .requestMatchers("/static/**").permitAll()
 //                        .requestMatchers("/templates/**").permitAll()
 //                        .requestMatchers("/static/css/**").permitAll()
+                                .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/v1/users/signup").permitAll()
 
                                 .requestMatchers("/v1/user/kakao/callback").permitAll()
