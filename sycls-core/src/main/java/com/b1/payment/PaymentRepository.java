@@ -51,6 +51,22 @@ public class PaymentRepository {
         }
     }
 
+    /**
+     * 기존 예매 기록 삭제
+     */
+    public void releaseReservation(
+            final Long roundId,
+            final Long userId
+    ) {
+        String keyPattern = generateKeyPatternForRoundAndUser(roundId, userId);
+        Iterable<String> keys = redissonClient.getKeys().getKeysByPattern(keyPattern);
+
+        keys.forEach(k -> redissonClient.getBucket(k).delete());
+    }
+
+    /**
+     * 좌석 lock
+     */
     private boolean lockSeats(
             final Long roundId,
             final Set<Long> seatIds
@@ -74,6 +90,9 @@ public class PaymentRepository {
         return allLocked;
     }
 
+    /**
+     * 기존 lock 해제
+     */
     private void unlockSeats(
             final Long roundId,
             final Set<Long> seatIds
@@ -133,6 +152,9 @@ public class PaymentRepository {
         return false;
     }
 
+    /**
+     * payment:{roundId}:{seatId}
+     */
     private String generateLockKeyForRoundAndSeat(
             final Long roundId,
             final Long seatId
@@ -140,6 +162,9 @@ public class PaymentRepository {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId;
     }
 
+    /**
+     * payment:{roundId}:{seatId}:{userId}
+     */
     private String generateLockKeyForRoundSeatAndUser(
             final Long roundId,
             final Long seatId,
@@ -148,6 +173,9 @@ public class PaymentRepository {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId + ":" + userId;
     }
 
+    /**
+     * payment:{roundId}:*{userId}
+     */
     private String generateKeyPatternForRoundAndUser(
             final Long roundId,
             final Long userId
@@ -155,13 +183,4 @@ public class PaymentRepository {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":*:" + userId;
     }
 
-    public void releaseReservation(
-            final Long roundId,
-            final Long userId
-    ) {
-        String keyPattern = generateKeyPatternForRoundAndUser(roundId, userId);
-        Iterable<String> keys = redissonClient.getKeys().getKeysByPattern(keyPattern);
-
-        keys.forEach(k -> redissonClient.getBucket(k).delete());
-    }
 }

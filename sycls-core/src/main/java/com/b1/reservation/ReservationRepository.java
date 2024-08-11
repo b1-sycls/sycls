@@ -118,6 +118,9 @@ public class ReservationRepository {
         return allLocked;
     }
 
+    /**
+     * 기존 lock 해제
+     */
     private void unlockSeats(
             final Long roundId,
             final Set<Long> seatIds
@@ -200,10 +203,16 @@ public class ReservationRepository {
         return false;
     }
 
+    /**
+     * reservation:{roundId}:*:*
+     */
     private String generateKeyPatternForRound(final Long roundId) {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":*:*";
     }
 
+    /**
+     * reservation:{roundId}:{seatId}
+     */
     private String generateLockKeyForRoundAndSeat(
             final Long roundId,
             final Long seatId
@@ -211,6 +220,9 @@ public class ReservationRepository {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId;
     }
 
+    /**
+     * reservation:{roundId}:{seatId}:{userId}
+     */
     private String generateLockKeyForRoundSeatAndUser(
             final Long roundId,
             final Long seatId,
@@ -219,6 +231,9 @@ public class ReservationRepository {
         return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId + ":" + userId;
     }
 
+    /**
+     * reservation:{roundId}:*:{userId}
+     */
     private String generateKeyPatternForRoundAndUser(
             final Long roundId,
             final Long userId
