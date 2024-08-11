@@ -1,6 +1,8 @@
 package com.b1.payment;
 
 import com.b1.config.TossConfig;
+import com.b1.exception.customexception.ReservationNotFoundException;
+import com.b1.exception.errorcode.ReservationErrorCode;
 import com.b1.payment.dto.ClientResponseDto;
 import com.b1.payment.dto.PaymentSuccessRequestDto;
 import com.b1.payment.dto.TossConfirmRequestDto;
@@ -48,6 +50,11 @@ public class TossPaymentService {
 
         Set<Long> reservationByUser = reservationHelper
                 .getReservationByUser(requestDto.roundId(), user.getId());
+
+        if (reservationByUser.isEmpty()) {
+            log.error("결제 도중 예매 중인 좌석이 없습니다. userId {} ", user.getId());
+            throw new ReservationNotFoundException(ReservationErrorCode.SEAT_RESERVATION_NOT_FOUND);
+        }
 
         return tossPaymentHelper
                 .confirmPayment(tossConfig, requestDto, reservationByUser, user.getId());
