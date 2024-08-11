@@ -33,6 +33,9 @@ public class TicketHelper {
         return ticketQueryRepository.getAllTicketForUser(user, pageable);
     }
 
+    /**
+     * 티켓 상세 조회
+     */
     public TicketGetDetailDto getDetailTicketForUser(
             final Long ticketId
     ) {

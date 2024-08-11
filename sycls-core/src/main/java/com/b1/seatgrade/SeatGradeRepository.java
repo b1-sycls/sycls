@@ -20,4 +20,6 @@ public interface SeatGradeRepository extends JpaRepository<SeatGrade, Long> {
     Set<SeatGrade> findAllByTicketIdIn(List<Long> ticketId);
 
     Set<SeatGrade> findByTicketId(Long ticketId);
+
+    List<SeatGrade> findAllByIdIn(Set<Long> seatGradeIds);
 }

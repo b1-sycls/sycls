@@ -38,7 +38,7 @@ subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 		developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
+        implementation 'org.springframework.boot:spring-boot-starter-aop'
         testImplementation 'org.mockito:mockito-core:4.8.0'
     }
 

@@ -18,7 +18,7 @@ dependencies {
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     // https://mvnrepository.com/artifact/org.redisson/redisson
-//    implementation 'org.redisson:redisson-spring-boot-starter:3.27.2'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.27.2'
 
 //    implementation 'org.springframework.boot:spring-boot-starter-web'
 

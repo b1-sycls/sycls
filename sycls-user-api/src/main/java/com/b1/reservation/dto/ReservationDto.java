@@ -1,7 +1,6 @@
 package com.b1.reservation.dto;
 
-import com.b1.round.entity.Round;
-import com.b1.seatgrade.entity.SeatGradeReservationLog;
+import com.b1.seatgrade.entity.SeatGrade;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,50 +15,42 @@ import java.util.stream.Collectors;
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SeatGradeReservationDto {
+public class ReservationDto {
 
     private String seatGradeType;
     private Integer quantity;
     private Integer price;
-    private Set<Long> reservationIds;
     private Set<Long> seatGradeIds;
     private Set<String> seatCodes;
 
-    public static SeatGradeReservationDto of(
+    public static ReservationDto of(
             final String type,
             final Integer quantity,
             final Integer price,
-            final Set<Long> reservationIds,
             final Set<Long> seatGradeIds,
             final Set<String> seatCodes
     ) {
-        return SeatGradeReservationDto.builder()
+        return ReservationDto.builder()
                 .seatGradeType(type)
                 .quantity(quantity)
                 .price(price)
-                .reservationIds(reservationIds)
                 .seatGradeIds(seatGradeIds)
                 .seatCodes(seatCodes)
                 .build();
     }
 
-    public static SeatGradeReservationDto of(String seatGradeType, int quantity, Integer price, List<SeatGradeReservationLog> logs) {
-        Set<Long> reservationIds = logs.stream()
-                .map(SeatGradeReservationLog::getId)
-                .collect(Collectors.toSet());
-
+    public static ReservationDto of(String seatGradeType, int quantity, Integer price, List<SeatGrade> logs) {
         Map<Long, String> seatGradeMap = logs.stream()
                 .collect(Collectors.toMap(
-                        srl -> srl.getSeatGrade().getId(),
-                        srl -> srl.getSeatGrade().getSeat().getCode(),
+                        SeatGrade::getId,
+                        srl -> srl.getSeat().getCode(),
                         (existing, replacement) -> existing // 중복 발생 시 기존 값을 사용
                 ));
 
-        return SeatGradeReservationDto.builder()
+        return ReservationDto.builder()
                 .seatGradeType(seatGradeType)
                 .quantity(quantity)
                 .price(price)
-                .reservationIds(reservationIds)
                 .seatGradeIds(seatGradeMap.keySet())
                 .seatCodes(new HashSet<>(seatGradeMap.values()))
                 .build();
