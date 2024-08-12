@@ -3,10 +3,12 @@ package com.b1.place;
 import com.b1.exception.customexception.PlaceCannotUpdateException;
 import com.b1.exception.customexception.PlaceNotFoundException;
 import com.b1.exception.errorcode.PlaceErrorCode;
+import com.b1.place.dto.PlaceGetEnableResponseDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondRequestDto;
 import com.b1.place.entity.Place;
 import com.b1.place.entity.PlaceStatus;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,13 @@ public class PlaceHelper {
                 requestDto.getStatus(),
                 pageable
         );
+    }
+
+    /**
+     * 공연장 enable 전체조회
+     */
+    public List<PlaceGetEnableResponseDto> getAllPlacesEnable() {
+        return placeQueryRepository.getAllPlacesEnable();
     }
 
     /**
