@@ -3,6 +3,7 @@ package com.b1.place;
 import static com.b1.place.entity.QPlace.place;
 import static com.b1.seat.entity.QSeat.seat;
 
+import com.b1.place.dto.PlaceGetEnableResponseDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.entity.PlaceStatus;
 import com.b1.seat.entity.SeatStatus;
@@ -24,6 +25,9 @@ public class PlaceQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    /**
+     * 공연장 전체 조회
+     */
     public Page<PlaceGetResponseDto> getAllPlaces(
             final String location,
             final String name,
@@ -61,6 +65,24 @@ public class PlaceQueryRepository {
                 );
 
         return PageableExecutionUtils.getPage(placeList, pageable, total::fetchOne);
+    }
+
+    /**
+     * 공연장 enable 전체 조회
+     */
+    public List<PlaceGetEnableResponseDto> getAllPlacesEnable() {
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                PlaceGetEnableResponseDto.class,
+                                place.id,
+                                place.location,
+                                place.name
+                        )
+                )
+                .from(place)
+                .where(place.status.eq(PlaceStatus.ENABLE))
+                .fetch();
     }
 
     /**

@@ -12,6 +12,10 @@ Content-Type: application/json
 GET http://localhost:8081/v1/places
 
 
+### GET 공연장 전체조회(ENABLE)
+GET http://localhost:8081/v1/places/enable
+
+
 ### GET 공연장 단건조회
 GET http://localhost:8081/v1/1
 
