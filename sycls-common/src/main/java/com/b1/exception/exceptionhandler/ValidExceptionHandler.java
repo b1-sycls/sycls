@@ -31,7 +31,7 @@ public class ValidExceptionHandler {
         }
 
         ErrorResponseDto errorResponseDto = ErrorResponseDto
-                .of(CommonErrorCode.BAD_REQUEST, validationMessage);
+                .of(CommonErrorCode.BAD_REQUEST, "valid", validationMessage);
 
         return ResponseEntity
                 .status(CommonErrorCode.BAD_REQUEST.getHttpStatusCode())
