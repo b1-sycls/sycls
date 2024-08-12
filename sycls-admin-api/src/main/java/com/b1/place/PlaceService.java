@@ -2,6 +2,7 @@ package com.b1.place;
 
 import com.b1.common.PageResponseDto;
 import com.b1.place.dto.PlaceAddRequestDto;
+import com.b1.place.dto.PlaceGetEnableResponseDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondRequestDto;
 import com.b1.place.dto.PlaceUpdateRequestDto;
@@ -9,6 +10,7 @@ import com.b1.place.entity.Place;
 import com.b1.place.entity.PlaceStatus;
 import com.b1.round.RoundHelper;
 import com.b1.util.PageUtil;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -53,6 +55,13 @@ public class PlaceService {
 
         Page<PlaceGetResponseDto> pageResponseDto = placeHelper.getAllPlaces(requestDto, pageable);
         return PageResponseDto.of(pageResponseDto);
+    }
+
+    /**
+     * 공연장 enable 전체조회
+     */
+    public List<PlaceGetEnableResponseDto> getAllPlacesEnable() {
+        return placeHelper.getAllPlacesEnable();
     }
 
     /**
