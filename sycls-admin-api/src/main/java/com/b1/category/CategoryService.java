@@ -2,6 +2,7 @@ package com.b1.category;
 
 import com.b1.category.dto.CategoryAddRequestDto;
 import com.b1.category.dto.CategoryGetAdminResponseDto;
+import com.b1.category.dto.CategoryGetEnableResponseDto;
 import com.b1.category.dto.CategoryUpdateRequestDto;
 import com.b1.category.entity.Category;
 import com.b1.category.entity.CategoryStatus;
@@ -83,6 +84,14 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryGetAdminResponseDto> getAllCategory() {
         return categoryHelper.getAllCategoryOrderByNameAsc();
+    }
+
+    /**
+     * 화성화 카테고리 전체조회
+     */
+    @Transactional(readOnly = true)
+    public List<CategoryGetEnableResponseDto> getAllEnableCategory() {
+        return categoryHelper.getAllCategoryAndEnable();
     }
 
     /**

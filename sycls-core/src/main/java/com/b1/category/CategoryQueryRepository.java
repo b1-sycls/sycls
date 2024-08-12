@@ -1,6 +1,7 @@
 package com.b1.category;
 
 import com.b1.category.dto.CategoryGetAdminResponseDto;
+import com.b1.category.dto.CategoryGetEnableResponseDto;
 import com.b1.category.dto.CategoryGetUserResponseDto;
 import com.b1.category.entity.CategoryStatus;
 import com.b1.category.entity.QCategory;
@@ -34,6 +35,25 @@ public class CategoryQueryRepository {
                 .from(category)
                 .orderBy(category.name.asc())
                 .fetch();
+    }
+
+    /**
+     * (어드민) 활성화 카테고리 전체조회
+     */
+    public List<CategoryGetEnableResponseDto> getAllCategoryAndEnable() {
+        QCategory category = QCategory.category;
+
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                                CategoryGetEnableResponseDto.class,
+                                category.id,
+                                category.name
+                        )
+                )
+                .from(category)
+                .where(category.status.eq(CategoryStatus.ENABLE))
+                .fetch();
+
     }
 
     /**

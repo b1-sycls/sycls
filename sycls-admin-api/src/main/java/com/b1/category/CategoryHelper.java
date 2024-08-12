@@ -1,6 +1,7 @@
 package com.b1.category;
 
 import com.b1.category.dto.CategoryGetAdminResponseDto;
+import com.b1.category.dto.CategoryGetEnableResponseDto;
 import com.b1.category.entity.Category;
 import com.b1.exception.customexception.CategoryNotFoundException;
 import com.b1.exception.errorcode.CategoryErrorCode;
@@ -48,5 +49,12 @@ public class CategoryHelper {
      */
     public List<CategoryGetAdminResponseDto> getAllCategoryOrderByNameAsc() {
         return categoryQueryRepository.getAllOrderByNameAscForAdmin();
+    }
+
+    /**
+     * 활성화 카테고리 전체조회
+     */
+    public List<CategoryGetEnableResponseDto> getAllCategoryAndEnable() {
+        return categoryQueryRepository.getAllCategoryAndEnable();
     }
 }
