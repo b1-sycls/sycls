@@ -51,7 +51,7 @@ public class ReviewHelper {
                     return new ReviewNotFoundException(ReviewErrorCode.NOT_FOUND_REVIEW);
                 }
         );
-        if (Objects.equals(review.getUser(), user)) {
+        if (!Objects.equals(review.getUser().getId(), user.getId())) {
             log.error("일치하지 않는 사용자 | {}, {}", reviewId, user.getId());
             throw new ReviewerMisMatchException(ReviewErrorCode.MISMATCH_REVIEWER);
         }

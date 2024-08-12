@@ -2,16 +2,15 @@ package com.b1.seatgrade;
 
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
+import com.b1.seatgrade.dto.SeatGradeDeleteRequestDto;
 import com.b1.seatgrade.dto.SeatGradeGetAllResponseDto;
 import com.b1.seatgrade.dto.SeatGradeUpdateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,12 +75,11 @@ public class SeatGradeRestController {
     /**
      * 좌석 등급 삭제
      */
-    @DeleteMapping("/rounds/{roundId}/seat-grades/{seatGradeId}")
+    @PatchMapping("/seat-grades/delete")
     public ResponseEntity<RestApiResponseDto<String>> deleteSeatGrade(
-            @PathVariable(value = "roundId") final Long roundId,
-            @PathVariable(value = "seatGradeId") final Long seatGradeId
+            @Valid @RequestBody final SeatGradeDeleteRequestDto requestDto
     ) {
-        seatGradeService.deleteSeatGrades(roundId, seatGradeId);
+        seatGradeService.deleteSeatGrades(requestDto.roundId(), requestDto.seatGradeIdList());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("삭제되었습니다."));
     }
