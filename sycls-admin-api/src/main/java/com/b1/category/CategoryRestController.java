@@ -2,6 +2,7 @@ package com.b1.category;
 
 import com.b1.category.dto.CategoryAddRequestDto;
 import com.b1.category.dto.CategoryGetAdminResponseDto;
+import com.b1.category.dto.CategoryGetEnableResponseDto;
 import com.b1.category.dto.CategoryUpdateRequestDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import jakarta.validation.Valid;
@@ -74,6 +75,16 @@ public class CategoryRestController {
     @GetMapping("/categories")
     public ResponseEntity<RestApiResponseDto<List<CategoryGetAdminResponseDto>>> getAllCategory() {
         List<CategoryGetAdminResponseDto> responseDtoList = categoryService.getAllCategory();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("조회 성공", responseDtoList));
+    }
+
+    /**
+     * 활성화 카테고리 전체조회
+     */
+    @GetMapping("/categories/enable")
+    ResponseEntity<RestApiResponseDto<List<CategoryGetEnableResponseDto>>> getAllEnableCategory() {
+        List<CategoryGetEnableResponseDto> responseDtoList = categoryService.getAllEnableCategory();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("조회 성공", responseDtoList));
     }

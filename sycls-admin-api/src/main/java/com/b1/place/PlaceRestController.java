@@ -3,10 +3,12 @@ package com.b1.place;
 import com.b1.common.PageResponseDto;
 import com.b1.globalresponse.RestApiResponseDto;
 import com.b1.place.dto.PlaceAddRequestDto;
+import com.b1.place.dto.PlaceGetEnableResponseDto;
 import com.b1.place.dto.PlaceGetResponseDto;
 import com.b1.place.dto.PlaceSearchCondRequestDto;
 import com.b1.place.dto.PlaceUpdateRequestDto;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +51,16 @@ public class PlaceRestController {
         PageResponseDto<PlaceGetResponseDto> responseDto = placeService.getAllPlaces(requestDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("조회되었습니다.", responseDto));
+    }
+
+    /**
+     * 공연장 활성화 상태 전체 조회
+     */
+    @GetMapping("/places/enable")
+    public ResponseEntity<RestApiResponseDto<List<PlaceGetEnableResponseDto>>> getAllPlacesEnable() {
+        List<PlaceGetEnableResponseDto> response = placeService.getAllPlacesEnable();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("조회되었습니다.", response));
     }
 
     /**
