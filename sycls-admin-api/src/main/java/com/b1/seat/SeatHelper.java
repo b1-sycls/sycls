@@ -64,7 +64,7 @@ public class SeatHelper {
         seatRepository.findAllByPlaceIdAndStatus(placeId, SeatStatus.ENABLE)
                 .stream()
                 .map(Seat::getCode)
-                .filter(code::contains)
+                .filter(code::equals)
                 .findAny()
                 .ifPresent(seatCode -> {
                     log.error("중복된 좌석코드 존재 | {}", seatCode);

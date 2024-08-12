@@ -1,11 +1,9 @@
 package com.b1.seatgrade;
 
-import com.b1.place.PlaceHelper;
 import com.b1.place.entity.PlaceStatus;
 import com.b1.round.RoundHelper;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
-import com.b1.seat.SeatHelper;
 import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.dto.SeatGradeAddRequestDto;
 import com.b1.seatgrade.dto.SeatGradeAdminGetResponseDto;
@@ -27,8 +25,6 @@ public class SeatGradeService {
 
     private final SeatGradeHelper seatGradeHelper;
     private final RoundHelper roundHelper;
-    private final SeatHelper seatHelper;
-    private final PlaceHelper placeHelper;
 
     /**
      * 좌석 등급 등록

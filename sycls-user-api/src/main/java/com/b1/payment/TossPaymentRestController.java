@@ -28,7 +28,7 @@ public class TossPaymentRestController {
 
     @PostMapping("/payment/client-key")
     public ResponseEntity<RestApiResponseDto<ClientResponseDto>> getClientKey(
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
         ClientResponseDto responseDto = tossPaymentService.getClientKey(userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
@@ -39,10 +39,11 @@ public class TossPaymentRestController {
      * 결제
      */
     @PostMapping("/payment/confirm")
-    public ResponseEntity<RestApiResponseDto<ResponseEntity<TossPaymentRestResponse>>> confirmPayment(
-            @Valid @RequestBody final TossConfirmRequestDto requestDto
+    public ResponseEntity<RestApiResponseDto<TossPaymentRestResponse>> confirmPayment(
+            @Valid @RequestBody final TossConfirmRequestDto requestDto,
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
-        ResponseEntity<TossPaymentRestResponse> response = tossPaymentService.confirm(requestDto);
+        TossPaymentRestResponse response = tossPaymentService.confirm(requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of(response));
     }
@@ -51,26 +52,30 @@ public class TossPaymentRestController {
      * 인증성공처리
      */
     @PostMapping("/payment/success")
-    public ResponseEntity<RestApiResponseDto<Object>> paymentRequest(
+    public ResponseEntity<RestApiResponseDto<String>> paymentRequest(
             @Valid @RequestBody final PaymentSuccessRequestDto requestDto,
             @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
-        tossPaymentService.successReservation(requestDto, userDetails);
+        tossPaymentService.successReservation(requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("결제 성공"));
     }
 
     /**
-     * 인증실패처리 TODO
+     * 인증실패처리
      */
     @GetMapping("/payment/fail")
-    public String failPayment(HttpServletRequest request, Model model) {
+    public ResponseEntity<RestApiResponseDto<String>> failPayment(
+            final HttpServletRequest request,
+            final Model model
+    ) {
         String failCode = request.getParameter("code");
         String failMessage = request.getParameter("message");
 
         model.addAttribute("code", failCode);
         model.addAttribute("message", failMessage);
 
-        return "/fail";
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(RestApiResponseDto.of("결제에 실패했습니다."));
     }
 }

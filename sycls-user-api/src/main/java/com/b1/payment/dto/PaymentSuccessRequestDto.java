@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 public record PaymentSuccessRequestDto(
+        @NotNull(message = "공연번호가 누락되었습니다.")
+        Long roundId,
         @NotBlank(message = "주문번호가 누락되었습니다.")
         String orderId,
         @NotNull(message = "결제금액이 누락되었습니다.")

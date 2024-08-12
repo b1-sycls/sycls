@@ -21,6 +21,7 @@ import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
 import com.b1.s3.S3Util;
 import com.b1.seatgrade.SeatGradeHelper;
+import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.util.PageUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -96,7 +97,6 @@ public class RoundService {
             Integer placeMaxSeat = statusDto.getPlaceMaxSeat();
             Long enableSeatGrade = statusDto.getEnableSeatGrade();
 
-            // TODO 이 아래 로직 place 가 enable 만 가져와서 없을경우가 있음 그렇다면 place 검증???
             if (placeMaxSeat == null) {
                 log.error("등록된 좌석이 없음 | roundId : {}", round.getId());
                 throw new RoundNotFullSeatGradeException(
@@ -134,6 +134,13 @@ public class RoundService {
         if (!Objects.equals(round.getPlace().getId(), requestDto.placeId())) {
             placeId = requestDto.placeId();
             place = placeHelper.getPlace(requestDto.placeId());
+
+            List<SeatGrade> seatGradeList = seatGradeHelper.getAllSeatGradesEntity(round.getId());
+
+            for (SeatGrade seatGrade : seatGradeList) {
+                seatGrade.deleteSeatGrade();
+            }
+            
             round.updatePlace(place);
         }
 
