@@ -60,6 +60,7 @@ public class PlaceService {
     /**
      * 공연장 enable 전체조회
      */
+    @Transactional(readOnly = true)
     public List<PlaceGetEnableResponseDto> getAllPlacesEnable() {
         return placeHelper.getAllPlacesEnable();
     }
