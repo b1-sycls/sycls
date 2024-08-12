@@ -26,4 +26,11 @@ public class ErrorResponseDto<T> extends RestApiResponseDto<T> {
                 errorCode.getDescription(),
                 data);
     }
+
+    public static <T> ErrorResponseDto<T> of(ErrorCode errorCode, String message, T data) {
+        return new ErrorResponseDto<>(
+                errorCode.getHttpStatusCode(),
+                message,
+                data);
+    }
 }
