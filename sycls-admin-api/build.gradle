@@ -20,6 +20,9 @@ dependencies {
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    //datafaker
+    implementation 'net.datafaker:datafaker:2.3.1'
+
     testImplementation 'org.springframework.security:spring-security-test'
     implementation project(':sycls-core')
     implementation project(':sycls-common')
