@@ -63,7 +63,7 @@ public class S3Util {
      * 이미지 파일 UUID 생성
      */
     public static String createFileName(final String extension) {
-        return UUID.randomUUID().toString().concat(extension);
+        return UUID.randomUUID() + "." + extension;
     }
 
     /**
