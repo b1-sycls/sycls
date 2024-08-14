@@ -4,6 +4,7 @@ import com.b1.common.PageResponseDto;
 import com.b1.content.ContentHelper;
 import com.b1.content.entity.Content;
 import com.b1.exception.customexception.InvalidDateException;
+import com.b1.exception.customexception.InvalidDateTimeException;
 import com.b1.exception.customexception.InvalidTimeException;
 import com.b1.exception.customexception.RoundConflictingReservationException;
 import com.b1.exception.customexception.RoundNotFullSeatGradeException;
@@ -24,6 +25,7 @@ import com.b1.seatgrade.SeatGradeHelper;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.util.PageUtil;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
@@ -140,7 +142,7 @@ public class RoundService {
             for (SeatGrade seatGrade : seatGradeList) {
                 seatGrade.deleteSeatGrade();
             }
-            
+
             round.updatePlace(place);
         }
 
@@ -199,6 +201,8 @@ public class RoundService {
 
         LocalDate today = LocalDate.now();
 
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+
         if (startDate.isBefore(today)) {
             log.error("공연 날짜가 과거일 수 없음 | date : {}", startDate);
             throw new InvalidDateException(RoundErrorCode.INVALID_DATE);
@@ -207,6 +211,11 @@ public class RoundService {
         if (endTime.isBefore(startTime)) {
             log.error("시작시간이 종료시간보다 늦을 수 없음");
             throw new InvalidTimeException(RoundErrorCode.INVALID_TIME);
+        }
+
+        if (startDateTime.isBefore(LocalDateTime.now())) {
+            log.error("시작일은 지금보다 과거일 수 없음");
+            throw new InvalidDateTimeException(RoundErrorCode.INVALID_DATETIME);
         }
     }
 
