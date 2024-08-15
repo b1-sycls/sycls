@@ -41,10 +41,11 @@ public class DatafakerRestController {
                 .body(RestApiResponseDto.of("생성 성공!"));
     }
 
-    @PostMapping("/datafaker/seat-grade")
+    @PostMapping("/datafaker/seat-grade/{placeId}")
     public ResponseEntity<RestApiResponseDto<String>> addDummyDataSeatGrade(
+            @PathVariable Long placeId
     ) {
-        datafakerService.addDummyDataSeatGrade();
+        datafakerService.addDummyDataSeatGrade(placeId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("생성 성공!"));
     }

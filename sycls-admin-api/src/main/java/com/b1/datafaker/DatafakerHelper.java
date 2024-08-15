@@ -70,12 +70,12 @@ public class DatafakerHelper {
         char letter = 'A';
         int codeIndex = 1;
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000; i++) {
             String code = String.format("%c%d", letter, codeIndex);
             seatList.add(Seat.addSeat(code, place));
 
             codeIndex++;
-            if (codeIndex > 1000) {
+            if (codeIndex > 100) {
                 codeIndex = 1;
                 letter++;
                 log.info("addDummySeat {} ", codeIndex);
@@ -124,9 +124,11 @@ public class DatafakerHelper {
     /**
      * 좌석등급 더미 데이터 생성
      */
-    public void addDummySeatGrade() {
-        List<Seat> seats = seatRepository.findAll();
-        List<Round> rounds = roundRepository.findAll();
+    public void addDummySeatGrade(Long placeId) {
+        Place place = placeRepository.findById(placeId).orElse(null);
+
+        List<Seat> seats = seatRepository.findAllByPlace(place);
+        List<Round> rounds = roundRepository.findAllByPlace(place);
         List<SeatGrade> seatGradeList = new ArrayList<>();
 
         for (Round round : rounds) {
