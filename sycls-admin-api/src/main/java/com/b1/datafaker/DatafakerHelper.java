@@ -124,9 +124,11 @@ public class DatafakerHelper {
     /**
      * 좌석등급 더미 데이터 생성
      */
-    public void addDummySeatGrade() {
-        List<Seat> seats = seatRepository.findAll();
-        List<Round> rounds = roundRepository.findAll();
+    public void addDummySeatGrade(Long placeId) {
+        Place place = placeRepository.findById(placeId).orElse(null);
+
+        List<Seat> seats = seatRepository.findAllByPlace(place);
+        List<Round> rounds = roundRepository.findAllByPlace(place);
         List<SeatGrade> seatGradeList = new ArrayList<>();
 
         for (Round round : rounds) {
