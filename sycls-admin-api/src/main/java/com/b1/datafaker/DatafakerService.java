@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Slf4j
+@Slf4j(topic = "datafaker service")
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -40,11 +40,15 @@ public class DatafakerService {
     }
 
     public void addDummyDataRound(Long placeId) {
+        log.info("round 생성 준비");
         List<Content> allDummyContents = datafakerHelper.getAllDummyContents();
         datafakerHelper.addDummyRound(placeId, allDummyContents);
+        log.info("round 생성 완료");
     }
 
     public void addDummyDataSeatGrade() {
+        log.info("addDummyDataSeatGrade 생성 시작");
         datafakerHelper.addDummySeatGrade();
+        log.info("addDummyDataSeatGrade 생성 완료");
     }
 }
