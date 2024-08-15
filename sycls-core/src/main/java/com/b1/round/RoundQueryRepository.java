@@ -310,6 +310,20 @@ public class RoundQueryRepository {
         return PageableExecutionUtils.getPage(roundList, pageable, total::fetchOne);
     }
 
+    public List<Round> getAllRoundsByPlaceIdAndStatus(Long placeId) {
+        QRound round = QRound.round;
+        QPlace place = QPlace.place;
+
+        return jpaQueryFactory
+                .selectFrom(round)
+                .where(round.place.id.eq(placeId)
+                        .and(round.status.eq(RoundStatus.WAITING))
+                )
+                .leftJoin(round.place, place)
+                .limit(100)
+                .fetch();
+    }
+
     /**
      * 공연 고유번호 검색 조건 설정
      */

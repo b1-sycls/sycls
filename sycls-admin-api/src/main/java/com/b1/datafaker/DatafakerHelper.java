@@ -6,6 +6,7 @@ import com.b1.content.ContentRepository;
 import com.b1.content.entity.Content;
 import com.b1.place.PlaceRepository;
 import com.b1.place.entity.Place;
+import com.b1.round.RoundQueryRepository;
 import com.b1.round.RoundRepository;
 import com.b1.round.entity.Round;
 import com.b1.round.entity.RoundStatus;
@@ -14,13 +15,10 @@ import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.SeatGradeRepository;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeType;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
@@ -38,6 +36,7 @@ public class DatafakerHelper {
     private final ContentRepository contentRepository;
     private final RoundRepository roundRepository;
     private final SeatGradeRepository seatGradeRepository;
+    private final RoundQueryRepository roundQueryRepository;
 
     /**
      * 카테고리 더미데이터 생성
@@ -56,7 +55,7 @@ public class DatafakerHelper {
      */
     public Place addDummyPlace() {
         String location = faker.address().fullAddress();
-        Integer maxSeat = 10000;
+        Integer maxSeat = 1000;
         String name = faker.company().name();
         return placeRepository.save(Place.addPlace(location, maxSeat, name));
     }
@@ -106,15 +105,19 @@ public class DatafakerHelper {
 
         List<Round> roundList = new ArrayList<>();
         for (Content allDummyContent : allDummyContents) {
-            List<Round> allByContentId = roundRepository.findAllByContentId(allDummyContent.getId());
+            List<Round> allByContentId = roundRepository.findAllByContentId(
+                    allDummyContent.getId());
             if (allByContentId.isEmpty()) {
                 for (int i = 1; i <= 5; i++) {
-                    LocalDate startDate = LocalDate.now().plusDays(faker.number().numberBetween(1, 30));
+                    LocalDate startDate = LocalDate.now()
+                            .plusDays(faker.number().numberBetween(1, 30));
                     LocalTime startTime = LocalTime
-                            .of(faker.number().numberBetween(9, 22), faker.number().numberBetween(0, 59));
+                            .of(faker.number().numberBetween(9, 22),
+                                    faker.number().numberBetween(0, 59));
                     LocalTime endTime = startTime.plusHours(2);
                     RoundStatus status = RoundStatus.WAITING;
-                    roundList.add(Round.addRound(i, startDate, startTime, endTime, status, allDummyContent, place));
+                    roundList.add(Round.addRound(i, startDate, startTime, endTime, status,
+                            allDummyContent, place));
                 }
             }
         }
@@ -128,15 +131,23 @@ public class DatafakerHelper {
         Place place = placeRepository.findById(placeId).orElse(null);
 
         List<Seat> seats = seatRepository.findAllByPlace(place);
-        List<Round> rounds = roundRepository.findAllByPlace(place);
+        // List<Round> rounds = roundRepository.findAllByPlace(place);
+        List<Round> roundList = roundQueryRepository.getAllRoundsByPlaceIdAndStatus(placeId);
+
+        if (roundList == null) {
+            log.info("WAITING 상태의 라운드가 없어서 종료됨");
+            return;
+        }
+
         List<SeatGrade> seatGradeList = new ArrayList<>();
 
-        for (Round round : rounds) {
+        for (Round round : roundList) {
             for (Seat seat : seats) {
                 SeatGradeType grade = SeatGradeType.S;
                 Integer price = 10000;
                 seatGradeList.add(SeatGrade.addSeatGrade(grade, price, seat, round));
             }
+            round.updateStatus(RoundStatus.AVAILABLE);
         }
         seatGradeRepository.saveAll(seatGradeList);
     }
