@@ -143,7 +143,7 @@ public class ContentQueryRepository {
     }
 
     /**
-     * (어드민) 공연 전체 조회시 필요한 공연의 회차 정보 페이징
+     * (어드민) 단일 조회시 필요한 공연의 회차 정보 페이징
      */
     public Page<ContentGetAdminResponseDto> getAllContentForAdmin(final Long categoryId,
             final String titleKeyword, final ContentStatus status, final Pageable pageable) {
@@ -170,7 +170,7 @@ public class ContentQueryRepository {
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(content.id.desc())
+                .orderBy(content.createdAt.desc())
                 .fetch();
 
         JPAQuery<Long> total = jpaQueryFactory
@@ -186,7 +186,7 @@ public class ContentQueryRepository {
     }
 
     /**
-     * (유저) 공연 전체 조회시필요한 공연의 회차 정보 페이징
+     * (유저) 단일 조회시 필요한 공연의 회차 정보 페이징
      */
     public Page<ContentGetUserResponseDto> getAllContentForUser(final Long categoryId,
             final String titleKeyword, final Pageable pageable) {
@@ -213,7 +213,7 @@ public class ContentQueryRepository {
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(content.id.desc())
+                .orderBy(content.createdAt.desc())
                 .fetch();
 
         JPAQuery<Long> total = jpaQueryFactory
