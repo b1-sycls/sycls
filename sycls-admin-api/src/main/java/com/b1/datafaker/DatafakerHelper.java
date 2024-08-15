@@ -14,14 +14,19 @@ import com.b1.seat.entity.Seat;
 import com.b1.seatgrade.SeatGradeRepository;
 import com.b1.seatgrade.entity.SeatGrade;
 import com.b1.seatgrade.entity.SeatGradeType;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DatafakerHelper {
@@ -42,6 +47,10 @@ public class DatafakerHelper {
         return categoryRepository.save(Category.addCategory(name));
     }
 
+    public Place getDummyPlace(Long id) {
+        return placeRepository.findById(id).orElse(null);
+    }
+
     /**
      * 공연장 더미데이터 생성
      */
@@ -55,7 +64,7 @@ public class DatafakerHelper {
     /**
      * 좌석 더미데이터 생성
      */
-    public List<Seat> addDummySeat(final Place place) {
+    public void addDummySeat(final Place place) {
         List<Seat> seatList = new ArrayList<>();
 
         char letter = 'A';
@@ -69,9 +78,10 @@ public class DatafakerHelper {
             if (codeIndex > 1000) {
                 codeIndex = 1;
                 letter++;
+                log.info("addDummySeat {} ", codeIndex);
             }
         }
-        return seatRepository.saveAll(seatList);
+        seatRepository.saveAll(seatList);
     }
 
     /**
@@ -84,31 +94,43 @@ public class DatafakerHelper {
         return contentRepository.save(Content.addContent(title, description, category, path));
     }
 
+    public List<Content> getAllDummyContents() {
+        return contentRepository.findAll();
+    }
+
     /**
      * 회차 더미 데이터 생성
      */
-    public List<Round> addDummyRound(final Content content, final Place place) {
-        List<Round> roundList = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            LocalDate startDate = LocalDate.now().plusDays(faker.number().numberBetween(1, 30));
-            LocalTime startTime = LocalTime
-                    .of(faker.number().numberBetween(9, 22), faker.number().numberBetween(0, 59));
-            LocalTime endTime = startTime.plusHours(2);
-            RoundStatus status = RoundStatus.WAITING;
-            roundList.add(Round.addRound(i, startDate, startTime, endTime, status, content, place));
-        }
+    public void addDummyRound(Long placeId, List<Content> allDummyContents) {
+        Place place = placeRepository.findById(placeId).orElse(null);
 
-        return roundRepository.saveAll(roundList);
+        List<Round> roundList = new ArrayList<>();
+        for (Content allDummyContent : allDummyContents) {
+            List<Round> allByContentId = roundRepository.findAllByContentId(allDummyContent.getId());
+            if (allByContentId.isEmpty()) {
+                for (int i = 1; i <= 5; i++) {
+                    LocalDate startDate = LocalDate.now().plusDays(faker.number().numberBetween(1, 30));
+                    LocalTime startTime = LocalTime
+                            .of(faker.number().numberBetween(9, 22), faker.number().numberBetween(0, 59));
+                    LocalTime endTime = startTime.plusHours(2);
+                    RoundStatus status = RoundStatus.WAITING;
+                    roundList.add(Round.addRound(i, startDate, startTime, endTime, status, allDummyContent, place));
+                }
+            }
+        }
+        roundRepository.saveAll(roundList);
     }
 
     /**
      * 좌석등급 더미 데이터 생성
      */
-    public void addDummySeatGrade(final List<Seat> seatList, final List<Round> roundList) {
+    public void addDummySeatGrade() {
+        List<Seat> seats = seatRepository.findAll();
+        List<Round> rounds = roundRepository.findAll();
         List<SeatGrade> seatGradeList = new ArrayList<>();
 
-        for (Round round : roundList) {
-            for (Seat seat : seatList) {
+        for (Round round : rounds) {
+            for (Seat seat : seats) {
                 SeatGradeType grade = SeatGradeType.S;
                 Integer price = 10000;
                 seatGradeList.add(SeatGrade.addSeatGrade(grade, price, seat, round));
@@ -116,4 +138,5 @@ public class DatafakerHelper {
         }
         seatGradeRepository.saveAll(seatGradeList);
     }
+
 }
