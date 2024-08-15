@@ -2,7 +2,6 @@ package com.b1.datafaker;
 
 import com.b1.content.entity.Content;
 import com.b1.place.entity.Place;
-import com.b1.round.entity.Round;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,9 +45,9 @@ public class DatafakerService {
         log.info("round 생성 완료");
     }
 
-    public void addDummyDataSeatGrade() {
+    public void addDummyDataSeatGrade(Long placeId) {
         log.info("addDummyDataSeatGrade 생성 시작");
-        datafakerHelper.addDummySeatGrade();
+        datafakerHelper.addDummySeatGrade(placeId);
         log.info("addDummyDataSeatGrade 생성 완료");
     }
 }
