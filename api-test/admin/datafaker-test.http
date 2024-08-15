@@ -1,0 +1,17 @@
+### 공연장 생성
+POST http://localhost:8081/v1/datafaker/place
+Authorization: {{Authorization}}
+
+
+### 좌석 생성
+POST http://localhost:8081/v1/datafaker/seat/8
+Authorization: {{Authorization}}
+
+
+### 회차 생성
+POST http://localhost:8081/v1/datafaker/round/8
+Authorization: {{Authorization}}
+
+### 좌석 등급 생성
+POST http://localhost:8081/v1/datafaker/seat-grade/8
+Authorization: {{Authorization}}
