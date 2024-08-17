@@ -19,6 +19,11 @@ spring:
             trust: ${MAIL_HOST}
             protocols: TLSv1.2
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
@@ -29,3 +34,4 @@ server:
 toss:
   clientKey: ${TOSS_CLIENT_KEY}
   secretKey: ${TOSS_SECRET_KEY}
+
