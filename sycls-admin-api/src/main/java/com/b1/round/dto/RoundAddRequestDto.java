@@ -1,8 +1,8 @@
 package com.b1.round.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -15,7 +15,7 @@ public record RoundAddRequestDto(
         Long placeId,
 
         @NotNull(message = "회차 순서는 누락될 수 없습니다.")
-        @Size(min = 1, message = "0보다 큰 양의 정수여야 합니다")
+        @Min(value = 1, message = "0보다 큰 양의 정수여야 합니다.")
         Integer sequence,
 
         @NotNull(message = "공연 날짜는 누락될 수 없습니다.")
