@@ -8,11 +8,13 @@ import com.b1.content.dto.ContentUpdateRequestDto;
 import com.b1.content.dto.ContentUpdateStatusRequestDto;
 import com.b1.content.entity.ContentStatus;
 import com.b1.globalresponse.RestApiResponseDto;
+import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,9 +41,15 @@ public class ContentRestController {
     public ResponseEntity<RestApiResponseDto<String>> addContent(
             @Valid @RequestPart("dto") final ContentAddRequestDto requestDto,
             @RequestPart(value = "mainImage") final MultipartFile mainImage,
-            @RequestPart(value = "detailImages", required = false) final MultipartFile[] detailImages
+            @RequestPart(value = "detailImages", required = false) final MultipartFile[] detailImages,
+            @AuthenticationPrincipal final UserDetailsImpl userDetail
     ) {
-        contentService.addContent(requestDto, mainImage, detailImages);
+        contentService.addContent(
+                requestDto,
+                mainImage,
+                detailImages,
+                userDetail.getUser().getId()
+        );
         return ResponseEntity.status(HttpStatus.OK).body(RestApiResponseDto.of("등록 성공"));
     }
 

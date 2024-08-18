@@ -4,6 +4,7 @@ import com.b1.exception.customexception.global.GlobalCannotAddException;
 import com.b1.exception.customexception.global.GlobalDuplicatedException;
 import com.b1.exception.customexception.global.GlobalEmailException;
 import com.b1.exception.customexception.global.GlobalEntityInUseException;
+import com.b1.exception.customexception.global.GlobalInterruptedException;
 import com.b1.exception.customexception.global.GlobalInvalidException;
 import com.b1.exception.customexception.global.GlobalLoadingException;
 import com.b1.exception.customexception.global.GlobalMissingException;
@@ -109,6 +110,14 @@ public class ApiExceptionHandler {
             GlobalNotSupportedException e
     ) {
         log.error("GlobalNotSupportedException 발생");
+        return sendErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(GlobalInterruptedException.class)
+    protected ResponseEntity<ErrorResponseDto> globalInterruptedException(
+            GlobalInterruptedException e
+    ) {
+        log.error("GlobalInterruptedException 발생");
         return sendErrorResponse(e.getErrorCode());
     }
 

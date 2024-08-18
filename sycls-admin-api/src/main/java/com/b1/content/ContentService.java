@@ -1,5 +1,6 @@
 package com.b1.content;
 
+import com.b1.aop.DistributedLock;
 import com.b1.category.CategoryHelper;
 import com.b1.category.entity.Category;
 import com.b1.common.PageResponseDto;
@@ -52,8 +53,9 @@ public class ContentService {
     /**
      * 공연 등록 기능
      */
+    @DistributedLock(key = "Content", target = "#userId")
     public void addContent(final ContentAddRequestDto requestDto, final MultipartFile mainImage,
-            final MultipartFile[] detailImages) {
+            final MultipartFile[] detailImages, final Long userId) {
 
         Category category = categoryHelper.findById(requestDto.categoryId());
 
