@@ -24,8 +24,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
-
     testImplementation 'org.springframework.security:spring-security-test'
     implementation project(':sycls-core')
     implementation project(':sycls-common')

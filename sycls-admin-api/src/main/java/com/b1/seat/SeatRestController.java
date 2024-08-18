@@ -5,10 +5,12 @@ import com.b1.seat.dto.SeatAddRequestDto;
 import com.b1.seat.dto.SeatGetAllResponseDto;
 import com.b1.seat.dto.SeatGetResponseDto;
 import com.b1.seat.dto.SeatUpdateRequestDto;
+import com.b1.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,9 +33,10 @@ public class SeatRestController {
     @PostMapping("/places/{placeId}/seats")
     public ResponseEntity<RestApiResponseDto<String>> addSeats(
             @PathVariable final Long placeId,
-            @Valid @RequestBody final SeatAddRequestDto requestDto
+            @Valid @RequestBody final SeatAddRequestDto requestDto,
+            @AuthenticationPrincipal final UserDetailsImpl userDetails
     ) {
-        seatService.addSeats(placeId, requestDto);
+        seatService.addSeats(placeId, requestDto, userDetails.getUser().getId());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RestApiResponseDto.of("등록되었습니다."));
     }

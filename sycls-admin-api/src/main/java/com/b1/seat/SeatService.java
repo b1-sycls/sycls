@@ -1,5 +1,6 @@
 package com.b1.seat;
 
+import com.b1.aop.DistributedLock;
 import com.b1.place.PlaceHelper;
 import com.b1.place.entity.Place;
 import com.b1.place.entity.PlaceStatus;
@@ -29,7 +30,12 @@ public class SeatService {
     /**
      * 해당 공연장의 좌석 등록
      */
-    public void addSeats(final Long placeId, final SeatAddRequestDto requestDto) {
+    @DistributedLock(key = "Seat", target = "#userId")
+    public void addSeats(
+            final Long placeId,
+            final SeatAddRequestDto requestDto,
+            final Long userId
+    ) {
         Place place = placeHelper.getPlace(placeId);
 
         // 공연장 최대 좌석수와 총좌석수 비교 예외처리
