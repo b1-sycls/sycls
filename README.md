@@ -47,7 +47,7 @@
 | 윤성모   | 공연장, 좌석, 리뷰           | [Blog](https://velog.io/@momoysm/posts)        | [momoysm](https://github.com/momoysm) |
 | 이진욱   | 사용자 인증, 회원 관리       | [Notion](https://leecoding.notion.site)       | [Leejinuk123](https://github.com/Leejinuk123) |
 
-<h2 id="아키택처" style="border: none;">🏗아키택처</h2>
+<h2 id="아키텍처" style="border: none;">🏗아키택처</h2>
 
 ![B1-Architecture-last drawio](https://github.com/user-attachments/assets/74187d81-0140-426b-9076-cf7594fff457)
 [🏗 아키텍처 Wiki](https://github.com/b1-sycls/sycls/wiki/%F0%9F%8F%97-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98)
