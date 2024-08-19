@@ -48,52 +48,15 @@
 | 윤성모   | 공연장, 좌석, 리뷰           | [Blog](https://velog.io/@momoysm/posts)        | [momoysm](https://github.com/momoysm) |
 | 이진욱   | 사용자 인증, 회원 관리       | [Notion](https://leecoding.notion.site)       | [Leejinuk123](https://github.com/Leejinuk123) |
 
-## 아키텍처
+## 🏗 아키텍처 
 ![B1-Architecture-last drawio](https://github.com/user-attachments/assets/74187d81-0140-426b-9076-cf7594fff457)
+![🏗 아키텍처 Wiki]([https://github.com/b1-sycls/sycls/wiki/🍀-주요-기술](https://github.com/b1-sycls/sycls/wiki/🏗-아키텍처))
 
 ## ERD
 ![티켓예매 v3 (1) (1)](https://github.com/user-attachments/assets/6ae18336-f0a5-464f-aa63-3928e7fdc600)
 
-## 💻기술 환경
-
-<details>
-<summary><b>Backend</b></summary>
-
-- **Java 17**
-- **Spring Boot 3.3.2**
-- **Spring Security 6.3.2**
-- **QueryDsl**
-- **JPA**
-- **Spring AOP**
-
-</details>
-
-<details>
-<summary><b>Infrastructure</b></summary>
-
-- **AWS EC2** (t2.micro, Ubuntu 24.02 LTS, 2GB RAM, 30GB Storage)
-- **AWS S3**
-- **AWS RDS** (db.t3.micro)
-- **AWS ElastiCache** (cache.t3.micro)
-- **AWS ECR**
-- **AWS CodeDeploy**
-- **AWS ACM**
-- **AWS WAF**
-- **AWS Auto Scaling**
-- **AWS Route 53**
-- **AWS Elastic Load Balancer**
-- **Docker**
-- **GitHub Actions**
-
-</details>
-
-<details>
-<summary><b>FrontEnd</b></summary>
-
-- **nginx**
-- **vue.js**
-
-</details>
+## 🍀 주요 기술
+[🍀 주요 기술](https://github.com/b1-sycls/sycls/wiki/🍀-주요-기술)
 
 ## 🗣️기술적 의사 결정
 
