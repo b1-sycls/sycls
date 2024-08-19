@@ -1,4 +1,4 @@
-# 에티켓(Every Ticket)
+# 🎟️에티켓(Every Ticket)
 ![에티켓이미지](https://github.com/user-attachments/assets/34672602-5c6e-4355-9a5e-a0e14ddfa6b1)
 
 ## 프로젝트 소개
@@ -54,7 +54,7 @@
 ## ERD
 ![티켓예매 v3 (1) (1)](https://github.com/user-attachments/assets/6ae18336-f0a5-464f-aa63-3928e7fdc600)
 
-## 기술 환경
+## 💻기술 환경
 
 <details>
 <summary><b>Backend</b></summary>
@@ -95,7 +95,7 @@
 
 </details>
 
-## 기술적 의사 결정
+## 🗣️기술적 의사 결정
 
 ### 서비스 단위의 아키텍처 구성
 
@@ -163,7 +163,7 @@
 
 </details>
 
-## 트러블슈팅
+## 🛠트러블슈팅
 
 ### Spring boot 3.x ElastiCache for Redis Connection 문제
 
