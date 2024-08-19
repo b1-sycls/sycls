@@ -9,11 +9,8 @@
 1. [사이트 바로가기](#사이트-바로가기)
 2. [팀노션 바로가기](#팀노션-바로가기)
 3. [팀원 소개](#팀원-소개)
-4. [기술 환경](#기술-환경)
-    - [Backend](#backend)
-    - [Infrastructure](#infrastructure)
-    - [FrontEnd](#frontend)
-5. [아키텍처](#아키텍처)
+4. [주요 기술](#주요-기술)
+5. [아키텍처](#🏗-아키텍처)
 6. [ERD](#ERD)
 7. [기술환경](#기술환경)
 8. [기술적 의사 결정](#기술적-의사-결정)
@@ -56,9 +53,16 @@
 ![티켓예매 v3 (1) (1)](https://github.com/user-attachments/assets/6ae18336-f0a5-464f-aa63-3928e7fdc600)
 
 ## 🍀 주요 기술
-[🍀 주요 기술](https://github.com/b1-sycls/sycls/wiki/🍀-주요-기술)
+- [🍀 주요 기술](https://github.com/b1-sycls/sycls/wiki/%F0%9F%8D%80-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EC%88%A0)
 
 ## 🗣️기술적 의사 결정
+- [1. 서비스 단위의 아키텍처 구성](https://github.com/b1-sycls/sycls/wiki/%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%8B%A8%EC%9C%84%EC%9D%98-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98-%EA%B5%AC%EC%84%B1)
+- [2. CI/CD 파이프라인 구축과 자동화](https://github.com/b1-sycls/sycls/wiki/CI-CD-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EA%B5%AC%EC%B6%95%EA%B3%BC-%EC%9E%90%EB%8F%99%ED%99%94)
+- [3. 무중단 배포를 결정한 이유](https://github.com/b1-sycls/sycls/wiki/%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC%EB%A5%BC-%EA%B2%B0%EC%A0%95%ED%95%9C-%EC%9D%B4%EC%9C%A0)
+- [4. AWS WAF를 사용한 이유](https://github.com/b1-sycls/sycls/wiki/AWS-WAF%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%9C-%EC%9D%B4%EC%9C%A0)
+- [5. ElastiCache](https://github.com/b1-sycls/sycls/wiki/ElastiCache)
+- [6. 공연 좌석 무분별 점유 문제 및 해결 필요성](https://github.com/b1-sycls/sycls/wiki/%EA%B3%B5%EC%97%B0-%EC%A2%8C%EC%84%9D-%EB%AC%B4%EB%B6%84%EB%B3%84-%EC%A0%90%EC%9C%A0-%EB%AC%B8%EC%A0%9C-%EB%B0%8F-%ED%95%B4%EA%B2%B0-%ED%95%84%EC%9A%94%EC%84%B1)
+- [7. 토큰 관리 방법](https://github.com/b1-sycls/sycls/wiki/%ED%86%A0%ED%81%B0-%EA%B4%80%EB%A6%AC-%EB%B0%A9%EB%B2%95)
 
 ### 서비스 단위의 아키텍처 구성
 
