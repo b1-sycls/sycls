@@ -39,6 +39,7 @@
 - [에티켓 팀 노션](https://teamsparta.notion.site/everyTicket-91486dd6f1af4dbca95a33ba3bc219b7)
 
 <h2 id="팀원-소개" style="border: none;">🧑‍💻팀원 소개</h2>
+
 | 이름     | 역할                       | Blog                                           | GitHub           |
 |----------|----------------------------|------------------------------------------------|------------------|
 | 서찬원   | 예매, 결제                 | [Blog](https://scwonn60.tistory.com)           | [Chanwon-Seo](https://github.com/Chanwon-Seo) |
