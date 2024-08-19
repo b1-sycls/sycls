@@ -57,6 +57,7 @@
 ![티켓예매 v3 (1) (1)](https://github.com/user-attachments/assets/6ae18336-f0a5-464f-aa63-3928e7fdc600)
 
 <h2 id="주요-기술" style="border: none;">🍀주요 기술</h2>
+
 - [🍀 주요 기술](https://github.com/b1-sycls/sycls/wiki/%F0%9F%8D%80-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EC%88%A0)
 
 <h2 id="기술적-의사-결정" style="border: none;">🗣️기술적 의사 결정</h2>
