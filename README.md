@@ -21,7 +21,7 @@
     - [ElastiCache 도입](#elasticache-도입)
     - [공연 좌석 무분별 점유 문제 해결](#공연-좌석-무분별-점유-문제-해결)
     - [토큰 관리 방법](#토큰-관리-방법)
-9. [트러블슈팅](#트러블슈팅)
+9. [트러블슈팅](#트러블-슈팅)
     - [Spring boot 3.x ElastiCache for Redis Connection 문제](#spring-boot-3x-elasticache-for-redis-connection-문제)
     - [Redis Token 관리 문제](#redis-token-관리-문제)
     - [@RequestBody와 @RequestPart 동시 수신 문제](#requestbody와-requestpart-동시-수신-문제)
@@ -37,8 +37,8 @@
 
 ## 팀노션 바로가기
 - [에티켓 팀 노션](https://teamsparta.notion.site/everyTicket-91486dd6f1af4dbca95a33ba3bc219b7)
-  
-## 팀원 소개
+
+<h2 id="팀원-소개" style="border: none;">🧑‍💻팀원 소개</h2>
 | 이름     | 역할                       | Blog                                           | GitHub           |
 |----------|----------------------------|------------------------------------------------|------------------|
 | 서찬원   | 예매, 결제                 | [Blog](https://scwonn60.tistory.com)           | [Chanwon-Seo](https://github.com/Chanwon-Seo) |
@@ -46,7 +46,7 @@
 | 윤성모   | 공연장, 좌석, 리뷰           | [Blog](https://velog.io/@momoysm/posts)        | [momoysm](https://github.com/momoysm) |
 | 이진욱   | 사용자 인증, 회원 관리       | [Notion](https://leecoding.notion.site)       | [Leejinuk123](https://github.com/Leejinuk123) |
 
-## 아키텍처 
+<h2 id="아키택처" style="border: none;">🏗아키택처</h2>
 ![B1-Architecture-last drawio](https://github.com/user-attachments/assets/74187d81-0140-426b-9076-cf7594fff457)
 [🏗 아키텍처 Wiki](https://github.com/b1-sycls/sycls/wiki/%F0%9F%8F%97-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98)
 
@@ -54,7 +54,7 @@
 ## ERD
 ![티켓예매 v3 (1) (1)](https://github.com/user-attachments/assets/6ae18336-f0a5-464f-aa63-3928e7fdc600)
 
-## 주요 기술
+<h2 id="주요-기술" style="border: none;">🍀주요 기술</h2>
 - [🍀 주요 기술](https://github.com/b1-sycls/sycls/wiki/%F0%9F%8D%80-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EC%88%A0)
 
 <h2 id="기술적-의사-결정" style="border: none;">🗣️기술적 의사 결정</h2>
@@ -87,7 +87,7 @@
 ### 토큰 관리 방법
 [7. 토큰 관리 방법](https://github.com/b1-sycls/sycls/wiki/%ED%86%A0%ED%81%B0-%EA%B4%80%EB%A6%AC-%EB%B0%A9%EB%B2%95)
 
-## 🛠트러블슈팅
+<h2 id="트러블-슈팅" style="border: none;">🛠트러블 슈팅</h2>
 
 ### Spring boot 3.x ElastiCache for Redis Connection 문제
 
