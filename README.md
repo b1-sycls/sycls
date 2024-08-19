@@ -10,9 +10,9 @@
 2. [팀노션 바로가기](#팀노션-바로가기)
 3. [팀원 소개](#팀원-소개)
 4. [주요 기술](#주요-기술)
-5. [아키텍처](#🏗-아키텍처)
+5. [아키텍처](#아키텍처)
 6. [ERD](#ERD)
-7. [주요 기술](#🍀-주요-기술)
+7. [주요 기술](#주요-기술)
 8. [기술적 의사 결정](#기술적-의사-결정)
     - [서비스 단위의 아키텍처 구성](#서비스-단위의-아키텍처-구성)
     - [CI/CD 파이프라인 구축과 자동화](#cicd-파이프라인-구축과-자동화)
@@ -46,14 +46,14 @@
 | 윤성모   | 공연장, 좌석, 리뷰           | [Blog](https://velog.io/@momoysm/posts)        | [momoysm](https://github.com/momoysm) |
 | 이진욱   | 사용자 인증, 회원 관리       | [Notion](https://leecoding.notion.site)       | [Leejinuk123](https://github.com/Leejinuk123) |
 
-## 🏗 아키텍처 
+## 아키텍처 
 ![B1-Architecture-last drawio](https://github.com/user-attachments/assets/74187d81-0140-426b-9076-cf7594fff457)
 ![🏗 아키텍처 Wiki]([https://github.com/b1-sycls/sycls/wiki/🍀-주요-기술](https://github.com/b1-sycls/sycls/wiki/🏗-아키텍처))
 
 ## ERD
 ![티켓예매 v3 (1) (1)](https://github.com/user-attachments/assets/6ae18336-f0a5-464f-aa63-3928e7fdc600)
 
-## 🍀 주요 기술
+## 주요 기술
 - [🍀 주요 기술](https://github.com/b1-sycls/sycls/wiki/%F0%9F%8D%80-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EC%88%A0)
 
 ## 🗣️기술적 의사 결정
@@ -90,71 +90,28 @@
 
 ### Spring boot 3.x ElastiCache for Redis Connection 문제
 
-<details>
-<summary>트러블슈팅 과정</summary>
-
-**문제 정의**: 회원가입 과정에서 이메일 인증 코드 전송 시 Redis 연결 문제 발생  
-**원인**: EC2와 ElastiCache 간의 성능 차이  
-**해결 방법**: 로그 추가, 지연 초기화, 명령 대기 시간 설정 등을 통해 문제를 해결하고, 최종적으로 성능 환경을 맞춰 문제를 근본적으로 해결했습니다.
-
-</details>
+[1. Spring Boot와 ElastiCache 연결 문제](https://github.com/b1-sycls/sycls/wiki/Spring-Boot%EC%99%80-ElastiCache-%EC%97%B0%EA%B2%B0-%EB%AC%B8%EC%A0%9C)
 
 ### Redis Token 관리 문제
 
-<details>
-<summary>트러블슈팅 과정</summary>
-
-**문제 정의**: JWT 토큰을 Redis에 저장할 때, 같은 유저의 AccessToken과 RefreshToken이 중복 저장됨  
-**해결 방법**: RefreshToken을 Key로 사용해 AccessToken과 함께 관리하여 데이터 중복 문제를 해결했습니다.
-
-</details>
+[2. Redis Token 관리 구조 문제](https://github.com/b1-sycls/sycls/wiki/Redis-Token-%EA%B4%80%EB%A6%AC-%EA%B5%AC%EC%A1%B0-%EB%AC%B8%EC%A0%9C)
 
 ### @RequestBody와 @RequestPart 동시 수신 문제
 
-<details>
-<summary>트러블슈팅 과정</summary>
-
-**문제 정의**: MultipartFile과 DTO를 동시에 수신하지 못함  
-**해결 방법**: @RequestPart를 사용하여 DTO를 수신하고, 요청 시 Content-Type을 지정하여 문제를 해결했습니다.
-
-</details>
+[3. @RequestBody 와 @RequestPart 동시에 받기](https://github.com/b1-sycls/sycls/wiki/@RequestBody-%EC%99%80-@RequestPart-%EB%8F%99%EC%8B%9C%EC%97%90-%EB%B0%9B%EA%B8%B0)
 
 ### 좌석 점유 캐싱 문제
 
-<details>
-<summary>트러블슈팅 과정</summary>
-
-**문제 정의**: 잦은 RDB 조회로 인한 성능 문제  
-**해결 방법**: Redis에 좌석 정보를 캐싱하고 TTL을 설정하여 성능을 개선했습니다.
-
-</details>
+[4. 좌석 점유 캐싱](https://github.com/b1-sycls/sycls/wiki/%EC%A2%8C%EC%84%9D-%EC%A0%90%EC%9C%A0-%EC%BA%90%EC%8B%B1)
 
 ### 조회 성능 최적화
 
-<details>
-<summary>트러블슈팅 과정</summary>
-
-**문제 정의**: 대용량 데이터로 인해 조회 성능이 저하됨  
-**해결 방법**: 인덱스 생성 및 쿼리 최적화를 통해 성능을 대폭 향상시켰습니다.
-
-</details>
+[5. 조회 성능 최적화 ( 유저 피드백 )](https://github.com/b1-sycls/sycls/wiki/5.-%EC%A1%B0%ED%9A%8C-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94-(-%EC%9C%A0%EC%A0%80-%ED%94%BC%EB%93%9C%EB%B0%B1-))
 
 ### 좌석 등급 관리 문제
 
-<details>
-<summary>트러블슈팅 과정</summary>
-
-**문제 정의**: 단일 좌석의 등급 관리가 어렵고 비효율적임  
-**해결 방법**: 좌석 등급을 일괄적으로 관리할 수 있는 구조로 변경했습니다.
-
-</details>
+[6. 좌석‐등급 관리 방법 변경](https://github.com/b1-sycls/sycls/wiki/%EC%A2%8C%EC%84%9D%E2%80%90%EB%93%B1%EA%B8%89-%EA%B4%80%EB%A6%AC-%EB%B0%A9%EB%B2%95-%EB%B3%80%EA%B2%BD)
 
 ### Double Submit 방지
 
-<details>
-<summary>트러블슈팅 과정</summary>
-
-**문제 정의**: 동일한 요청이 여러 번 중복 등록되는 문제  
-**해결 방법**: 프론트에서 버튼 비활성화와 Redis를 사용한 분산락으로 중복 요청을 방지했습니다.
-
-</details>
+[7. Double Submit 방지](https://github.com/b1-sycls/sycls/wiki/Double-Submit-%EB%B0%A9%EC%A7%80)
