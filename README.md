@@ -48,7 +48,7 @@
 
 ## 아키텍처 
 ![B1-Architecture-last drawio](https://github.com/user-attachments/assets/74187d81-0140-426b-9076-cf7594fff457)
-![🏗 아키텍처 Wiki](https://github.com/b1-sycls/sycls/wiki/%F0%9F%8F%97-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98)
+[🏗 아키텍처 Wiki](https://github.com/b1-sycls/sycls/wiki/%F0%9F%8F%97-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98)
 
 
 ## ERD
