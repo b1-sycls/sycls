@@ -1,5 +1,7 @@
 package com.b1.reservation;
 
+import com.b1.constant.RedissonConstants;
+import com.b1.redis.RedissonRepository;
 import com.b1.seatgrade.SeatGradeRepository;
 import com.b1.seatgrade.entity.SeatGrade;
 import lombok.RequiredArgsConstructor;
@@ -11,13 +13,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.b1.constant.RedissonConstants.*;
+import static com.b1.constant.RedissonConstants.REDISSON_RESERVATION_LOCK_KEY_PREFIX;
+
 @Slf4j(topic = "Reservation Helper")
 @Component
 @RequiredArgsConstructor
 public class ReservationHelper {
 
-    private final ReservationRepository reservationRepository;
     private final SeatGradeRepository seatGradeRepository;
+    private final RedissonRepository redissonRepository;
 
     /**
      * 선택 좌석 점유 등록
@@ -27,7 +32,7 @@ public class ReservationHelper {
             final Set<Long> seatGradeIds,
             final Long userId
     ) {
-        reservationRepository.reserveSeats(roundId, seatGradeIds, userId);
+        redissonRepository.reserveSeats(REDISSON_RESERVATION_LOCK_KEY_PREFIX, roundId, seatGradeIds, userId);
     }
 
     /**
@@ -37,7 +42,8 @@ public class ReservationHelper {
             final Long roundId,
             final Long userId
     ) {
-        return reservationRepository.getReservationByUser(roundId, userId);
+        return redissonRepository
+                .getReservationByUser(REDISSON_RESERVATION_LOCK_KEY_PREFIX, roundId, userId);
     }
 
     /**
@@ -47,7 +53,7 @@ public class ReservationHelper {
             final Long roundId,
             final Long userId
     ) {
-        reservationRepository.releaseReservation(roundId, userId);
+        redissonRepository.releaseReservation(REDISSON_RESERVATION_LOCK_KEY_PREFIX, roundId, userId);
 
     }
 
@@ -58,7 +64,8 @@ public class ReservationHelper {
             final Long roundId,
             final Long userId
     ) {
-        Set<Long> seatReservationIds = reservationRepository.getReservationByUser(roundId, userId);
+        Set<Long> seatReservationIds = redissonRepository
+                .getReservationByUser(REDISSON_RESERVATION_LOCK_KEY_PREFIX, roundId, userId);
         List<SeatGrade> selectSeatGrades = seatGradeRepository.findAllByIdIn(seatReservationIds);
 
         return getLogSeatGradeMap(selectSeatGrades);
@@ -70,7 +77,7 @@ public class ReservationHelper {
     public Set<Long> getOccupied(
             final Long roundId
     ) {
-        return reservationRepository.getOccupied(roundId);
+        return redissonRepository.getOccupied(REDISSON_RESERVATION_LOCK_KEY_PREFIX, roundId);
     }
 
     /**
@@ -80,7 +87,8 @@ public class ReservationHelper {
             final Long roundId,
             final Long userId
     ) {
-        Set<Long> seatReservationIds = reservationRepository.getReservationByUser(roundId, userId);
+        Set<Long> seatReservationIds = redissonRepository
+                .getReservationByUser(REDISSON_RESERVATION_LOCK_KEY_PREFIX, roundId, userId);
         return seatGradeRepository.findAllByIdIn(seatReservationIds);
     }
 
@@ -103,6 +111,6 @@ public class ReservationHelper {
             final Long roundId,
             final Long userId
     ) {
-        reservationRepository.releaseReservation(roundId, userId);
+        redissonRepository.releaseReservation(REDISSON_RESERVATION_LOCK_KEY_PREFIX, roundId, userId);
     }
 }

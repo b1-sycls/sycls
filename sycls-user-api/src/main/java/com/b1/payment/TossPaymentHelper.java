@@ -1,10 +1,12 @@
 package com.b1.payment;
 
 import com.b1.config.TossConfig;
+import com.b1.constant.RedissonConstants;
 import com.b1.exception.customexception.TossPaymentException;
 import com.b1.exception.errorcode.PaymentErrorCode;
 import com.b1.payment.dto.TossConfirmRequestDto;
 import com.b1.payment.dto.TossPaymentRestResponse;
+import com.b1.redis.RedissonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -18,6 +20,8 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.Set;
 
+import static com.b1.constant.RedissonConstants.*;
+import static com.b1.constant.RedissonConstants.REDISSON_RESERVATION_LOCK_KEY_PREFIX;
 import static com.b1.constant.TossConstant.AUTHORIZATION;
 import static com.b1.constant.TossConstant.BASIC;
 import static com.b1.constant.TossConstant.TOSS_URL;
@@ -27,7 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Component
 @RequiredArgsConstructor
 public class TossPaymentHelper {
-    private final PaymentRepository paymentRepository;
+    private final RedissonRepository redissonRepository;
 
     /**
      * 결제 시도
@@ -38,7 +42,7 @@ public class TossPaymentHelper {
             final Set<Long> reservationByUser,
             final Long userId
     ) {
-        paymentRepository.seatLock(requestDto.roundId(), reservationByUser, userId);
+        redissonRepository.seatLock(REDISSON_PAYMENT_LOCK_KEY_PREFIX, requestDto.roundId(), reservationByUser, userId);
         String authorization = Base64.getEncoder().encodeToString((tossConfig.getPaymentSecretKey() + ":").getBytes());
 
         HttpHeaders headers = new HttpHeaders();
@@ -65,6 +69,6 @@ public class TossPaymentHelper {
             final Long roundId,
             final Long userId
     ) {
-        paymentRepository.releaseReservation(roundId, userId);
+        redissonRepository.releaseReservation(REDISSON_PAYMENT_LOCK_KEY_PREFIX, roundId, userId);
     }
 }
