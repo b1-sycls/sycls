@@ -1,6 +1,5 @@
-package com.b1.reservation;
+package com.b1.redis;
 
-import com.b1.constant.ReservationConstants;
 import com.b1.exception.customexception.SeatGradeAlreadySoldOutException;
 import com.b1.exception.errorcode.SeatGradeErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +15,13 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.b1.constant.ReservationConstants.*;
+import static com.b1.constant.RedissonConstants.LOCK_EXPIRATION_TIME;
+import static com.b1.constant.RedissonConstants.RESERVATION_EXPIRATION_TIME;
 
-@Slf4j(topic = "Reservation Repository")
+@Slf4j(topic = "Redisson Repository")
 @Repository
 @RequiredArgsConstructor
-public class ReservationRepository {
-
+public class RedissonRepository {
 
     private final RedissonClient redissonClient;
     private final RedisTemplate<String, String> redisTemplate;
@@ -31,27 +30,43 @@ public class ReservationRepository {
      * 예매 등록
      */
     public void reserveSeats(
+            final String prefix,
             final Long roundId,
             final Set<Long> newSeatIds,
             final Long userId
     ) {
-        if (checkIfSeatsAlreadyReserved(roundId, newSeatIds, userId)) {
-            log.error("이미 매진된 좌석 {}", newSeatIds);
-            throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
-        }
+        validateSeatsAvailability(prefix, roundId, newSeatIds, userId);
 
-        if (!lockSeats(roundId, newSeatIds)) {
-            log.error("이미 매진된 좌석 {}", newSeatIds);
-            throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
-        }
+        lockSeatsOrThrow(prefix, roundId, newSeatIds);
 
         try {
-            removeExistingReservations(roundId, userId);
+            removeExistingReservations(prefix, roundId, userId);
 
-            updateSeatReservations(roundId, newSeatIds, userId);
+            updateSeatReservations(prefix, roundId, newSeatIds, userId);
         } finally {
             // 잠금 해제
-            unlockSeats(roundId, newSeatIds);
+            unlockSeats(prefix, roundId, newSeatIds);
+        }
+    }
+
+    /**
+     * 결제 좌석 등록
+     */
+    public void seatLock(
+            final String prefix,
+            final Long roundId,
+            final Set<Long> newSeatIds,
+            final Long userId
+    ) {
+        validateSeatsAvailability(prefix, roundId, newSeatIds, userId);
+
+        lockSeatsOrThrow(prefix, roundId, newSeatIds);
+
+        try {
+            updateSeatReservations(prefix, roundId, newSeatIds, userId);
+        } finally {
+            // 잠금 해제
+            unlockSeats(prefix, roundId, newSeatIds);
         }
     }
 
@@ -59,10 +74,11 @@ public class ReservationRepository {
      * 예매 정보 조회
      */
     public Set<Long> getReservationByUser(
+            final String prefix,
             final Long roundId,
             final Long userId
     ) {
-        String keyPattern = generateKeyPatternForRoundAndUser(roundId, userId);
+        String keyPattern = generateKeyPatternForRoundAndUser(prefix, roundId, userId);
         Set<String> keys = redisTemplate.keys(keyPattern);
         return keys.stream().map(k -> Long.parseLong(k.split(":")[2])
         ).collect(Collectors.toSet());
@@ -72,45 +88,49 @@ public class ReservationRepository {
      * 예매 중인 좌석 취소
      */
     public void releaseReservation(
+            final String prefix,
             final Long roundId,
             final Long userId
     ) {
-        String keyPattern = generateKeyPatternForRoundAndUser(roundId, userId);
+        String keyPattern = generateKeyPatternForRoundAndUser(prefix, roundId, userId);
         Iterable<String> keys = redissonClient.getKeys().getKeysByPattern(keyPattern);
 
-        keys.forEach(k -> {
-            redissonClient.getBucket(k).delete();
-        });
+        keys.forEach(k -> redissonClient.getBucket(k).delete());
     }
 
     /**
      * 점유 중인 좌석 조회
      */
     public Set<Long> getOccupied(
+            final String prefix,
             final Long roundId
     ) {
-        String keyPattern = generateKeyPatternForRound(roundId);
+        String keyPattern = generateKeyPatternForRound(prefix, roundId);
         Set<String> keys = redisTemplate.keys(keyPattern);
         return keys.stream().map(k -> Long.parseLong(k.split(":")[2])
         ).collect(Collectors.toSet());
     }
 
+    /**
+     * 좌석 잠금 시도 및 잠금 여부 검증
+     */
     private boolean lockSeats(
+            final String prefix,
             final Long roundId,
             final Set<Long> seatIds
     ) {
         boolean allLocked = true;
         for (Long seatId : seatIds) {
-            RLock lock = redissonClient.getLock(generateLockKeyForRoundAndSeat(roundId, seatId));
+            RLock lock = redissonClient.getLock(generateLockKeyForRoundAndSeat(prefix, roundId, seatId));
             try {
                 if (!lock.tryLock(0, LOCK_EXPIRATION_TIME, TimeUnit.SECONDS)) {
-                    unlockSeats(roundId, seatIds);
+                    unlockSeats(prefix, roundId, seatIds);
                     allLocked = false;
                     break;
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                unlockSeats(roundId, seatIds);
+                unlockSeats(prefix, roundId, seatIds);
                 log.error("이미 매진된 좌석 {}", seatIds);
                 throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
             }
@@ -119,14 +139,35 @@ public class ReservationRepository {
     }
 
     /**
+     * 좌석 잠금 시도 매진 된 경우 예외 발생
+     */
+    private void lockSeatsOrThrow(String prefix, Long roundId, Set<Long> newSeatIds) {
+        if (!lockSeats(prefix, roundId, newSeatIds)) {
+            log.error("이미 매진된 좌석 {}", newSeatIds);
+            throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
+        }
+    }
+
+    /**
+     * 매진 된 좌석 여부 검증
+     */
+    private void validateSeatsAvailability(String prefix, Long roundId, Set<Long> newSeatIds, Long userId) {
+        if (checkIfSeatsAlreadyReserved(prefix, roundId, newSeatIds, userId)) {
+            log.error("이미 매진된 좌석 {}", newSeatIds);
+            throw new SeatGradeAlreadySoldOutException(SeatGradeErrorCode.SEAT_GRADE_ALREADY_SOLD_OUT);
+        }
+    }
+
+    /**
      * 기존 lock 해제
      */
     private void unlockSeats(
+            final String prefix,
             final Long roundId,
             final Set<Long> seatIds
     ) {
         for (Long seatId : seatIds) {
-            RLock lock = redissonClient.getLock(generateLockKeyForRoundAndSeat(roundId, seatId));
+            RLock lock = redissonClient.getLock(generateLockKeyForRoundAndSeat(prefix, roundId, seatId));
             if (lock.isHeldByCurrentThread()) {
                 lock.unlock();
             }
@@ -137,11 +178,12 @@ public class ReservationRepository {
      * 기존 예매 좌석 삭제
      */
     private void removeExistingReservations(
+            final String prefix,
             final Long roundId,
             final Long userId
     ) {
         RKeys keys = redissonClient.getKeys();
-        String pattern = generateKeyPatternForRoundAndUser(roundId, userId);
+        String pattern = generateKeyPatternForRoundAndUser(prefix, roundId, userId);
         keys.getKeysByPattern(pattern).forEach(key -> {
             RBucket<String> bucket = redissonClient.getBucket(key);
             if (bucket.get() != null) {
@@ -160,12 +202,13 @@ public class ReservationRepository {
      * 새로운 좌석 예매 등록
      */
     private void updateSeatReservations(
+            final String prefix,
             final Long roundId,
             final Set<Long> newSeatIds,
             final Long userId
     ) {
         for (Long seatId : newSeatIds) {
-            String key = generateLockKeyForRoundSeatAndUser(roundId, seatId, userId);
+            String key = generateLockKeyForRoundSeatAndUser(prefix, roundId, seatId, userId);
             RBucket<String> bucket = redissonClient.getBucket(key);
 
             String existingReservation = bucket.get();
@@ -184,12 +227,13 @@ public class ReservationRepository {
      * 이미 예매 된 좌석여부를 검증
      */
     private boolean checkIfSeatsAlreadyReserved(
+            final String prefix,
             final Long roundId,
             final Set<Long> seatIds,
             final Long userId
     ) {
         for (Long seatId : seatIds) {
-            String pattern = generateLockKeyForRoundAndSeat(roundId, seatId) + ":*";
+            String pattern = generateLockKeyForRoundAndSeat(prefix, roundId, seatId) + ":*";
             Set<String> keys = redisTemplate.keys(pattern);
 
             for (String key : keys) {
@@ -206,38 +250,41 @@ public class ReservationRepository {
     /**
      * reservation:{roundId}:*:*
      */
-    private String generateKeyPatternForRound(final Long roundId) {
-        return REDISSON_LOCK_KEY_PREFIX + roundId + ":*:*";
+    private String generateKeyPatternForRound(final String prefix, final Long roundId) {
+        return prefix + roundId + ":*:*";
     }
 
     /**
      * reservation:{roundId}:{seatId}
      */
     private String generateLockKeyForRoundAndSeat(
+            final String prefix,
             final Long roundId,
             final Long seatId
     ) {
-        return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId;
+        return prefix + roundId + ":" + seatId;
     }
 
     /**
      * reservation:{roundId}:{seatId}:{userId}
      */
     private String generateLockKeyForRoundSeatAndUser(
+            final String prefix,
             final Long roundId,
             final Long seatId,
             final Long userId
     ) {
-        return REDISSON_LOCK_KEY_PREFIX + roundId + ":" + seatId + ":" + userId;
+        return prefix + roundId + ":" + seatId + ":" + userId;
     }
 
     /**
      * reservation:{roundId}:*:{userId}
      */
     private String generateKeyPatternForRoundAndUser(
+            final String prefix,
             final Long roundId,
             final Long userId
     ) {
-        return REDISSON_LOCK_KEY_PREFIX + roundId + ":*:" + userId;
+        return prefix + roundId + ":*:" + userId;
     }
 }
